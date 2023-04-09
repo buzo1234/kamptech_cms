@@ -18,6 +18,9 @@ const Layout = ({ screen }) => {
   console.log(screen);
   return (
     <div className='App h-screen relative'>
+        <head>
+            <title>Kamptech</title>
+        </head>
       <nav className=' flex flex-wrap items-center justify-between px-6 py-3 bg-white shadow-md sticky top-0 left-0 z-50'>
         <div className='container  flex flex-wrap items-center justify-between'>
           <div className='w-full relative flex justify-start lg:w-auto lg:static lg:block lg:justify-start'>
@@ -53,7 +56,7 @@ const Layout = ({ screen }) => {
 
       {/* Broad Page View */}
 
-      <div className='hidden lg:grid xl:grid grid-cols-6 w-full h-screen pt-16 lg:absolute xl:absolute lg:inset-y-0 xl:inset-y-0 lg:left-0 xl:left-0 flex-shrink-0 overflow-hidden'>
+      <div className='hidden lg:grid xl:grid grid-cols-6 w-full h-screen pt-16 lg:absolute xl:absolute lg:inset-y-0 xl:inset-y-0 lg:left-0 xl:left-0 lg:top-0 xl:top-0 flex-shrink-0 overflow-hidden'>
         <div className='col-span-1 bg-white h-full flex flex-grow'>
           <div
             className='lg:flex  flex-grow items-start h-full bg-white'
@@ -149,7 +152,7 @@ const Layout = ({ screen }) => {
         )}
       </div>
 
-      <div className='absolute inset-y-0 left-0 w-2/3 md:w-1/3 pt-16 flex-shrink-0 lg:hidden xl:hidden '>
+      <div className='absolute inset-y-0 left-0  top-0  w-2/3 md:w-1/3 pt-16 flex-shrink-0 lg:hidden xl:hidden '>
         <div
           className={
             'flex flex-grow items-start h-full bg-white    duration-300 ease-in-out z-50' +

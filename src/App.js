@@ -13,6 +13,7 @@ function App() {
   const [navbarOpen, setNavbarOpen] = useState(false);
   return (
     <div className="App h-screen relative">
+      
        <nav className=" flex flex-wrap items-center justify-between px-3 py-3 bg-white shadow-md sticky top-0 left-0 z-50">
         <div className="container  flex flex-wrap items-center justify-between">
           <div className="w-full relative flex justify-start lg:w-auto lg:static lg:block lg:justify-start">
