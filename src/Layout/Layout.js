@@ -14,6 +14,8 @@ import CouponsScreen from '../screens/CouponsScreen';
 
 const Layout = ({ screen }) => {
   const [navbarOpen, setNavbarOpen] = useState(false);
+
+  console.log(screen);
   return (
     <div className='App h-screen relative'>
       <nav className=' flex flex-wrap items-center justify-between px-3 py-3 bg-white shadow-md sticky top-0 left-0 z-50'>
@@ -107,7 +109,7 @@ const Layout = ({ screen }) => {
         </div>
 
         <div className='col-span-5 bg-gray-300/30 overflow-auto h-full  w-full flex flex-col'>
-          Page Content
+        
           {screen === 'dashboard' ? (
             <DashBoardScreen />
           ) : screen === 'products' ? (
@@ -132,7 +134,7 @@ const Layout = ({ screen }) => {
 
       {/* Mobile Page View */}
       <div className='bg-gray-300/20 lg:hidden xl:hidden'>
-        Page Content
+
         {screen === 'dashboard' ? (
           <DashBoardScreen />
         ) : screen === 'products' ? (
