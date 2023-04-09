@@ -10,7 +10,7 @@ import ProductsScreen from './screens/ProductsScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import OrdersScreen from './screens/OrdersScreen';
 import CouponsScreen from './screens/CouponsScreen';
-import Layout from './Layout/layout';
+import Layout from './Layout/Layout';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
