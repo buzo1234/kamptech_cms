@@ -18,7 +18,7 @@ const Layout = ({ screen }) => {
   console.log(screen);
   return (
     <div className='App h-screen relative'>
-      <nav className=' flex flex-wrap items-center justify-between px-3 py-3 bg-white shadow-md sticky top-0 left-0 z-50'>
+      <nav className=' flex flex-wrap items-center justify-between px-6 py-3 bg-white shadow-md sticky top-0 left-0 z-50'>
         <div className='container  flex flex-wrap items-center justify-between'>
           <div className='w-full relative flex justify-start lg:w-auto lg:static lg:block lg:justify-start'>
             <button
@@ -33,10 +33,11 @@ const Layout = ({ screen }) => {
               </div>
             </button>
             <a
-              className='text-md font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-black '
+              className='text-md font-bold leading-relaxed flex  mr-4 py-2 whitespace-nowrap items-center  text-black '
               href='/'
             >
-              Kamptech
+                <img src="logo.png" alt="" className='w-[25px] h-[25px] object-contain mr-[4px]' />
+                <span>KampTech</span>
             </a>
           </div>
         </div>
@@ -121,8 +122,8 @@ const Layout = ({ screen }) => {
           ) : (
             <CouponsScreen />
           )}
-          {/*       
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRr2_MFLhxziJEIX6EpmwB5veWttEiD9BOJnQ&usqp=CAU" alt="" className='w-1/3'/>
+                
+              {/* <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRr2_MFLhxziJEIX6EpmwB5veWttEiD9BOJnQ&usqp=CAU" alt="" className='w-1/3'/>
   
               <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRr2_MFLhxziJEIX6EpmwB5veWttEiD9BOJnQ&usqp=CAU" alt="" className='w-1/3'/>
   
@@ -133,7 +134,7 @@ const Layout = ({ screen }) => {
       </div>
 
       {/* Mobile Page View */}
-      <div className='bg-gray-300/20 lg:hidden xl:hidden'>
+      <div className='bg-gray-300/30 lg:hidden xl:hidden'>
 
         {screen === 'dashboard' ? (
           <DashBoardScreen />
@@ -148,10 +149,10 @@ const Layout = ({ screen }) => {
         )}
       </div>
 
-      <div className='absolute inset-y-0 left-0 w-2/3 md:w-1/3 mt-16 flex-shrink-0 lg:hidden xl:hidden '>
+      <div className='absolute inset-y-0 left-0 w-2/3 md:w-1/3 pt-16 flex-shrink-0 lg:hidden xl:hidden '>
         <div
           className={
-            'flex flex-grow items-start h-full bg-white   duration-300 ease-in-out z-50' +
+            'flex flex-grow items-start h-full bg-white    duration-300 ease-in-out z-50' +
             (navbarOpen ? ' flex   translate-x-0' : ' flex  -translate-x-full')
           }
           id='example-navbar-danger'
