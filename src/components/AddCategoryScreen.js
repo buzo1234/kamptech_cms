@@ -5,39 +5,39 @@ import '../styles/toggleSwitch.css'
 const AddCategoryScreen = ({ setShow, show }) => {
   return (
     <div className='h-screen bg-white flex z-40 shadow-inner shadpw-lg pt-16 flex-col w-full'>
-      <div className='flex justify-between items-center py-3 px-2 bg-gray-100'>
-        <div className='flex flex-col mr-2'>
-          <p>Add Category</p>
-          <p className='text-xs'>
+      <div className='flex justify-between items-center py-3 px-2 bg-gray-800'>
+        <div className='flex flex-col mr-2 text-gray-300 '>
+          <p className='font-semibold'>Add Category</p>
+          <p className='text-xs text-gray-300'>
             Add your Product category and necessary information from here
           </p>
         </div>
         <button
-          className='rounded-full shadow-xl p-2 w-[30px] h-[30px]  bg-gray-300 text-red-500 text-sm flex justify-center items-center'
+          className='rounded-full shadow-xl p-2 w-[30px] h-[30px]  bg-white text-red-500 text-sm flex justify-center items-center'
           onClick={() => setShow(!show)}
         >
           <CloseIcon style={{width:"20px", height:"20px"}} />
         </button>
       </div>
 
-      <div className='fixed inset-x-0 bottom-0  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2  justify-evenly px-2 py-3 bg-gray-100 gap-x-6 gap-y-3 z-50'>
+      <div className='fixed inset-x-0 bottom-0  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2  justify-evenly px-2 py-3 bg-gray-800 gap-x-6 gap-y-3 z-50'>
         <button
-          className='bg-gray-200 col-span-1  py-2 w-full rounded-lg text-red-500 hover:bg-red-200 hover:text-red-600'
+          className='bg-gray-700 col-span-1  py-2 w-full rounded-lg text-gray-500 hover:bg-gray-800 hover:text-red-700 font-semibold  border border-gray-700'
           onClick={() => setShow(!show)}
         >
           Cancel
         </button>
-        <button className='bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-bold '>
+        <button className='bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold '>
           Add Category
         </button>
       </div>
 
-      <div className='overflow-y-auto pb-32'>
+      <div className='overflow-y-auto pb-32 bg-gray-700'>
         <form>
           {/* Title */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-2'>
-              <p className="text-sm">Name</p>
+              <p className="text-sm text-gray-400">Name</p>
             </div>
             <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-2'>
               <input
@@ -45,7 +45,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
                 name=''
                 id=''
                 placeholder='Category title'
-                className='bg-gray-100 w-full rounded-md px-2 py-1 placeholder:text-sm'
+                className='block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none border-transparent '
               />
             </div>
           </div>
@@ -53,15 +53,17 @@ const AddCategoryScreen = ({ setShow, show }) => {
           {/* Description */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-2'>
-              <p className="text-sm">Description</p>
+              <p className="text-sm text-gray-400">Description</p>
             </div>
             <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-2'>
               <textarea
                 type='text'
-                name=''
+                name='description'
+                rows="4"
+                spellCheck={false}
                 id=''
                 placeholder='Category Description'
-                className='bg-gray-100 w-full rounded-md px-2 py-1 placeholder:text-sm'
+                className='block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none border-transparent'
               />
             </div>
           </div>
@@ -69,14 +71,14 @@ const AddCategoryScreen = ({ setShow, show }) => {
           {/* Select Parent Category */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-2'>
-              <p className="text-sm">Parent Category</p>
+              <p className="text-sm text-gray-400">Parent Category</p>
             </div>
             <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-2'>
               <select
                 name=''
                 id=''
                 placeholder='Select Parent'
-                className='bg-gray-100 w-full rounded-md px-1 py-1 placeholder:text-sm'
+                className='block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none border-transparent'
               >
                 <option value='' disabled selected hidden>
                   Select Parent
@@ -92,7 +94,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
           {/* Image */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-2'>
-              <p className="text-sm">Category Image</p>
+              <p className="text-sm text-gray-400">Category Image</p>
             </div>
             <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-2'>
               <div className='w-full text-center'>
@@ -142,7 +144,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
           {/* Published */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-2'>
-              <p className="text-sm">Published</p>
+              <p className="text-sm text-gray-400 ">Published</p>
             </div>
             
             <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-2 relative'>

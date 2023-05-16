@@ -8,7 +8,7 @@ const CategoryScreen = () => {
     <>
       <div class='p-4 relative z-0'>
       <p className='font-semibold py-3 text-lg px-2'>Category</p>
-        <div className='bg-white px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 '>
+        <div className='bg-gray-800 px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 '>
 
         
        
@@ -18,7 +18,7 @@ const CategoryScreen = () => {
               <div class='flex'>
                 <div class='lg:flex-1 md:flex-1 mr-3 sm:flex-none'>
                   <button
-                    class='border flex justify-center items-center border-black hover:border-green-400 hover:text-green-400  dark:text-black cursor-pointer h-10 w-20 rounded-md focus:outline-none'
+                    class='border flex justify-center items-center border-white hover:border-green-400 hover:text-green-400  dark:text-white cursor-pointer h-10 w-20 rounded-md focus:outline-none'
                     fdprocessedid='k2ha3j'
                   >
                     <svg
@@ -42,7 +42,7 @@ const CategoryScreen = () => {
                 </div>
                 <div class='lg:flex-1 md:flex-1 mr-3  sm:flex-none'>
                   <button
-                    class='border flex justify-center items-center h-10 w-20 hover:text-yellow-500  border-black dark:text-black cursor-pointer  py-2 hover:border-yellow-500 rounded-md focus:outline-none'
+                    class='border flex justify-center items-center h-10 w-20 hover:text-yellow-500  border-white dark:text-white cursor-pointer  py-2 hover:border-yellow-500 rounded-md focus:outline-none'
                     fdprocessedid='b9mgoj'
                   >
                     <svg
