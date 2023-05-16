@@ -1,27 +1,59 @@
-import React from "react";
+import React, { useState } from "react";
+import { CSVLink } from "react-csv";
 
 const OrdersScreen = () => {
+  const sampleOrders = [
+    {
+      invoice: 10012,
+      time: 1455,
+      name: "Prathamesh",
+      product: "Slippers",
+      amount: 2500,
+      method: "Cash",
+      status: "Pending",
+    },
+    {
+      invoice: 10023,
+      time: 1920,
+      name: "Karan",
+      product: "Shoes",
+      amount: 25,
+      method: "Card",
+      status: "Delivered",
+    },
+  ];
+
+  const [orders, setOrders] = useState(true);
+  const [allOrders, setAllOrders] = useState(sampleOrders);
+
+  const headers = [
+    { label: "Invoice No.", key: "invoice" },
+    { label: "Order Time", key: "time" },
+    { label: "Customer Name", key: "name" },
+    { label: "Product", key: "product" },
+    { label: "Amount", key: "amount" },
+    { label: "Method", key: "method" },
+    { label: "Status", key: "status" },
+  ];
+
   return (
     <>
       <div>
-        <p className="font-bold mt-4 text-2xl">Manage Orders</p>
+        <p className="font-bold mt-4 text-2xl px-6">Orders</p>
       </div>
-      <div class="p-4">
+      <div className="p-6 bg-primary m-6 rounded-md">
         <form>
-          <div class="grid gap-4 lg:gap-6 xl:gap-6 lg:grid-cols-3 xl:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 py-2">
+          <div className="grid gap-4 lg:gap-6 xl:gap-6 lg:grid-cols-3 xl:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 py-2">
             <div>
               <input
-                class="block w-full px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 border h-12 text-sm focus:outline-none block w-full bg-gray-100 border-transparent"
+                className="block w-full px-3 py-1 text-sm focus:outline-none leading-5 rounded-md focus:border-gray-200 border-gray-200 focus:ring-green-300 bg-gray-700 border h-12 border-transparent"
                 type="search"
                 name="search"
                 placeholder="Search by Customer Name"
               />
             </div>
             <div>
-              <select
-                class="block w-full px-2 py-1 text-sm dark:text-gray-300 focus:outline-none rounded-md form-select focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:shadow-none focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 leading-5 border h-12 text-sm focus:outline-none block w-full bg-gray-100 border-transparent"
-                fdprocessedid="j2fnag"
-              >
+              <select className="block w-full px-2 py-1 text-sm dark:text-gray-300 focus:outline-none rounded-md form-select dark:border-gray-600 focus:shadow-none dark:focus:border-gray-500 dark:bg-gray-700 leading-5 border h-12 bg-gray-100 border-transparent">
                 <option value="Status" hidden="">
                   Status
                 </option>
@@ -32,55 +64,49 @@ const OrdersScreen = () => {
               </select>
             </div>
             <div>
-              <select
-                class="block w-full px-2 py-1 text-sm dark:text-gray-300 focus:outline-none rounded-md form-select focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:shadow-none focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 leading-5 border h-12 text-sm focus:outline-none block w-full bg-gray-100 border-transparent"
-                fdprocessedid="k3d96r"
-              >
+              <select className="block w-full px-3 py-1 text-sm focus:outline-none leading-5 rounded-md focus:border-gray-200 border-gray-200 focus:ring-green-300 bg-gray-700 border h-12 border-transparent">
                 <option value="Order limits" hidden="">
                   Order limits
                 </option>
-                <option value="5">Last 5 days orders</option>
-                <option value="7">Last 7 days orders</option>
+                <option value="10">Last 10 days orders</option>
                 <option value="15">Last 15 days orders</option>
                 <option value="30">Last 30 days orders</option>
               </select>
             </div>
           </div>
-          <div class="grid gap-4 lg:gap-6 xl:gap-6 lg:grid-cols-3 xl:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 py-2">
+          <div className="grid gap-4 lg:gap-6 xl:gap-6 lg:grid-cols-3 xl:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 py-2">
             <div>
-              <label class="block text-sm text-left">
-                Start Date
-              </label>
+              <label className="block text-sm text-left">Start Date</label>
               <input
-                class="block w-full px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 border h-12 text-sm focus:outline-none block w-full bg-gray-100 border-transparent"
+                className="block w-full px-3 py-1 text-sm focus:outline-none leading-5 rounded-md focus:border-gray-200 border-gray-200 focus:ring-green-300 bg-gray-700 border h-12 border-transparent"
                 type="date"
                 name="startDate"
               />
             </div>
             <div>
-              <label class="block text-sm text-left">
-                End Date
-              </label>
+              <label className="block text-sm text-left">End Date</label>
               <input
-                class="block w-full px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 border h-12 text-sm focus:outline-none block w-full bg-gray-100 border-transparent"
+                className="block w-full px-3 py-1 text-sm focus:outline-none leading-5 rounded-md focus:border-gray-200 border-gray-200 focus:ring-green-300 bg-gray-700 border h-12 border-transparent"
                 type="date"
                 name="startDate"
               />
             </div>
             <div>
               <label
-                class="block text-sm text-gray-700 dark:text-gray-400"
+                className="block text-sm text-gray-700 dark:text-gray-400"
                 style={{ visibility: "hidden" }}
               >
                 Download
               </label>
-              <button
-                type="button"
-                class="false flex items-center justify-center text-sm leading-5 h-12 w-full text-center transition-colors duration-150 font-medium focus:outline-none px-6 py-2 rounded-md text-white bg-green-500 border border-transparent active:bg-green-600 hover:bg-green-600 focus:ring focus:ring-purple-300"
-                fdprocessedid="c2pr77"
+              <CSVLink
+                target="_blank"
+                filename={"TechSouq-All Orders.csv"}
+                data={sampleOrders}
+                headers={headers}
+                className="false flex items-center justify-center text-sm leading-5 h-12 w-full text-center transition-colors duration-150 font-medium focus:outline-none px-6 py-2 rounded-md text-white bg-green-500 border border-transparent active:bg-green-600 hover:bg-green-600 focus:ring focus:ring-purple-300"
               >
                 Download All Orders
-                <span class="ml-2 text-base">
+                <span className="ml-2 text-base">
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
@@ -99,10 +125,70 @@ const OrdersScreen = () => {
                     ></path>
                   </svg>
                 </span>
-              </button>
+              </CSVLink>
             </div>
           </div>
         </form>
+      </div>
+
+      {/* List of all orders in table format */}
+      {/* Fetch orders then show them here */}
+
+      <div className="m-6">
+        {orders ? (
+          <div className="w-full overflow-hidden border border-gray-700 rounded-lg ring-1 ring-black ring-opacity-5 mb-8 bg-gray-900 overflow-x-auto">
+            <table className="w-full whitespace-nowrap">
+              <thead className="text-xs font-semibold tracking-wide text-left uppercase border-b border-gray-700 text-gray-400 bg-gray-800">
+                <tr>
+                  <td className="px-4 py-3">Invoice No.</td>
+                  <td className="px-4 py-3">Order Time</td>
+                  <td className="px-4 py-3">Customer Name</td>
+                  <td className="px-4 py-3">Product</td>
+                  <td className="px-4 py-3">Amount</td>
+                  <td className="px-4 py-3">Method</td>
+                  <td className="px-4 py-3">Status</td>
+                  <td className="px-4 py-3">Action</td>
+                </tr>
+              </thead>
+              <tbody>
+                {allOrders?.map(
+                  ({
+                    invoice,
+                    time,
+                    name,
+                    product,
+                    amount,
+                    method,
+                    status,
+                  }) => (
+                    <tr key={invoice}>
+                      <td className="px-4 py-3">{invoice}</td>
+                      <td className="px-4 py-3">{time}</td>
+                      <td className="px-4 py-3">{name}</td>
+                      <td className="px-4 py-3">{product}</td>
+                      <td className="px-4 py-3">{amount}</td>
+                      <td className="px-4 py-3">{method}</td>
+                      <td className="px-4 py-3">{status}</td>
+                      <td className="px-4 py-3">
+                        <select className="block w-full text-sm text-gray-300 focus:outline-none rounded-md form-select dark:border-gray-600 focus:shadow-none focus:border-gray-500 dark:bg-gray-700 leading-5 border h-6 bg-gray-100 border-transparent">
+                          <option value="Status" hidden="">
+                            Status
+                          </option>
+                          <option value="Delivered">Delivered</option>
+                          <option value="Pending">Pending</option>
+                          <option value="Processing">Processing</option>
+                          <option value="Cancel">Cancel</option>
+                        </select>
+                      </td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div>No orders yet</div>
+        )}
       </div>
     </>
   );
