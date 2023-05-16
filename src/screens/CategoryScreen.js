@@ -6,7 +6,7 @@ const CategoryScreen = () => {
 
   return (
     <>
-      <div class='p-4 relative z-0'>
+      <div class='p-4 relative z-20'>
       <p className='font-semibold py-3 text-lg px-2'>Category</p>
         <div className='bg-gray-800 px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 '>
 
@@ -156,7 +156,7 @@ const CategoryScreen = () => {
 
         {addCat && (
           <>
-            <div className="absolute w-full h-screen -top-16 left-0 bg-black/30"></div>
+            <div className="absolute w-full h-screen -top-16 left-0 bg-black/30 "></div>
 
             <div className="absolute right-0 -top-16 w-full lg:w-1/2 xl:w-1/2 bg-white transform -translate-x-0 transition duration-300 ease-in-out">
               <AddCategoryScreen setShow={setAddCat} show={addCat} />
