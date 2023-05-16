@@ -1,8 +1,105 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
-import '../styles/toggleSwitch.css'
+import '../styles/toggleSwitch.css';
+import {
+  createCategory,
+  getCategories,
+  login,
+  getUserData,
+  addCategoryImage,
+} from '../actions';
 
 const AddCategoryScreen = ({ setShow, show }) => {
+  const [categoryData, setcategoryData] = useState({
+    name: '',
+    desc: '',
+    image: '',
+    parent: '',
+    published: false,
+  });
+
+  const [files, setFiles] = useState();
+  const [thumbnail, setThumbnail] = useState('');
+
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    getUserData()
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((e) => {
+        console.log(e.message);
+      });
+  }, []);
+
+  /* useEffect(() => {
+    loginHandler();
+  }, []); */
+
+  const handleDrop = async (event) => {
+    event.preventDefault();
+    const { files } = event.dataTransfer;
+    if (files.length > 0) {
+      setFiles(files[0]);
+      const reader = new FileReader();
+      if(files[0] && files[0].type.match('image.*')){
+
+      
+      reader.onload = (event) => {
+        setThumbnail(event.target.result);
+      };
+      reader.readAsDataURL(event.dataTransfer.files[0]);
+    }
+    }
+
+    console.log('files', files[0]);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  const handleFileSelect = (e) => {
+    e.preventDefault();
+    const selectedFile = e.target.files[0];
+    setFiles(selectedFile);
+
+    const reader = new FileReader();
+    if(selectedFile && selectedFile.type.match('image.*')){
+      reader.onload = (event) => {
+      setThumbnail(event.target.result);
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  }
+  };
+
+  /*  const loginHandler = async () => {
+    await login('karandua2002@gmail.com', 'newaccount@100')
+      .then(() => console.log('logged in'))
+      .catch((err) => console.log(err));
+  }; */
+
+  const handleAddCategory = async () => {
+    try {
+      var urlData = await addCategoryImage(files);
+
+      var urlImage = `http://64.227.164.212/v1/storage/buckets/${urlData.bucketId}/files/${urlData.$id}/view?project=646339a61beac87efd09`;
+      console.log('image', urlImage);
+      setcategoryData({ ...categoryData, image: urlImage });
+      console.log('data', categoryData);
+      await createCategory({"name":categoryData.name, "desc":categoryData.desc, "image":urlImage, "parent":categoryData.parent, "published": categoryData.published}).then(() => {
+        console.log('category created');
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDivClick = () => {
+    fileInputRef.current.click();
+  };
+
   return (
     <div className='h-screen bg-gray-800 flex z-40 shadow-inner  pt-16 flex-col w-full'>
       <div className='flex justify-between items-center py-6 px-3 bg-gray-900'>
@@ -16,7 +113,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
           className='rounded-full shadow-xl p-2 w-[30px] h-[30px]  bg-white text-red-500 text-sm flex justify-center items-center'
           onClick={() => setShow(!show)}
         >
-          <CloseIcon style={{width:"20px", height:"20px"}} />
+          <CloseIcon style={{ width: '20px', height: '20px' }} />
         </button>
       </div>
 
@@ -27,7 +124,10 @@ const AddCategoryScreen = ({ setShow, show }) => {
         >
           Cancel
         </button>
-        <button className='bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold '>
+        <button
+          className='bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold '
+          onClick={() => handleAddCategory()}
+        >
           Add Category
         </button>
       </div>
@@ -37,10 +137,16 @@ const AddCategoryScreen = ({ setShow, show }) => {
           {/* Title */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-3'>
-              <p className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0">Name</p>
+              <p className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0'>Name</p>
             </div>
             <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-2'>
               <input
+                onChange={(e) =>
+                  setcategoryData({
+                    ...categoryData,
+                    name: e.target.value,
+                  })
+                }
                 type='text'
                 name=''
                 id=''
@@ -53,13 +159,21 @@ const AddCategoryScreen = ({ setShow, show }) => {
           {/* Description */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-3'>
-              <p className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0">Description</p>
+              <p className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0'>
+                Description
+              </p>
             </div>
             <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-2'>
               <textarea
+                onChange={(e) =>
+                  setcategoryData({
+                    ...categoryData,
+                    desc: e.target.value,
+                  })
+                }
                 type='text'
                 name='description'
-                rows="4"
+                rows='4'
                 spellCheck={false}
                 id=''
                 placeholder='Category Description'
@@ -71,10 +185,18 @@ const AddCategoryScreen = ({ setShow, show }) => {
           {/* Select Parent Category */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-3'>
-              <p className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0">Parent Category</p>
+              <p className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0'>
+                Parent Category
+              </p>
             </div>
             <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-2'>
               <select
+                onChange={(e) =>
+                  setcategoryData({
+                    ...categoryData,
+                    parent: e.target.value,
+                  })
+                }
                 name=''
                 id=''
                 placeholder='Select Parent'
@@ -83,10 +205,10 @@ const AddCategoryScreen = ({ setShow, show }) => {
                 <option value='' disabled selected hidden>
                   Select Parent
                 </option>
-                <option value='option1'>Set as Parent Category</option>
+                <option value='isParent'>Set as Parent Category</option>
+                <option value='option1'>Option 1</option>
                 <option value='option2'>Option 2</option>
                 <option value='option3'>Option 3</option>
-                <option value='option4'>Option 4</option>
               </select>
             </div>
           </div>
@@ -94,7 +216,9 @@ const AddCategoryScreen = ({ setShow, show }) => {
           {/* Image */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-3'>
-              <p className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0">Category Image</p>
+              <p className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0'>
+                Category Image
+              </p>
             </div>
             <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-2'>
               <div className='w-full text-center'>
@@ -102,12 +226,18 @@ const AddCategoryScreen = ({ setShow, show }) => {
                   className='border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md cursor-pointer px-6 pt-5 pb-6'
                   role='button'
                   tabindex='0'
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                  onClick={handleDivClick}
                 >
                   <input
+                    onChange={handleFileSelect}
                     accept='image/*'
                     multiple=''
                     type='file'
                     autocomplete='off'
+                    ref={fileInputRef}
+                    id='fileInput'
                     tabindex='-1'
                     style={{ display: 'none' }}
                   />
@@ -130,11 +260,56 @@ const AddCategoryScreen = ({ setShow, show }) => {
                       <polyline points='16 16 12 12 8 16'></polyline>
                     </svg>
                   </span>
-                  <p className='text-sm mt-2'>Drag your images here</p>
+                  <p className='text-sm mt-2'>Drag your image here</p>
                   <em className='text-xs text-gray-400'>
-                    (Only *.jpeg, *.webp and *.png images will be accepted)
+                    (Only *.jpeg, *.webp and *.png image will be accepted)
                   </em>
                 </div>
+                {files ? (
+                  <div className='flex w-full justify-center flex-col items-center mt-3'>
+                    {/* <p>Selected file: {files.name}</p>
+                    <p>File size: {files.size} bytes</p> */}
+                    <img
+                      src={thumbnail}
+                      alt='Thumbnail'
+                      className='w-3/4 object-contain rounded-md'
+                    />
+                  </div>
+                ) : (
+                  ''
+                )}
+                {/*  <div
+      style={{
+        width: '300px',
+        height: '200px',
+        border: '1px dashed gray',
+        borderRadius: '4px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+      onClick={handleDivClick}
+    >
+      {files ? (
+        <div>
+          <p>Selected file: {files.name}</p>
+          <p>File size: {files.size} bytes</p>
+        </div>
+      ) : (
+        <label htmlFor="fileInput">
+          <input
+          ref={fileInputRef}
+            id="fileInput"
+            type="file"
+            style={{ display: 'none' }}
+            onChange={handleFileSelect}
+          />
+          <p>Drag and drop file here or click to select a file</p>
+        </label>
+      )}
+    </div> */}
                 <div className='text-green-500'></div>
                 <aside className='flex flex-row flex-wrap mt-4'></aside>
               </div>
@@ -144,27 +319,26 @@ const AddCategoryScreen = ({ setShow, show }) => {
           {/* Published */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-3'>
-              <p className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 ">Published</p>
+              <p className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 '>
+                Published
+              </p>
             </div>
-            
-            <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-2 relative'>
-          
-              <label className='flex items-center relative w-max cursor-pointer select-none '  >
-                
-                <input
-                  type='checkbox'
-                  className='appearance-none transition-colors cursor-pointer w-14 h-7 rounded-full focus:outline-none focus:ring-[0.5px] focus:ring-offset-0  focus:ring-black bg-red-500'
-                />
-                <span className='absolute font-medium text-xs  right-1 text-white'>
-                  {' '}
-                  No{' '}
-                </span>
-                <span className='absolute font-medium text-xs  right-8 text-white'>
-                  {' '}
-                  Yes{' '}
-                </span>
-                <span className='w-7 h-7 right-7 absolute rounded-full transform transition-transform bg-gray-200' />
-              </label>
+
+            <div
+              className='col-span-1 lg:col-span-3 xl:col-span-3 px-2 relative cursor-pointer'
+              onClick={() =>
+                setcategoryData({
+                  ...categoryData,
+                  published: !categoryData.published,
+                })
+              }
+            >
+              <input
+                type='checkbox'
+                checked={categoryData.published}
+                class='sr-only peer'
+              />
+              <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[13px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
             </div>
           </div>
         </form>
