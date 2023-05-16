@@ -6,8 +6,8 @@ const CategoryScreen = () => {
 
   return (
     <>
-      <div class='p-4 relative z-20'>
-      <p className='font-semibold py-3 text-lg px-2'>Category</p>
+      <div class='pt-4 px-6 relative z-20'>
+      <p className='font-bold pb-3 pt-4  text-2xl '>Category</p>
         <div className='bg-gray-800 px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 '>
 
         

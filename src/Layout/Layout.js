@@ -21,7 +21,7 @@ const Layout = ({ screen }) => {
         <div className='container flex flex-wrap items-center justify-between'>
           <div className='w-full relative flex justify-start lg:w-auto lg:static lg:block lg:justify-start'>
             <button
-              className='text-black cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none'
+              className='text-black cursor-pointer text-xl leading-none pr-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none'
               type='button'
               onClick={() => setNavbarOpen(!navbarOpen)}
             >
