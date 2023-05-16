@@ -43,7 +43,7 @@ const Layout = ({ screen }) => {
                 alt=""
                 className="w-[25px] h-[25px] object-contain mr-[4px]"
               />
-              <span>KampTech</span>
+              <span>TechSouqDubai</span>
             </a>
           </div>
         </div>
@@ -51,7 +51,7 @@ const Layout = ({ screen }) => {
       <div
         className={
           navbarOpen
-            ? "inset-y-0 left-0 mt-16 flex w-full bg-black bg-opacity-20 absolute lg:hidden xl:hidden"
+            ? "inset-y-0 left-0 mt-16 flex z-10 w-full bg-black bg-opacity-20 absolute lg:hidden xl: cursor-pointer"
             : "hidden"
         }
         onClick={() => setNavbarOpen(!navbarOpen)}
@@ -153,7 +153,7 @@ const Layout = ({ screen }) => {
         )}
       </div>
 
-      <div className="absolute inset-y-0 left-0  top-0  w-2/3 md:w-1/3 pt-16 flex-shrink-0 lg:hidden xl:hidden ">
+      <div className={"absolute inset-y-0 left-0 z-20  top-0  w-2/3 md:w-1/3 pt-16 flex-shrink-0 lg:hidden xl:hidden " + (navbarOpen ? "" : "pointer-events-none")} >
         <div
           className={
             "flex flex-grow items-start h-full bg-white    duration-300 ease-in-out z-50" +

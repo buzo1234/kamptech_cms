@@ -1,0 +1,5 @@
+const client = new Client();
+
+client
+    .setEndpoint('http://64.227.164.212/v1')
+    .setProject('646339a61beac87efd09');
