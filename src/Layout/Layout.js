@@ -154,11 +154,7 @@ const Layout = ({ screen }) => {
         )}
       </div>
 
-<<<<<<< HEAD
       <div className={"absolute inset-y-0 left-0 z-20  top-0  w-2/3 md:w-1/3 pt-16 flex-shrink-0 lg:hidden xl:hidden " + (navbarOpen ? "" : "pointer-events-none")} >
-=======
-      <div className="absolute inset-y-0 left-0  top-0  w-2/3 md:w-1/3 pt-16 flex-shrink-0 lg:hidden xl:hidden">
->>>>>>> 2c201178315caff56de3816ab5866a6eab92a5db
         <div
           className={
             "flex flex-grow items-start h-full bg-primary duration-300 ease-in-out z-50" +
