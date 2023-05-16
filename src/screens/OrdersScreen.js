@@ -25,6 +25,8 @@ const OrdersScreen = () => {
 
   const [orders, setOrders] = useState(true);
   const [allOrders, setAllOrders] = useState(sampleOrders);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filtered, setFiltered] = useState([]);
 
   const headers = [
     { label: "Invoice No.", key: "invoice" },
@@ -35,6 +37,16 @@ const OrdersScreen = () => {
     { label: "Method", key: "method" },
     { label: "Status", key: "status" },
   ];
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setSearchQuery(e.target.value);
+
+    const filteredResults = sampleOrders.filter((item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFiltered(filteredResults);
+  };
 
   return (
     <>
@@ -50,6 +62,8 @@ const OrdersScreen = () => {
                 type="search"
                 name="search"
                 placeholder="Search by Customer Name"
+                value={searchQuery}
+                onChange={handleSearch}
               />
             </div>
             <div>
@@ -151,38 +165,71 @@ const OrdersScreen = () => {
                 </tr>
               </thead>
               <tbody>
-                {allOrders?.map(
-                  ({
-                    invoice,
-                    time,
-                    name,
-                    product,
-                    amount,
-                    method,
-                    status,
-                  }) => (
-                    <tr key={invoice}>
-                      <td className="px-4 py-3">{invoice}</td>
-                      <td className="px-4 py-3">{time}</td>
-                      <td className="px-4 py-3">{name}</td>
-                      <td className="px-4 py-3">{product}</td>
-                      <td className="px-4 py-3">{amount}</td>
-                      <td className="px-4 py-3">{method}</td>
-                      <td className="px-4 py-3">{status}</td>
-                      <td className="px-4 py-3">
-                        <select className="block w-full text-sm text-gray-300 focus:outline-none rounded-md form-select dark:border-gray-600 focus:shadow-none focus:border-gray-500 dark:bg-gray-700 leading-5 border h-6 bg-gray-100 border-transparent">
-                          <option value="Status" hidden="">
-                            Status
-                          </option>
-                          <option value="Delivered">Delivered</option>
-                          <option value="Pending">Pending</option>
-                          <option value="Processing">Processing</option>
-                          <option value="Cancel">Cancel</option>
-                        </select>
-                      </td>
-                    </tr>
-                  )
-                )}
+                {searchQuery
+                  ? filtered.map(
+                      ({
+                        invoice,
+                        time,
+                        name,
+                        product,
+                        amount,
+                        method,
+                        status,
+                      }) => (
+                        <tr key={invoice}>
+                          <td className="px-4 py-3">{invoice}</td>
+                          <td className="px-4 py-3">{time}</td>
+                          <td className="px-4 py-3">{name}</td>
+                          <td className="px-4 py-3">{product}</td>
+                          <td className="px-4 py-3">{amount}</td>
+                          <td className="px-4 py-3">{method}</td>
+                          <td className="px-4 py-3">{status}</td>
+                          <td className="px-4 py-3">
+                            <select className="block w-full text-sm text-gray-300 focus:outline-none rounded-md form-select dark:border-gray-600 focus:shadow-none focus:border-gray-500 dark:bg-gray-700 leading-5 border h-6 bg-gray-100 border-transparent">
+                              <option value="Status" hidden="">
+                                Status
+                              </option>
+                              <option value="Delivered">Delivered</option>
+                              <option value="Pending">Pending</option>
+                              <option value="Processing">Processing</option>
+                              <option value="Cancel">Cancel</option>
+                            </select>
+                          </td>
+                        </tr>
+                      )
+                    )
+                  : allOrders?.map(
+                      ({
+                        invoice,
+                        time,
+                        name,
+                        product,
+                        amount,
+                        method,
+                        status,
+                      }) => (
+                        <tr key={invoice}>
+                          <td className="px-4 py-3">{invoice}</td>
+                          <td className="px-4 py-3">{time}</td>
+                          <td className="px-4 py-3">{name}</td>
+                          <td className="px-4 py-3">{product}</td>
+                          <td className="px-4 py-3">{amount}</td>
+                          <td className="px-4 py-3">{method}</td>
+                          <td className="px-4 py-3">{status}</td>
+                          <td className="px-4 py-3">
+                            <select className="block w-full text-sm text-gray-300 focus:outline-none rounded-md form-select dark:border-gray-600 focus:shadow-none focus:border-gray-500 dark:bg-gray-700 leading-5 border h-6 bg-gray-100 border-transparent">
+                              <option value="Status" hidden="">
+                                Status
+                              </option>
+                              <option value="Delivered">Delivered</option>
+                              <option value="Pending">Pending</option>
+                              <option value="Processing">Processing</option>
+                              <option value="Cancel">Cancel</option>
+                            </select>
+                          </td>
+                        </tr>
+                      )
+                    )}
               </tbody>
             </table>
           </div>
