@@ -6,46 +6,42 @@ const CategoryScreen = () => {
 
   return (
     <>
-      <div class='pt-4 px-6 relative z-20'>
-      <p className='font-bold pb-3 pt-4  text-2xl '>Category</p>
-        <div className='bg-gray-800 px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 '>
-
-        
-       
-        <form class='py-6 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6  xl:flex '>
-          <div class='flex justify-start xl:w-1/2  md:w-full '>
-            <div class=' lg:flex md:flex flex-grow-0'>
-              <div class='flex'>
-                <div class='lg:flex-1 md:flex-1 mr-3 sm:flex-none'>
-                  <button
-                    class='border flex justify-center items-center border-white hover:border-green-400 hover:text-green-400  dark:text-white cursor-pointer h-10 w-20 rounded-md focus:outline-none'
-                    fdprocessedid='k2ha3j'
-                  >
-                    <svg
-                      stroke='currentColor'
-                      fill='none'
-                      stroke-width='2'
-                      viewBox='0 0 24 24'
-                      stroke-linecap='round'
-                      stroke-linejoin='round'
-                      class='mr-2'
-                      height='1em'
-                      width='1em'
-                      xmlns='http://www.w3.org/2000/svg'
+      <div class="pt-4 px-6 relative z-20">
+        <p className="font-bold pb-3 pt-4  text-2xl ">Category</p>
+        <div className="bg-gray-800 px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 ">
+          <form class="py-6 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6  xl:flex ">
+            <div class="flex justify-start xl:w-1/2  md:w-full ">
+              <div class=" lg:flex md:flex flex-grow-0">
+                <div class="flex">
+                  <div class="lg:flex-1 md:flex-1 mr-3 sm:flex-none">
+                    <button
+                      class="border flex justify-center items-center border-white hover:border-green-400 hover:text-green-400  dark:text-white cursor-pointer h-10 w-20 rounded-md focus:outline-none"
+                      fdprocessedid="k2ha3j"
                     >
-                      <path d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'></path>
-                      <polyline points='17 8 12 3 7 8'></polyline>
-                      <line x1='12' y1='3' x2='12' y2='15'></line>
-                    </svg>
-                    <span class='text-xs '>Export</span>
-                  </button>
-                </div>
-                <div class='lg:flex-1 md:flex-1 mr-3  sm:flex-none'>
-                  <button
-                    class='border flex justify-center items-center h-10 w-20 hover:text-yellow-500  border-white dark:text-white cursor-pointer  py-2 hover:border-yellow-500 rounded-md focus:outline-none'
-                    fdprocessedid='b9mgoj'
-                  >
-                   
+                      <svg
+                        stroke="currentColor"
+                        fill="none"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="mr-2"
+                        height="1em"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                      </svg>
+                      <span class="text-xs ">Export</span>
+                    </button>
+                  </div>
+                  <div class="lg:flex-1 md:flex-1 mr-3  sm:flex-none">
+                    <button
+                      class="border flex justify-center items-center h-10 w-20 hover:text-yellow-500  border-white dark:text-white cursor-pointer  py-2 hover:border-yellow-500 rounded-md focus:outline-none"
+                      fdprocessedid="b9mgoj"
+                    >
                       <svg
                         stroke="currentColor"
                         fill="none"
