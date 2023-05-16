@@ -140,7 +140,7 @@ const Layout = ({ screen }) => {
       </div>
 
       {/* Mobile Page View */}
-      <div className="lg:hidden xl:hidden text-white">
+      <div className="lg:hidden xl:hidden text-white bg-secondary">
         {screen === "dashboard" ? (
           <DashBoardScreen />
         ) : screen === "products" ? (
