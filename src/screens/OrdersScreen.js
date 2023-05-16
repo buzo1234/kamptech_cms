@@ -39,7 +39,7 @@ const OrdersScreen = () => {
   return (
     <>
       <div>
-        <p className="font-bold mt-4 text-2xl px-6">Orders</p>
+        <p className="font-bold lg:mt-4 text-2xl px-6 pt-4">Orders</p>
       </div>
       <div className="p-6 bg-primary m-6 rounded-md">
         <form>
