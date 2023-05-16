@@ -45,7 +45,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
                 name=''
                 id=''
                 placeholder='Category title'
-                className='block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none border-transparent '
+                className='block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none '
               />
             </div>
           </div>
@@ -63,7 +63,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
                 spellCheck={false}
                 id=''
                 placeholder='Category Description'
-                className='block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none border-transparent'
+                className='block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none '
               />
             </div>
           </div>
@@ -78,7 +78,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
                 name=''
                 id=''
                 placeholder='Select Parent'
-                className='block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none border-transparent'
+                className='block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none '
               >
                 <option value='' disabled selected hidden>
                   Select Parent
