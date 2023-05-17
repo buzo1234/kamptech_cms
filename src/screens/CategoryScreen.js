@@ -93,7 +93,7 @@ const CategoryScreen = () => {
             <div class="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start flex-grow-0">
               <div class="w-full md:w-40 lg:w-40 xl:w-40 mr-3 mb-3 lg:mb-0">
                 <button
-                  class="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 rounded-lg text-sm text-white bg-green-500 border border-transparent opacity-50 cursor-not-allowed w-full rounded-md h-12 btn-gray text-gray-600 sm:mb-3"
+                  class="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 rounded-lg text-sm text-white bg-green-500 border border-transparent opacity-50 w-full h-12 btn-gray sm:mb-3"
                   disabled=""
                   type="button"
                 >
@@ -118,7 +118,7 @@ const CategoryScreen = () => {
               </div>
               <div class="w-full md:w-32 lg:w-32 xl:w-32 mr-3 mb-3 lg:mb-0">
                 <button
-                  class="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 rounded-lg text-sm text-white bg-green-500 border border-transparent opacity-50 cursor-not-allowed w-full rounded-md h-12 bg-red-300 disabled btn-red"
+                  class="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 text-sm text-white border border-transparent opacity-50 w-full rounded-md h-12 bg-red-300 disabled btn-red"
                   disabled=""
                   type="button"
                 >
@@ -145,7 +145,7 @@ const CategoryScreen = () => {
               </div>
               <div className="w-full md:w-48 lg:w-48 xl:w-48">
                 <button
-                  className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 rounded-lg text-sm text-white bg-green-700 border border-transparent active:bg-green-600 focus:ring focus:ring-purple-300 w-full rounded-md h-12"
+                  className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 text-sm text-white bg-green-700 border border-transparent active:bg-green-600 focus:ring focus:ring-purple-300 w-full rounded-md h-12"
                   type="button"
                   fdprocessedid="3w9l4i"
                   onClick={() => {
