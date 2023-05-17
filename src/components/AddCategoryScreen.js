@@ -98,7 +98,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
     try {
       var urlData = await addCategoryImage(files);
 
-      var urlImage = `http://64.227.164.212/v1/storage/buckets/${urlData.bucketId}/files/${urlData.$id}/view?project=646339a61beac87efd09`;
+      var urlImage = `https://appwrite.techsouqdubai.com/v1/storage/buckets/${urlData.bucketId}/files/${urlData.$id}/view?project=646339a61beac87efd09`;
       console.log('image', urlImage);
       setcategoryData({ ...categoryData, image: urlImage });
       console.log('data', categoryData);
