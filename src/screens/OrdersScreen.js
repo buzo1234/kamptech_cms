@@ -1,32 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CSVLink } from "react-csv";
+import { getOrders } from "../actions";
 
 const OrdersScreen = () => {
-  const sampleOrders = [
-    {
-      invoice: 10012,
-      time: 1455,
-      name: "Prathamesh",
-      product: "Slippers",
-      amount: 2500,
-      method: "Cash",
-      status: "Pending",
-    },
-    {
-      invoice: 10023,
-      time: 1920,
-      name: "Karan",
-      product: "Shoes",
-      amount: 25,
-      method: "Card",
-      status: "Delivered",
-    },
-  ];
-
-  const [orders, setOrders] = useState(true);
-  const [allOrders, setAllOrders] = useState(sampleOrders);
   const [searchQuery, setSearchQuery] = useState("");
   const [filtered, setFiltered] = useState([]);
+
+  const [allOrders, setAllOrders] = useState([]);
 
   const headers = [
     { label: "Invoice No.", key: "invoice" },
@@ -41,19 +21,29 @@ const OrdersScreen = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     setSearchQuery(e.target.value);
-
+    const sampleOrders = [];
     const filteredResults = sampleOrders.filter((item) =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFiltered(filteredResults);
   };
 
+  useEffect(() => {
+    getLatestOrders();
+  }, [allOrders]);
+
+  const getLatestOrders = async () => {
+    await getOrders()
+      .then((response) => setAllOrders(response.documents))
+      .catch((e) => console.log(e.message));
+  };
+
   return (
     <>
       <div>
-        <p className="font-bold lg:mt-4 text-2xl px-6 pt-4">Orders</p>
+        <p className="font-bold text-2xl">Orders</p>
       </div>
-      <div className="p-6 bg-primary m-6 rounded-md">
+      <div className="p-6 bg-primary rounded-lg my-4">
         <form>
           <div className="grid gap-4 lg:gap-6 xl:gap-6 lg:grid-cols-3 xl:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 py-2">
             <div>
@@ -115,7 +105,7 @@ const OrdersScreen = () => {
               <CSVLink
                 target="_blank"
                 filename={"TechSouq-All Orders.csv"}
-                data={sampleOrders}
+                data={allOrders}
                 headers={headers}
                 className="false flex items-center justify-center text-sm leading-5 h-12 w-full text-center transition-colors duration-150 font-medium focus:outline-none px-6 py-2 rounded-md text-white bg-green-500 border border-transparent active:bg-green-600 hover:bg-green-600 focus:ring focus:ring-purple-300"
               >
@@ -147,9 +137,17 @@ const OrdersScreen = () => {
 
       {/* List of all orders in table format */}
       {/* Fetch orders then show them here */}
+      <div className="mt-6 mb-4">
+        <button
+          className="px-4 py-2 rounded-lg text-gray-300 bg-primary border-0 border-gray-300 border-solid font-bold"
+          onClick={getLatestOrders}
+        >
+          Refresh Orders
+        </button>
+      </div>
 
-      <div className="m-6">
-        {orders ? (
+      <div className="">
+        {allOrders ? (
           <div className="w-full overflow-hidden border border-gray-700 rounded-lg ring-1 ring-black ring-opacity-5 mb-8 bg-gray-900 overflow-x-auto">
             <table className="w-full whitespace-nowrap">
               <thead className="text-xs font-semibold tracking-wide text-left uppercase border-b border-gray-700 text-gray-400 bg-gray-800">
