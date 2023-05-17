@@ -16,9 +16,9 @@ const ProductsScreen = () => {
   return (
     <>
       <div>
-        <p className="font-bold pt-4 text-2xl text-center">Manage Products</p>
+        <p className="font-bold">Products</p>
       </div>
-      <div className="p-4">
+      <div className="px-4">
         <form className="py-3 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6  xl:flex">
           <div className="flex justify-start xl:w-1/2  md:w-full">
             <div className=" lg:flex md:flex flex-grow-0">
