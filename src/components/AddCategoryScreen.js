@@ -7,6 +7,7 @@ import {
   login,
   getUserData,
   addCategoryImage,
+  getParentCategories
 } from '../actions';
 
 const AddCategoryScreen = ({ setShow, show }) => {
@@ -21,9 +22,12 @@ const AddCategoryScreen = ({ setShow, show }) => {
   const [files, setFiles] = useState();
   const [thumbnail, setThumbnail] = useState('');
 
+  const [parentList, setParentCat] = useState([]);
+
   const fileInputRef = useRef(null);
 
   useEffect(() => {
+    
     getUserData()
       .then((response) => {
         console.log(response);
@@ -31,11 +35,23 @@ const AddCategoryScreen = ({ setShow, show }) => {
       .catch((e) => {
         console.log(e.message);
       });
+    getParentList();
   }, []);
 
   /* useEffect(() => {
     loginHandler();
   }, []); */
+
+  const getParentList = async () => {
+    const parentCategories = await getParentCategories()
+      .then((response) => {
+        console.log(response);
+        setParentCat(response.documents);
+      })
+      .catch((e) => console.log(e.message));
+
+    
+  };
 
   const handleDrop = async (event) => {
     event.preventDefault();
@@ -43,14 +59,12 @@ const AddCategoryScreen = ({ setShow, show }) => {
     if (files.length > 0) {
       setFiles(files[0]);
       const reader = new FileReader();
-      if(files[0] && files[0].type.match('image.*')){
-
-      
-      reader.onload = (event) => {
-        setThumbnail(event.target.result);
-      };
-      reader.readAsDataURL(event.dataTransfer.files[0]);
-    }
+      if (files[0] && files[0].type.match('image.*')) {
+        reader.onload = (event) => {
+          setThumbnail(event.target.result);
+        };
+        reader.readAsDataURL(event.dataTransfer.files[0]);
+      }
     }
 
     console.log('files', files[0]);
@@ -66,12 +80,12 @@ const AddCategoryScreen = ({ setShow, show }) => {
     setFiles(selectedFile);
 
     const reader = new FileReader();
-    if(selectedFile && selectedFile.type.match('image.*')){
+    if (selectedFile && selectedFile.type.match('image.*')) {
       reader.onload = (event) => {
-      setThumbnail(event.target.result);
-    };
-    reader.readAsDataURL(e.target.files[0]);
-  }
+        setThumbnail(event.target.result);
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
   };
 
   /*  const loginHandler = async () => {
@@ -88,8 +102,15 @@ const AddCategoryScreen = ({ setShow, show }) => {
       console.log('image', urlImage);
       setcategoryData({ ...categoryData, image: urlImage });
       console.log('data', categoryData);
-      await createCategory({"name":categoryData.name, "desc":categoryData.desc, "image":urlImage, "parent":categoryData.parent, "published": categoryData.published}).then(() => {
+      await createCategory({
+        name: categoryData.name,
+        desc: categoryData.desc,
+        image: urlImage,
+        parent: categoryData.parent,
+        published: categoryData.published,
+      }).then(() => {
         console.log('category created');
+        setShow(false);
       });
     } catch (error) {
       console.log(error);
@@ -101,7 +122,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
   };
 
   return (
-    <div className='h-screen bg-gray-800 flex z-40 shadow-inner  pt-16 flex-col w-full'>
+    <div className='h-screen  bg-gray-800 flex z-40 shadow-inner  flex-col w-full'>
       <div className='flex justify-between items-center py-6 px-3 bg-gray-900'>
         <div className='flex flex-col mr-2 text-gray-300 '>
           <p className='font-semibold'>Add Category</p>
@@ -205,10 +226,16 @@ const AddCategoryScreen = ({ setShow, show }) => {
                 <option value='' disabled selected hidden>
                   Select Parent
                 </option>
+
                 <option value='isParent'>Set as Parent Category</option>
-                <option value='option1'>Option 1</option>
+                {parentList.map((val, index) => (
+                  <option value={`${val.$id}&&${val.name}`} key={index}>
+                    {val.name}
+                  </option>
+                ))}
+                {/*  <option value='option1'>Option 1</option>
                 <option value='option2'>Option 2</option>
-                <option value='option3'>Option 3</option>
+                <option value='option3'>Option 3</option> */}
               </select>
             </div>
           </div>
@@ -278,38 +305,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
                 ) : (
                   ''
                 )}
-                {/*  <div
-      style={{
-        width: '300px',
-        height: '200px',
-        border: '1px dashed gray',
-        borderRadius: '4px',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-      onClick={handleDivClick}
-    >
-      {files ? (
-        <div>
-          <p>Selected file: {files.name}</p>
-          <p>File size: {files.size} bytes</p>
-        </div>
-      ) : (
-        <label htmlFor="fileInput">
-          <input
-          ref={fileInputRef}
-            id="fileInput"
-            type="file"
-            style={{ display: 'none' }}
-            onChange={handleFileSelect}
-          />
-          <p>Drag and drop file here or click to select a file</p>
-        </label>
-      )}
-    </div> */}
+               
                 <div className='text-green-500'></div>
                 <aside className='flex flex-row flex-wrap mt-4'></aside>
               </div>

@@ -23,7 +23,13 @@ const Layout = ({ screen }) => {
             <button
               className='text-black cursor-pointer text-xl leading-none pr-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none'
               type='button'
-              onClick={() => setNavbarOpen(!navbarOpen)}
+              onClick={() => {
+                window.scrollTo({
+                  top: 0,
+                  behavior: 'smooth',
+                });
+                setNavbarOpen(!navbarOpen);
+              }}
             >
               <div className='w-[25px] flex flex-col'>
                 <div className='h-[3px] bg-white w-full'></div>
@@ -70,7 +76,7 @@ const Layout = ({ screen }) => {
               <li className='hover:text-white'>
                 <a
                   className='px-3 py-4 flex items-center text-xs font-bold leading-snug'
-                  href='/'  
+                  href='/'
                 >
                   <GridViewOutlinedIcon />
                   <span className='ml-2'>Dashboard</span>
@@ -156,14 +162,16 @@ const Layout = ({ screen }) => {
 
       <div
         className={
-          'absolute inset-y-0 left-0  top-0  w-2/3 md:w-1/3 pt-16 flex-shrink-0 lg:hidden xl:hidden' +
+          'absolute h-full left-0  top-0  w-2/3 md:w-1/3 pt-16 flex-shrink-0 lg:hidden xl:hidden' +
           (navbarOpen ? ' z-40 ' : ' pointer-events-none bg-transparent z-20')
         }
       >
         <div
           className={
             'flex flex-grow items-start h-full bg-primary duration-300 ease-in-out ' +
-            (navbarOpen ? ' flex translate-x-0' : ' flex -translate-x-full pointer-events-none')
+            (navbarOpen
+              ? ' flex translate-x-0'
+              : ' flex -translate-x-full pointer-events-none')
           }
           id='example-navbar-danger'
         >
