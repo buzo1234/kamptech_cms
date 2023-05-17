@@ -122,7 +122,7 @@ const Layout = ({ screen }) => {
           </div>
         </div>
 
-        <div className='col-span-5 bg-secondary overflow-auto h-full w-full flex flex-col text-white'>
+        <div className='col-span-5 bg-secondary overflow-auto h-full w-full flex flex-col text-white p-6'>
           {screen === 'dashboard' ? (
             <DashBoardScreen />
           ) : screen === 'products' ? (
@@ -146,7 +146,7 @@ const Layout = ({ screen }) => {
       </div>
 
       {/* Mobile Page View */}
-      <div className='lg:hidden xl:hidden text-white bg-secondary'>
+      <div className='lg:hidden xl:hidden text-white bg-secondary p-6'>
         {screen === 'dashboard' ? (
           <DashBoardScreen />
         ) : screen === 'products' ? (

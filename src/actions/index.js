@@ -1,5 +1,10 @@
-import { Account, Databases, ID, Query, Storage } from 'appwrite';
-import { client, collectionID, databaseID } from '../config';
+import { Account, Databases, ID, Query, Storage } from "appwrite";
+import {
+  client,
+  categoryCollectionID,
+  databaseID,
+  ordersCollectionID,
+} from "../config";
 
 const account = new Account(client);
 const storage = new Storage(client);
@@ -10,7 +15,7 @@ const createCategory = async (categoryData) => {
   try {
     return await database.createDocument(
       databaseID,
-      collectionID,
+      categoryCollectionID,
       ID.unique(),
       categoryData
     );
@@ -21,7 +26,7 @@ const createCategory = async (categoryData) => {
 
 const getCategories = async () => {
   try {
-    return await database.listDocuments(databaseID, collectionID);
+    return await database.listDocuments(databaseID, categoryCollectionID);
   } catch (e) {
     console.error(e.message);
   }
@@ -29,8 +34,8 @@ const getCategories = async () => {
 
 const getParentCategories = async () => {
   try {
-    return await database.listDocuments(databaseID, collectionID, [
-      Query.equal('parent', 'isParent'),
+    return await database.listDocuments(databaseID, categoryCollectionID, [
+      Query.equal("parent", "isParent"),
     ]);
   } catch (e) {
     console.log(e.message);
@@ -39,9 +44,11 @@ const getParentCategories = async () => {
 
 const getCategoryName = async (id) => {
   try {
-    const response = await database.listDocuments(databaseID, collectionID, [
-      Query.equal('$id', id),
-    ]);
+    const response = await database.listDocuments(
+      databaseID,
+      categoryCollectionID,
+      [Query.equal("$id", id)]
+    );
 
     return response.documents[0];
   } catch (e) {
@@ -67,7 +74,17 @@ const getUserData = async () => {
 
 const addCategoryImage = async (image) => {
   try {
-    return await storage.createFile('6463d825b38c9f1d947c', ID.unique(), image);
+    return await storage.createFile("6463d825b38c9f1d947c", ID.unique(), image);
+  } catch (e) {
+    console.error(e.message);
+  }
+};
+
+const getOrders = async () => {
+  try {
+    const orders = await database.listDocuments(databaseID, ordersCollectionID);
+    console.log(orders);
+    return orders;
   } catch (e) {
     console.error(e.message);
   }
@@ -81,4 +98,5 @@ export {
   addCategoryImage,
   getParentCategories,
   getCategoryName,
+  getOrders,
 };
