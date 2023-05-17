@@ -8,6 +8,15 @@ const CategoryScreen = () => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
+    if (addCat) {
+      document.body.style.overflow = 'hidden';
+      console.log('hidden');
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [addCat]);
+
+  useEffect(() => {
     getCatData();
   }, [addCat]);
 
@@ -23,6 +32,7 @@ const CategoryScreen = () => {
 
   return (
     <>
+<<<<<<< HEAD
       <div class={"relative z-20" + (addCat ? " overflow-none" : "")}>
         <p className="font-bold pb-3 pt-4  text-2xl ">Category</p>
         <div className="bg-primary px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 ">
@@ -31,6 +41,16 @@ const CategoryScreen = () => {
               <div class=" lg:flex md:flex flex-grow-0">
                 <div class="flex">
                   <div class="lg:flex-1 md:flex-1 mr-3 sm:flex-none">
+=======
+      <div class={'pt-4 px-6 relative z-20' + (addCat ? ' overflow-none' : '')}>
+        <p className='font-bold pb-3 pt-4  text-2xl '>Category</p>
+        <div className='bg-gray-800 px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 '>
+          <form class='py-6 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6  xl:flex '>
+            <div class='flex justify-start xl:w-1/2  md:w-full '>
+              <div class=' lg:flex md:flex flex-grow-0'>
+                <div class='flex'>
+                  <div class='lg:flex-1 md:flex-1 mr-3 sm:flex-none'>
+>>>>>>> 12a8d6b778046a1ba20f49d742d95921f84ecc67
                     <button
                       class="border flex justify-center items-center border-white hover:border-green-400 hover:text-green-400  dark:text-white cursor-pointer h-10 w-20 rounded-md focus:outline-none"
                       fdprocessedid="k2ha3j"
@@ -142,8 +162,14 @@ const CategoryScreen = () => {
                   onClick={() => {
                     window.scrollTo({
                       top: 0,
+<<<<<<< HEAD
                       behavior: "smooth",
                     });
+=======
+                      behavior: 'smooth',
+                    });
+
+>>>>>>> 12a8d6b778046a1ba20f49d742d95921f84ecc67
                     setAddCat(!addCat);
                     console.log(addCat);
                   }}
@@ -178,9 +204,15 @@ const CategoryScreen = () => {
       </div>
       {addCat && (
         <>
+<<<<<<< HEAD
           <div className="absolute w-full h-full z-[100] top-0 left-0 bg-black/30 "></div>
 
           <div className="absolute right-0 overflow-hidden h-full z-[200] top-0 6 w-full lg:w-2/3 xl:w-2/3 bg-white transform -translate-x-0 transition duration-300 ease-in-out">
+=======
+          <div className='absolute w-full h-full z-[100] top-0 left-0 bg-black/30 '></div>
+
+          <div className='absolute right-0 overflow-hidden h-full z-[200] top-0 6 w-full lg:w-2/3 xl:w-2/3 bg-white transform -translate-x-0 transition duration-300 ease-in-out'>
+>>>>>>> 12a8d6b778046a1ba20f49d742d95921f84ecc67
             <AddCategoryScreen setShow={setAddCat} show={addCat} />
           </div>
         </>

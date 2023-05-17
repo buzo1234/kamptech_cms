@@ -98,7 +98,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
     try {
       var urlData = await addCategoryImage(files);
 
-      var urlImage = `http://64.227.164.212/v1/storage/buckets/${urlData.bucketId}/files/${urlData.$id}/view?project=646339a61beac87efd09`;
+      var urlImage = `https://appwrite.techsouqdubai.com/v1/storage/buckets/${urlData.bucketId}/files/${urlData.$id}/view?project=646339a61beac87efd09`;
       console.log('image', urlImage);
       setcategoryData({ ...categoryData, image: urlImage });
       console.log('data', categoryData);
@@ -122,7 +122,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
   };
 
   return (
-    <div className='h-screen  bg-gray-800 flex z-40 shadow-inner  flex-col w-full'>
+    <div className='h-screen  bg-gray-800 flex z-40 shadow-inner  flex-col w-full fixed'>
       <div className='flex justify-between items-center py-6 px-3 bg-gray-900'>
         <div className='flex flex-col mr-2 text-gray-300 '>
           <p className='font-semibold'>Add Category</p>

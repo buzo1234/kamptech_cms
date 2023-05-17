@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
@@ -14,6 +14,16 @@ import CouponsScreen from '../screens/CouponsScreen';
 
 const Layout = ({ screen }) => {
   const [navbarOpen, setNavbarOpen] = useState(false);
+
+  useEffect(() => {
+    if(navbarOpen)
+    {
+      document.body.style.overflow = 'hidden';
+      console.log("hidden")
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [navbarOpen])
 
   return (
     <div className='App h-screen relative bg-secondary'>
