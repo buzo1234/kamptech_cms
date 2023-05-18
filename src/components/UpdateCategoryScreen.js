@@ -99,8 +99,10 @@ const UpdateCategoryScreen = ({ setShow, show, catData }) => {
     try {
       var urlImage = categoryData.image;
       var urlData = {$id: categoryData.fileId, bucketId: categoryData.bucketId}
+
+      console.log("files ",files);
      
-      if (thumbnail!==null || thumbnail!=='') {
+      if (files!==null && files!==undefined) {
     
         urlData = await addCategoryImage(files);
         urlImage = `https://appwrite.techsouqdubai.com/v1/storage/buckets/${urlData.bucketId}/files/${urlData.$id}/view?project=646339a61beac87efd09`;
@@ -108,7 +110,7 @@ const UpdateCategoryScreen = ({ setShow, show, catData }) => {
         setcategoryData({ ...categoryData, image: urlImage });
       }
       
-      console.log('data', categoryData);
+      console.log('data', urlData);
       await updateCategory({
         name: categoryData.name,
         desc: categoryData.desc,

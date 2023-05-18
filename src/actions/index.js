@@ -117,7 +117,7 @@ const addCategoryImage = async (image) => {
   try {
     return await storage.createFile('6463d825b38c9f1d947c', ID.unique(), image);
   } catch (e) {
-    console.error(e.message);
+    console.error("msg : " ,e.message);
   }
 };
 

@@ -43,7 +43,7 @@ const CategoryScreen = () => {
   return (
     <>
       <div class={"relative z-20" + (addCat ? " overflow-none" : "")} id="mainbody">
-        <p className="font-bold pb-3 pt-4  text-2xl ">Category</p>
+        <p className="font-bold pb-3   text-2xl ">Category</p>
         <div className="bg-gray-800 px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 ">
           <form class="py-6 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6  xl:flex ">
             <div class="flex justify-start xl:w-1/2  md:w-full ">
