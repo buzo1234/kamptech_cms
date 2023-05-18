@@ -122,7 +122,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
   };
 
   return (
-    <div className='h-screen  bg-gray-800 flex z-40 shadow-inner  flex-col w-full fixed'>
+    <div className='h-screen-safe  bg-gray-800 flex z-40 shadow-inner  flex-col w-full fixed'>
       <div className='flex justify-between items-center py-6 px-3 bg-gray-900'>
         <div className='flex flex-col mr-2 text-gray-300 '>
           <p className='font-semibold'>Add Category</p>
