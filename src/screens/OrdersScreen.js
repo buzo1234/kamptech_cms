@@ -104,7 +104,7 @@ const OrdersScreen = () => {
               </label>
               <CSVLink
                 target="_blank"
-                filename={"TechSouq-All Orders.csv"}
+                filename={"TechSouq-All Orders"}
                 data={allOrders}
                 headers={headers}
                 className="false flex items-center justify-center text-sm leading-5 h-12 w-full text-center transition-colors duration-150 font-medium focus:outline-none px-6 py-2 rounded-md text-white bg-green-500 border border-transparent active:bg-green-600 hover:bg-green-600 focus:ring focus:ring-purple-300"
