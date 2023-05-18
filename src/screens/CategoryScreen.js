@@ -190,7 +190,7 @@ const CategoryScreen = () => {
         <>
           <div className="absolute w-full h-full z-[100] top-0 left-0 bg-black/30 "></div>
 
-          <div className="absolute right-0 overflow-hidden h-full z-[200] top-0 6 w-full lg:w-2/3 xl:w-2/3 bg-white transform -translate-x-0 transition duration-300 ease-in-out">
+          <div className="absolute right-0 overflow-hidden  z-[200] top-0 6 w-full lg:w-2/3 xl:w-2/3 bg-white transform -translate-x-0 transition duration-300 ease-in-out"  style={{height:"calc(100vh - calc(100vh - 100%))"}}>
             <AddCategoryScreen setShow={setAddCat} show={addCat} />
           </div>
         </>
