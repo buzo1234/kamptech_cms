@@ -140,7 +140,7 @@ const OrdersScreen = () => {
       <div className='mt-6 mb-4'>
         <button
           className='px-4 py-2 rounded-lg text-gray-300 bg-primary border-0 border-gray-300 border-solid font-bold'
-          onClick={getLatestOrders}
+          onClick={() => getLatestOrders()}
         >
           Refresh Orders
         </button>
