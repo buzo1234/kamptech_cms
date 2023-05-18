@@ -40,7 +40,9 @@ const DeleteCategoryScreen = ({ setShow, show, catId }) => {
       <div className='flex w-full justify-center items-center flex-col'>
         <DeleteOutlineSharpIcon className='text-red-500 my-6' style={{width:"40px", height:"40px"}} />
       
-      <p className='text-xl'>Are you Sure! Want to <span className='text-red-500'>Delete</span> this category?</p>
+      <p className='text-xl text-center'>Are you Sure! Want to <span className='text-red-500'>Delete</span> this category?</p>
+
+      <p className='text-sm text-center mt-3 underline'>If this category have any <span className='text-red-500 font-semibold'>Child</span> categories, they will be Deleted too</p>
 
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 mt-8 w-full gap-3 mb-3'>
       <button
