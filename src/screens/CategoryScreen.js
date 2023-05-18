@@ -10,9 +10,11 @@ const CategoryScreen = () => {
   useEffect(() => {
     if (addCat) {
       document.body.style.overflow = "hidden";
+      //document.getElementById("mainbody").style.overflow = "hidden";
       console.log("hidden");
     } else {
       document.body.style.overflow = "auto";
+      //document.getElementById("mainbody").style.overflow = "auto";
     }
   }, [addCat]);
 
@@ -32,7 +34,7 @@ const CategoryScreen = () => {
 
   return (
     <>
-      <div class={"relative z-20" + (addCat ? " overflow-none" : "")}>
+      <div class={"relative z-20" + (addCat ? " overflow-none" : "")} id="mainbody">
         <p className="font-bold pb-3 pt-4  text-2xl ">Category</p>
         <div className="bg-gray-800 px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 ">
           <form class="py-6 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6  xl:flex ">
@@ -190,7 +192,7 @@ const CategoryScreen = () => {
         <>
           <div className="absolute w-full h-full z-[100] top-0 left-0 bg-black/30 "></div>
 
-          <div className="absolute right-0 overflow-hidden h-full z-[200] top-0 6 w-full lg:w-2/3 xl:w-2/3 bg-white transform -translate-x-0 transition duration-300 ease-in-out">
+          <div className="absolute right-0 overflow-auto   z-[200] top-0 6 w-full lg:w-2/3 xl:w-2/3 bg-white transform -translate-x-0 transition duration-300 ease-in-out " style={{minHeight: "100svh", overflow:"auto"}} >
             <AddCategoryScreen setShow={setAddCat} show={addCat} />
           </div>
         </>

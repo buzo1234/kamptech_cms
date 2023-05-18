@@ -8,7 +8,6 @@ import {
 
 const account = new Account(client);
 const storage = new Storage(client);
-
 const database = new Databases(client);
 
 const createCategory = async (categoryData) => {
