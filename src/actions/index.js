@@ -82,10 +82,36 @@ const addCategoryImage = async (image) => {
 const getOrders = async () => {
   try {
     const orders = await database.listDocuments(databaseID, ordersCollectionID);
-    console.log(orders);
     return orders;
   } catch (e) {
     console.error(e.message);
+  }
+};
+
+const getOrderById = async (documentId) => {
+  try {
+    const orderById = await database.getDocument(
+      databaseID,
+      ordersCollectionID,
+      documentId
+    );
+    return orderById;
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
+const updateOrderStatus = async (documentId, orderStatus) => {
+  try {
+    const orderById = await database.updateDocument(
+      databaseID,
+      ordersCollectionID,
+      documentId,
+      { Status: orderStatus }
+    );
+    return orderById;
+  } catch (e) {
+    console.error(e);
   }
 };
 
@@ -98,4 +124,6 @@ export {
   getParentCategories,
   getCategoryName,
   getOrders,
+  getOrderById,
+  updateOrderStatus,
 };
