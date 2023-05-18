@@ -192,7 +192,7 @@ const CategoryScreen = () => {
         <>
           <div className="absolute w-full h-full z-[100] top-0 left-0 bg-black/30 "></div>
 
-          <div className="absolute right-0 overflow-auto   z-[200] top-0 6 w-full lg:w-2/3 xl:w-2/3 bg-white transform -translate-x-0 transition duration-300 ease-in-out " style={{minHeight: "-webkit-fill-available", overflow:"auto"}} >
+          <div className="absolute right-0 overflow-auto   z-[200] top-0 6 w-full lg:w-2/3 xl:w-2/3 bg-white transform -translate-x-0 transition duration-300 ease-in-out " style={{minHeight: "100svh", overflow:"auto"}} >
             <AddCategoryScreen setShow={setAddCat} show={addCat} />
           </div>
         </>
