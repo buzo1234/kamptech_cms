@@ -1,10 +1,17 @@
 import React, { useState } from "react";
+import { CSVLink } from "react-csv";
 
 const ProductsScreen = () => {
   const [addProduct, setAddProduct] = useState(false);
 
+  const [allProducts, getAllProducts] = useState([]);
+
   const [tags, setTags] = useState([]);
   const [tagValue, setTagValue] = useState("");
+
+  const headers = [
+    {label: "Product Name", key: "name"}
+  ]
 
   const handleTags = (e) => {
     if (e.target.value && e.key === "Enter") {
@@ -16,15 +23,15 @@ const ProductsScreen = () => {
   return (
     <>
       <div>
-        <p className="font-bold">Products</p>
+        <p className="font-bold text-2xl">Products</p>
       </div>
-      <div className="px-4">
+      <div>
         <form className="py-3 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6  xl:flex">
           <div className="flex justify-start xl:w-1/2  md:w-full">
             <div className=" lg:flex md:flex flex-grow-0">
               <div className="flex">
                 <div className="lg:flex-1 md:flex-1 mr-3 sm:flex-none">
-                  <button className="border flex justify-center items-center border-gray-300 hover:border-green-400 hover:text-green-400  dark:text-gray-300 cursor-pointer h-10 w-20 rounded-md focus:outline-none">
+                  <CSVLink target="_blank" headers={headers} data={allProducts} filename={"TechSouqDubai - Products Catalogue"} className="border flex justify-center items-center border-gray-300 hover:border-green-400 hover:text-green-400  dark:text-gray-300 cursor-pointer h-10 w-20 rounded-md focus:outline-none">
                     <svg
                       stroke="currentColor"
                       fill="none"
@@ -42,7 +49,7 @@ const ProductsScreen = () => {
                       <line x1="12" y1="3" x2="12" y2="15"></line>
                     </svg>
                     <span className="text-xs">Export</span>
-                  </button>
+                  </CSVLink>
                 </div>
                 <div className="lg:flex-1 md:flex-1 mr-3  sm:flex-none">
                   <button className="border flex justify-center items-center h-10 w-20 hover:text-yellow-400  border-gray-300 dark:text-gray-300 cursor-pointer  py-2 hover:border-yellow-400 rounded-md focus:outline-none">
