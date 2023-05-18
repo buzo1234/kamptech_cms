@@ -2,22 +2,26 @@ import React, { useEffect, useState, useRef } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import '../styles/toggleSwitch.css';
 import {
-  createCategory,
+  updateCategory,
   getCategories,
   login,
   getUserData,
   addCategoryImage,
-  getParentCategories
+  getParentCategories,
 } from '../actions';
 
-const AddCategoryScreen = ({ setShow, show }) => {
+const UpdateCategoryScreen = ({ setShow, show, catData }) => {
   const [categoryData, setcategoryData] = useState({
-    name: '',
-    desc: '',
-    image: '',
-    parent: '',
-    published: false,
+    name: catData.name,
+    desc: catData.desc,
+    image: catData.image,
+    parent: catData.parent,
+    published: catData.published,
+    bucketId: catData.bucketId,
+    fileId: catData.fileId,
   });
+
+  
 
   const [files, setFiles] = useState();
   const [thumbnail, setThumbnail] = useState('');
@@ -27,7 +31,6 @@ const AddCategoryScreen = ({ setShow, show }) => {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    
     getUserData()
       .then((response) => {
         console.log(response);
@@ -49,8 +52,6 @@ const AddCategoryScreen = ({ setShow, show }) => {
         setParentCat(response.documents);
       })
       .catch((e) => console.log(e.message));
-
-    
   };
 
   const handleDrop = async (event) => {
@@ -96,13 +97,19 @@ const AddCategoryScreen = ({ setShow, show }) => {
 
   const handleAddCategory = async () => {
     try {
-      var urlData = await addCategoryImage(files);
-
-      var urlImage = `https://appwrite.techsouqdubai.com/v1/storage/buckets/${urlData.bucketId}/files/${urlData.$id}/view?project=646339a61beac87efd09`;
-      console.log('image', urlImage);
-      setcategoryData({ ...categoryData, image: urlImage });
+      var urlImage = categoryData.image;
+      var urlData = {$id: categoryData.fileId, bucketId: categoryData.bucketId}
+     
+      if (thumbnail!==null || thumbnail!=='') {
+    
+        urlData = await addCategoryImage(files);
+        urlImage = `https://appwrite.techsouqdubai.com/v1/storage/buckets/${urlData.bucketId}/files/${urlData.$id}/view?project=646339a61beac87efd09`;
+        console.log('image', urlImage);
+        setcategoryData({ ...categoryData, image: urlImage });
+      }
+      
       console.log('data', categoryData);
-      await createCategory({
+      await updateCategory({
         name: categoryData.name,
         desc: categoryData.desc,
         image: urlImage,
@@ -110,7 +117,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
         published: categoryData.published,
         fileId: urlData.$id,
         bucketId: urlData.bucketId
-      }).then(() => {
+      }, catData.$id).then(() => {
         console.log('category created');
         setShow(false);
       });
@@ -124,12 +131,15 @@ const AddCategoryScreen = ({ setShow, show }) => {
   };
 
   return (
-    <div className=' bg-gray-800 flex z-40 shadow-inner  flex-col w-full fixed overflow-auto' style={{height:"100svh"}}>
+    <div
+      className=' bg-gray-800 flex z-40 shadow-inner  flex-col w-full fixed overflow-auto'
+      style={{ height: '100svh' }}
+    >
       <div className='flex justify-between items-center py-6 px-3 bg-gray-900'>
         <div className='flex flex-col mr-2 text-gray-300 '>
-          <p className='font-semibold'>Add Category</p>
+          <p className='font-semibold'>Update Category</p>
           <p className='text-xs text-gray-300'>
-            Add your Product category and necessary information from here
+            Upadate your Product category and necessary information from here
           </p>
         </div>
         <button
@@ -151,7 +161,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
           className='bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold '
           onClick={() => handleAddCategory()}
         >
-          Add Category
+          Update Category
         </button>
       </div>
 
@@ -173,6 +183,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
                 type='text'
                 name=''
                 id=''
+                value={categoryData.name}
                 placeholder='Category title'
                 className='block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none '
               />
@@ -197,6 +208,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
                 type='text'
                 name='description'
                 rows='4'
+                value={categoryData.desc}
                 spellCheck={false}
                 id=''
                 placeholder='Category Description'
@@ -222,6 +234,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
                 }
                 name=''
                 id=''
+                value={categoryData.parent}
                 placeholder='Select Parent'
                 className='block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none '
               >
@@ -294,20 +307,34 @@ const AddCategoryScreen = ({ setShow, show }) => {
                     (Only *.jpeg, *.webp and *.png image will be accepted)
                   </em>
                 </div>
-                {files ? (
-                  <div className='flex w-full justify-center flex-col items-center mt-3'>
+                {files || categoryData.image !== null ? (
+                  <div className='flex w-full justify-center flex-col items-center mt-3 '>
                     {/* <p>Selected file: {files.name}</p>
                     <p>File size: {files.size} bytes</p> */}
-                    <img
-                      src={thumbnail}
-                      alt='Thumbnail'
-                      className='w-3/4 object-contain rounded-md'
-                    />
+
+                    <div className='relative w-3/4'>
+                      {thumbnail && (
+                        <button
+                          className='absolute -top-1 -right-1 w-8 h-8 rounded-full bg-white text-red-500 '
+                          onClick={() => {
+                            setFiles();
+                            setThumbnail();
+                          }}
+                        >
+                          <CloseIcon color='red' />
+                        </button>
+                      )}
+                      <img
+                        src={thumbnail || categoryData.image}
+                        alt='Thumbnail'
+                        className=' object-contain rounded-md'
+                      />
+                    </div>
                   </div>
                 ) : (
                   ''
                 )}
-               
+
                 <div className='text-green-500'></div>
                 <aside className='flex flex-row flex-wrap mt-4'></aside>
               </div>
@@ -345,4 +372,4 @@ const AddCategoryScreen = ({ setShow, show }) => {
   );
 };
 
-export default AddCategoryScreen;
+export default UpdateCategoryScreen;
