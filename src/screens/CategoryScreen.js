@@ -2,13 +2,21 @@ import React, { useEffect, useState } from "react";
 import AddCategoryScreen from "../components/AddCategoryScreen";
 import { getCategories } from "../actions";
 import CategoriesView from "../components/CategoriesView";
+import UpdateCategoryScreen from "../components/UpdateCategoryScreen";
+import DeleteCategoryScreen from "../components/DeleteCategoryScreen";
 
 const CategoryScreen = () => {
   const [addCat, setAddCat] = useState(false);
   const [categories, setCategories] = useState([]);
 
+  const [editCat, setEditCat] = useState(false);
+  const [editCatData, setEditCatData] = useState();
+
+  const [deleteBox, setDeleteBox] = useState(false);
+  const [deleteId, setDeleteId] = useState();
+
   useEffect(() => {
-    if (addCat) {
+    if (addCat || editCat || deleteBox) {
       document.body.style.overflow = "hidden";
       //document.getElementById("mainbody").style.overflow = "hidden";
       console.log("hidden");
@@ -16,11 +24,11 @@ const CategoryScreen = () => {
       document.body.style.overflow = "auto";
       //document.getElementById("mainbody").style.overflow = "auto";
     }
-  }, [addCat]);
+  }, [addCat, editCat, deleteBox]);
 
   useEffect(() => {
     getCatData();
-  }, [addCat]);
+  }, [addCat, editCat, deleteBox]);
 
   const getCatData = async () => {
     try {
@@ -185,9 +193,11 @@ const CategoryScreen = () => {
 
         {/* Show Categories */}
         <div className="my-6">
-          <CategoriesView catList={categories} />
+          <CategoriesView catList={categories} setEditId={setEditCatData} setShow={setEditCat} show={editCat} setDeleteId={setDeleteId} delShow={deleteBox} setDelShow={setDeleteBox}/>
         </div>
       </div>
+
+      {/* Add Category Screen */}
       {addCat && (
         <>
           <div className="absolute w-full h-full z-[100] top-0 left-0 bg-black/30 "></div>
@@ -197,6 +207,29 @@ const CategoryScreen = () => {
           </div>
         </>
       )}
+
+      {/* Edit Category Screen */}
+      {editCat && (
+        <>
+          <div className="absolute w-full h-full z-[100] top-0 left-0 bg-black/30 "></div>
+
+          <div className="absolute right-0 overflow-auto   z-[200] top-0 6 w-full lg:w-2/3 xl:w-2/3 bg-white transform -translate-x-0 transition duration-300 ease-in-out " style={{minHeight: "100svh", overflow:"auto"}} >
+            <UpdateCategoryScreen setShow={setEditCat} show={editCat} catData={editCatData}/>
+          </div>
+        </>
+      )}
+
+      {/* Delete Category Screen */}
+      {deleteBox && (
+        <>
+          <div className="absolute w-full h-full z-[100] top-0 left-0 bg-black/30 "></div>
+
+          <div className="absolute  overflow-auto top-0 left-0  z-[200]  w-full h-full bg-transparent flex justify-center items-center mx-auto  " style={{overflow:"auto"}} >
+            <DeleteCategoryScreen setShow={setDeleteBox} show={deleteBox} catId={deleteId}/>
+          </div>
+        </>
+      )}
+
     </>
   );
 };
