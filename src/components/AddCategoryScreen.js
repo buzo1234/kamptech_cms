@@ -27,14 +27,6 @@ const AddCategoryScreen = ({ setShow, show }) => {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    
-    getUserData()
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((e) => {
-        console.log(e.message);
-      });
     getParentList();
   }, []);
 
@@ -196,12 +188,12 @@ const AddCategoryScreen = ({ setShow, show }) => {
                 }
                 type='text'
                 name='description'
-                rows='4'
-                spellCheck={false}
+               rows={4}
+                spellCheck={true}
                 id=''
                 placeholder='Category Description'
-                className='block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none '
-              />
+                className='block p-3 w-full text-sm px-3 py-1 text-gray-300 rounded-md focus:outline-none form-textarea  border-gray-600 focus:border-gray-500 bg-gray-700 focus:ring-gray-700 focus:ring  border  border-transparent '
+              ></textarea>
             </div>
           </div>
 
