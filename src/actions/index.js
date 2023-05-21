@@ -4,6 +4,7 @@ import {
   categoryCollectionID,
   databaseID,
   ordersCollectionID,
+  adminUserCollectionID,
 } from '../config';
 
 const account = new Account(client);
@@ -159,11 +160,10 @@ const updateOrderStatus = async (documentId, orderStatus) => {
 
 const verifyGoogleAccount = () => {
   try {
-    account.createOAuth2Session(
-      'google',
-      'https://console.techsouqdubai.com/',
-      'https://console.techsouqdubai.com/login'
-    );
+    const url = window.location.href.includes('localhost')
+      ? 'http://localhost:3000'
+      : 'https://console.techsouqdubai.com';
+    account.createOAuth2Session('google', `${url}/login`, `${url}/login`);
   } catch (e) {
     console.error(e.message);
   }
@@ -178,12 +178,24 @@ const getAccountDetails = async () => {
 };
 
 const logout = async () => {
-  try{
-    await account.deleteSession("current");
-  }catch(e){
-    console.log(e)
+  try {
+    await account.deleteSession('current');
+  } catch (e) {
+    console.log(e);
   }
-}
+};
+
+const getAdmins = async () => {
+  try {
+    const admins = await database.listDocuments(
+      databaseID,
+      adminUserCollectionID
+    );
+    return admins;
+  } catch (e) {
+    console.error(e.message);
+  }
+};
 
 export {
   createCategory,
@@ -200,5 +212,6 @@ export {
   updateOrderStatus,
   verifyGoogleAccount,
   getAccountDetails,
-  logout
+  logout,
+  getAdmins,
 };

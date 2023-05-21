@@ -20,7 +20,7 @@ const Layout = ({ screen }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const whiteListEmails = ['karandua2002@gmail.com', 'ppratham1180@gmail.com'];
+  
 
   useEffect(() => {
     getUser();
@@ -40,7 +40,7 @@ const Layout = ({ screen }) => {
     const data = await getAccountDetails();
     console.log(data);
     setUser(data);
-    if (data === undefined || !whiteListEmails.includes(data.email)) {
+    if (data === undefined) {
       await logoutSession();
     }
     setLoading(false);
