@@ -2,6 +2,20 @@ import React, { useState } from "react";
 
 function AddProductScreen({ formState, categories }) {
   const [rowCount, setRowCount] = useState(0);
+  const [specifications, setSpecifications] = useState([]);
+  const [key, setKey] = useState("");
+  const [value, setValue] = useState("");
+
+  const handleRemoveField = (event, index) => {
+    event.preventDefault();
+    setRowCount(rowCount - 1);
+    setSpecifications([...specifications].splice(index, 1));
+  };
+
+  const handleSpecification = () => {
+    const specificationObject = {};
+    // specificationObject[key] = value;
+  };
 
   return (
     <div className="absolute right-0 overflow-auto z-[200] top-0 w-full h-full lg:w-[80%] xl:w-[80%] bg-primary transform -translate-x-0 transition duration-300 ease-in-out">
@@ -206,10 +220,84 @@ function AddProductScreen({ formState, categories }) {
             </div>
           </div>
           <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-            <label className="block text-sm text-gray-700 dark:text-gray-400 col-span-4 sm:col-span-2 font-medium">
+            <label className="block text-sm text-gray-700 dark:text-gray-400 col-span-2 sm:col-span-2 font-medium">
               Specifications
             </label>
-            
+            <div>
+              <div className="col-span-8">
+                <button
+                  className="border-0 border-white border-solid px-4 py-2 bg-gray-600 rounded-md mb-4"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setRowCount(rowCount + 1);
+                  }}
+                >
+                  + Add Row
+                </button>
+                <button className="bg-green-600 text-white px-4 py-2 rounded-md">
+                  Done
+                </button>
+              </div>
+              {Array.from({ length: rowCount }).map((index) => (
+                <div className="flex mb-2" key={index}>
+                  <input
+                    type="text"
+                    placeholder="key"
+                    className="block px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-500 bg-gray-700 border h-12 border-transparent mr-10 col-span-2"
+                  />
+                  <input
+                    type="text"
+                    placeholder="value"
+                    className="block px-3 py-1 text-sm focus:outline-none focus:border-gray-200 bg-gray-700 dark:text-gray-300 leading-5 rounded-md border h-12 border-transparent col-span-2"
+                  />
+                  <button
+                    className="mx-4"
+                    onClick={(e) => handleRemoveField(e, index)}
+                  >
+                    <svg
+                      stroke="currentColor"
+                      fill="none"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="mx-auto"
+                      height="1em"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-6 gap-3 md:gap-3 xl:gap-5 lg:gap-3 mb-6">
+            <label className="block text-sm text-gray-700 dark:text-gray-400 col-span-4 sm:col-span-2 font-medium">
+              Added Specifications
+            </label>
+            <div>
+              {specifications.length > 0 ? specifications.map((spec) => (
+                <div className="flex flex-grow text-gray-300">
+                  <label className="mr-6">{spec.key}</label>
+                  <label>{spec.value}</label>
+                </div>
+              )) : <p className="text-gray-300 col-span-4">No Specifications mentioned</p>}
+            </div>
+          </div>
+          <div className="grid grid-cols-6 gap-3 md:gap-3 xl:gap-5 lg:gap-3 mb-6 justify-items-start">
+            <label className="block text-sm text-gray-700 dark:text-gray-400 col-span-2 sm:col-span-2 font-medium">
+              Published
+            </label>
+            <input
+              type="checkbox"
+              name="published"
+              id="published"
+              defaultChecked={false}
+              className="font-medium"
+            />
           </div>
         </div>
       </form>

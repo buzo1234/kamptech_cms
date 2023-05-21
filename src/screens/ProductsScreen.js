@@ -17,10 +17,8 @@ const ProductsScreen = () => {
     { label: "Sale Price", key: "salePrice" },
     { label: "Cost Price", key: "costPrice" },
     { label: "Category", key: "category" },
-    // { label: "Colors", key: "color" },
-    { label: "Net Weight", key: "netWeight" },
-    { label: "Gross Weight", key: "grossWeight" },
     { label: "Published", key: "published" },
+    // { label: "Colors", key: "color" },
     // { label: "Coupons", key: "coupon" },
     // { label: "Barcode", key: "barcode" },
   ];
@@ -246,8 +244,8 @@ const ProductsScreen = () => {
         </form>
       </div>
 
-      <div className="mt-10">
-        <table className="w-full rounded-lg border-0 border-white border-solid">
+      <div className="w-full overflow-x-auto mt-10">
+        <table className="rounded-lg border-0 border-white border-solid  whitespace-nowrap">
           <thead className="text-xs font-semibold text-left uppercase border-gray-700 text-gray-400 bg-gray-800">
             <tr>
               <td className="px-4 py-3 w-[1/9]">Image</td>
