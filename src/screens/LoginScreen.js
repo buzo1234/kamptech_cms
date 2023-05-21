@@ -1,8 +1,23 @@
-import React from 'react'
-import { verifyGoogleAccount } from '../actions'
-
+import React, { useEffect } from 'react'
+import { verifyGoogleAccount, getAccountDetails } from '../actions'
+import { useNavigate } from 'react-router-dom'
 
 const LoginScreen = () => {
+
+  const navigate = useNavigate();
+  const whiteListEmails = ['karandua2002@gmail.com','ppratham1180@gmail.com']
+
+  useEffect(() => {
+    getUser();
+  }, [])
+
+  const getUser = async () => {
+    const data = await getAccountDetails();
+    
+    if(data!==undefined && whiteListEmails.includes(data.email)){
+      navigate('/')
+    }
+  }
 
   const handleAuth = () => {
     verifyGoogleAccount();

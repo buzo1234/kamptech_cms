@@ -14,7 +14,6 @@ const DashBoardScreen = () => {
   }, []);
 
   const getLatestOrders = async () => {
-    console.log("Here")
     await getOrders()
       .then((response) => {
         setAllOrders(response.documents);
