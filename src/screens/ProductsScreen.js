@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CSVLink } from 'react-csv';
 import { getCategories, getProducts } from '../actions';
 import AddProductScreen from '../components/AddProductScreen';
+import ProductsView from '../components/ProductsView';
 
 const ProductsScreen = () => {
   const [addProduct, setAddProduct] = useState(false);
@@ -222,7 +223,6 @@ const ProductsScreen = () => {
             <AddProductScreen
               formState={setAddProduct}
               categories={allCategories}
-              show={addProduct}
             />
           </div>
         </>
@@ -272,52 +272,7 @@ const ProductsScreen = () => {
         </form>
       </div>
 
-      <div className='w-full overflow-x-auto mt-10'>
-        <table className='rounded-lg border-0 border-white border-solid  whitespace-nowrap'>
-          <thead className='text-xs font-semibold text-left uppercase border-gray-700 text-gray-400 bg-gray-800'>
-            <tr>
-              <td className='px-4 py-3 w-[1/9]'>Image</td>
-              <td className='px-4 py-3 w-[1/9]'>Product Name</td>
-              <td className='px-4 py-3 w-[1/9]'>Qty</td>
-              <td className='px-4 py-3 w-[1/9]'>Tags</td>
-              <td className='px-4 py-3 w-[1/9]'>Category</td>
-              <td className='px-4 py-3 w-[1/9]'>Published</td>
-              <td className='px-4 py-3 w-[1/9]'>Sale Price</td>
-              <td className='px-4 py-3 w-[1/9]'>Cost Price</td>
-            </tr>
-          </thead>
-          <tbody>
-            {allProducts?.map(
-              ({
-                $id,
-                title,
-                images,
-                modelName,
-                modelNumber,
-                description,
-                tags,
-                quantity,
-                salePrice,
-                category,
-                published,
-                costPrice,
-              }) => (
-                <tr key={$id}>
-                  <td className='px-4 py-3 w-[1/9]'>{images[0]}</td>
-                  <td className='px-4 py-3 w-[1/9]'>{title}</td>
-                  <td className='px-4 py-3 w-[1/9]'>{quantity}</td>
-                  {/* tags should be mapped */}
-                  <td className='px-4 py-3 w-[1/9]'>{tags}</td>
-                  <td className='px-4 py-3 w-[1/9]'>{category.name}</td>
-                  <td className='px-4 py-3 w-[1/9]'>{published}</td>
-                  <td className='px-4 py-3 w-[1/9]'>{salePrice}</td>
-                  <td className='px-4 py-3 w-[1/9]'>{costPrice}</td>
-                </tr>
-              )
-            )}
-          </tbody>
-        </table>
-      </div>
+      {allProducts.length > 0 ? <ProductsView allProducts={allProducts} /> : <p className="mt-8">No Products yet. Add manually or import a CSV file</p>}
     </>
   );
 };
