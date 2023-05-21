@@ -31,6 +31,7 @@ const CategoryScreen = () => {
   }, [addCat, editCat, deleteBox]);
 
   const getCatData = async () => {
+    console.log("here")
     try {
       await getCategories()
         .then((response) => setCategories(response.documents))

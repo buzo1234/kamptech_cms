@@ -11,9 +11,10 @@ const DashBoardScreen = () => {
   useEffect(() => {
     getLatestOrders();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allOrders]);
+  }, []);
 
   const getLatestOrders = async () => {
+    console.log("Here")
     await getOrders()
       .then((response) => {
         setAllOrders(response.documents);
