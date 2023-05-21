@@ -16,6 +16,8 @@ const DashBoardScreen = () => {
   const getLatestOrders = async () => {
     await getOrders()
       .then((response) => {
+        const allOrders = response.documents
+        const totalOrderCount = response.total;
         setAllOrders(response.documents);
         setTotalOrderCount(response.total);
 
