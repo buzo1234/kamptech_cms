@@ -18,7 +18,7 @@ const DashBoardScreen = () => {
     await getOrders()
       .then((response) => {
         setAllOrders(response.documents);
-        setTotalOrderCount(allOrders.length);
+        setTotalOrderCount(response.total);
 
         const getTotalProcessing = allOrders.filter(
           (item) => item.Status === "Processing"
@@ -50,7 +50,7 @@ const DashBoardScreen = () => {
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
-                  stroke-width="0"
+                  strokeWidth="0"
                   version="1.1"
                   viewBox="0 0 16 16"
                   height="1em"
@@ -83,7 +83,7 @@ const DashBoardScreen = () => {
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
-                  stroke-width="0"
+                  strokeWidth="0"
                   version="1.1"
                   viewBox="0 0 16 16"
                   height="1em"
@@ -115,10 +115,10 @@ const DashBoardScreen = () => {
               <svg
                 stroke="currentColor"
                 fill="none"
-                stroke-width="2"
+                strokeWidth="2"
                 viewBox="0 0 24 24"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 height="1em"
                 width="1em"
                 xmlns="http://www.w3.org/2000/svg"
@@ -144,7 +144,7 @@ const DashBoardScreen = () => {
               <svg
                 stroke="currentColor"
                 fill="currentColor"
-                stroke-width="0"
+                strokeWidth="0"
                 version="1.1"
                 viewBox="0 0 16 16"
                 height="1em"
@@ -174,10 +174,10 @@ const DashBoardScreen = () => {
               <svg
                 stroke="currentColor"
                 fill="none"
-                stroke-width="2"
+                strokeWidth="2"
                 viewBox="0 0 24 24"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 height="1em"
                 width="1em"
                 xmlns="http://www.w3.org/2000/svg"
@@ -203,10 +203,10 @@ const DashBoardScreen = () => {
               <svg
                 stroke="currentColor"
                 fill="none"
-                stroke-width="2"
+                strokeWidth="2"
                 viewBox="0 0 24 24"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 height="1em"
                 width="1em"
                 xmlns="http://www.w3.org/2000/svg"
@@ -235,10 +235,10 @@ const DashBoardScreen = () => {
               <svg
                 stroke="currentColor"
                 fill="none"
-                stroke-width="2"
+                strokeWidth="2"
                 viewBox="0 0 24 24"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 height="1em"
                 width="1em"
                 xmlns="http://www.w3.org/2000/svg"
@@ -265,10 +265,10 @@ const DashBoardScreen = () => {
               <svg
                 stroke="currentColor"
                 fill="none"
-                stroke-width="2"
+                strokeWidth="2"
                 viewBox="0 0 24 24"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 height="1em"
                 width="1em"
                 xmlns="http://www.w3.org/2000/svg"

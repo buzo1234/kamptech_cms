@@ -1,10 +1,11 @@
-import { Account, Databases, ID, Query, Storage } from 'appwrite';
+import { Account, Databases, ID, Query, Storage } from "appwrite";
 import {
   client,
   categoryCollectionID,
   databaseID,
   ordersCollectionID,
-} from '../config';
+  productsCollectionID,
+} from "../config";
 
 const account = new Account(client);
 const storage = new Storage(client);
@@ -45,25 +46,25 @@ const updateCategory = async (categoryData, id) => {
 };
 
 const deleteCategory = async (id) => {
-  const catid = id.split('&&')[0];
+  const catid = id.split("&&")[0];
   console.log(catid);
   try {
     const response = await database.listDocuments(
       databaseID,
       categoryCollectionID,
-      [Query.equal('parent', id)]
+      [Query.equal("parent", id)]
     );
     const documents = response.documents;
 
     for (const document of documents) {
-      await storage.deleteFile(document.bucketId, document.fileId)
+      await storage.deleteFile(document.bucketId, document.fileId);
       await database
         .deleteDocument(databaseID, categoryCollectionID, document.$id)
         .then(() => {
-          console.log('Document deleted successfully');
+          console.log("Document deleted successfully");
         })
         .catch((error) => {
-          console.error('Error deleting document:', error);
+          console.error("Error deleting document:", error);
         });
     }
 
@@ -76,7 +77,7 @@ const deleteCategory = async (id) => {
 const getParentCategories = async () => {
   try {
     return await database.listDocuments(databaseID, categoryCollectionID, [
-      Query.equal('parent', 'isParent'),
+      Query.equal("parent", "isParent"),
     ]);
   } catch (e) {
     console.log(e.message);
@@ -88,7 +89,7 @@ const getCategoryName = async (id) => {
     const response = await database.listDocuments(
       databaseID,
       categoryCollectionID,
-      [Query.equal('$id', id)]
+      [Query.equal("$id", id)]
     );
 
     return response.documents[0];
@@ -115,9 +116,9 @@ const getUserData = async () => {
 
 const addCategoryImage = async (image) => {
   try {
-    return await storage.createFile('6463d825b38c9f1d947c', ID.unique(), image);
+    return await storage.createFile("6463d825b38c9f1d947c", ID.unique(), image);
   } catch (e) {
-    console.error("msg : " ,e.message);
+    console.error("msg : ", e.message);
   }
 };
 
@@ -157,6 +158,19 @@ const updateOrderStatus = async (documentId, orderStatus) => {
   }
 };
 
+const getProducts = async () => {
+  try {
+    const allProducts = await database.listDocuments(
+      databaseID,
+      productsCollectionID
+    );
+    console.log(allProducts);
+    return allProducts;
+  } catch (e) {
+    console.error(e.message);
+  }
+};
+
 export {
   createCategory,
   getCategories,
@@ -170,4 +184,5 @@ export {
   getOrders,
   getOrderById,
   updateOrderStatus,
+  getProducts,
 };

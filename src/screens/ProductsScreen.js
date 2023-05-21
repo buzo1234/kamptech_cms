@@ -1,24 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CSVLink } from "react-csv";
+import { getCategories, getProducts } from "../actions";
+import AddProductScreen from "../components/AddProductScreen";
 
 const ProductsScreen = () => {
   const [addProduct, setAddProduct] = useState(false);
 
-  const [allProducts, getAllProducts] = useState([]);
-
-  const [tags, setTags] = useState([]);
-  const [tagValue, setTagValue] = useState("");
-
   const headers = [
-    {label: "Product Name", key: "name"}
-  ]
+    { label: "Product Title", key: "title" },
+    { label: "Model Name", key: "modelName" },
+    { label: "Model Number", key: "modelNumber" },
+    { label: "Product Description", key: "description" },
+    { label: "Quantity", key: "quantity" },
+    { label: "Product Tags", key: "tags" },
+    { label: "Product Images", key: "images" },
+    { label: "Sale Price", key: "salePrice" },
+    { label: "Cost Price", key: "costPrice" },
+    { label: "Category", key: "category" },
+    // { label: "Colors", key: "color" },
+    { label: "Net Weight", key: "netWeight" },
+    { label: "Gross Weight", key: "grossWeight" },
+    { label: "Published", key: "published" },
+    // { label: "Coupons", key: "coupon" },
+    // { label: "Barcode", key: "barcode" },
+  ];
 
-  const handleTags = (e) => {
-    if (e.target.value && e.key === "Enter") {
-      setTagValue(e.target.value);
-      setTags([...tags, tagValue]);
-    }
-  }
+  const [allCategories, setAllCategories] = useState([]);
+
+  const [allProducts, setAllProducts] = useState([]);
+
+  useEffect(() => {
+    getAllCategoriesAndProducts();
+  }, []);
+
+  const getAllCategoriesAndProducts = async () => {
+    await getCategories()
+      .then((response) => {
+        setAllCategories(response.documents);
+        console.log(response.documents);
+      })
+      .catch((e) => console.log(e.message));
+
+    await getProducts()
+      .then((response) => {
+        setAllProducts(response.documents);
+      })
+      .catch((e) => {
+        console.error(e.message);
+      });
+  };
 
   return (
     <>
@@ -31,14 +61,20 @@ const ProductsScreen = () => {
             <div className=" lg:flex md:flex flex-grow-0">
               <div className="flex">
                 <div className="lg:flex-1 md:flex-1 mr-3 sm:flex-none">
-                  <CSVLink target="_blank" headers={headers} data={allProducts} filename={"TechSouqDubai - Products Catalogue"} className="border flex justify-center items-center border-gray-300 hover:border-green-400 hover:text-green-400  dark:text-gray-300 cursor-pointer h-10 w-20 rounded-md focus:outline-none">
+                  <CSVLink
+                    target="_blank"
+                    headers={headers}
+                    data={allProducts}
+                    filename={"TechSouqDubai - Products Catalogue"}
+                    className="border flex justify-center items-center border-gray-300 hover:border-green-400 hover:text-green-400  dark:text-gray-300 cursor-pointer h-10 w-20 rounded-md focus:outline-none"
+                  >
                     <svg
                       stroke="currentColor"
                       fill="none"
-                      stroke-width="2"
+                      strokeWidth="2"
                       viewBox="0 0 24 24"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       className=""
                       height="1em"
                       width="1em"
@@ -56,10 +92,10 @@ const ProductsScreen = () => {
                     <svg
                       stroke="currentColor"
                       fill="none"
-                      stroke-width="2"
+                      strokeWidth="2"
                       viewBox="0 0 24 24"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       className=""
                       height="1em"
                       width="1em"
@@ -86,10 +122,10 @@ const ProductsScreen = () => {
                   <svg
                     stroke="currentColor"
                     fill="none"
-                    stroke-width="2"
+                    strokeWidth="2"
                     viewBox="0 0 24 24"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     height="1em"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -111,10 +147,10 @@ const ProductsScreen = () => {
                   <svg
                     stroke="currentColor"
                     fill="none"
-                    stroke-width="2"
+                    strokeWidth="2"
                     viewBox="0 0 24 24"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     height="1em"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -138,10 +174,10 @@ const ProductsScreen = () => {
                   <svg
                     stroke="currentColor"
                     fill="none"
-                    stroke-width="2"
+                    strokeWidth="2"
                     viewBox="0 0 24 24"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     height="1em"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -159,194 +195,14 @@ const ProductsScreen = () => {
         </form>
       </div>
 
-      <div className={`${addProduct ? "block" : "hidden"}`}>
-        <form>
-          <div className="px-6 pt-8 flex-grow w-full h-full max-h-full pb-40 md:pb-32 lg:pb-32 xl:pb-32">
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-              <label className="block text-sm text-gray-700 dark:text-gray-400 col-span-4 sm:col-span-2 font-medium">
-                Product Title/Name
-              </label>
-              <div className="col-span-8 sm:col-span-4">
-                <input
-                  className="block w-full px-3 py-1 text-sm dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 border h-12 focus:outline-none bg-gray-100 border-transparent"
-                  type="text"
-                  name="title"
-                  placeholder="Product Title/Name"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-              <label className="block text-sm text-gray-700 dark:text-gray-400 col-span-4 sm:col-span-2 font-medium">
-                Product Description
-              </label>
-              <div className="col-span-8 sm:col-span-4">
-                <textarea
-                  className="block p-3 w-full text-sm dark:text-gray-300 rounded-md focus:outline-none form-textarea focus:border-purple-400 border-gray-300 dark:border-gray-600 dark:focus:border-gray-600 dark:bg-gray-700 dark:focus:ring-gray-300 focus:ring focus:ring-purple-300 border bg-gray-100 border-transparent"
-                  name="description"
-                  placeholder="Product Description"
-                  rows="4"
-                  spellcheck="false"
-                ></textarea>
-              </div>
-            </div>
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-              <label className="block text-sm text-gray-700 dark:text-gray-400 col-span-4 sm:col-span-2 font-medium">
-                Product Images
-              </label>
-              <div className="col-span-8 sm:col-span-4">
-                <div className="w-full text-center">
-                  <div
-                    className="border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md cursor-pointer px-6 pt-5 pb-6"
-                    role="button"
-                    tabindex="0"
-                  >
-                    <input
-                      accept="image/*"
-                      multiple=""
-                      type="file"
-                      autocomplete="off"
-                      tabindex="-1"
-                      style={{ display: "none" }}
-                    />
-                    <span className="mx-auto flex justify-center">
-                      <svg
-                        stroke="currentColor"
-                        fill="none"
-                        stroke-width="2"
-                        viewBox="0 0 24 24"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        className="text-3xl text-green-500"
-                        height="1em"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <polyline points="16 16 12 12 8 16"></polyline>
-                        <line x1="12" y1="12" x2="12" y2="21"></line>
-                        <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path>
-                        <polyline points="16 16 12 12 8 16"></polyline>
-                      </svg>
-                    </span>
-                    <p className="text-sm mt-2">Drag your images here</p>
-                    <em className="text-xs text-gray-400">
-                      (Only *.jpeg, *.webp and *.png images will be accepted)
-                    </em>
-                  </div>
-                  <div className="text-green-500"></div>
-                  <aside className="flex flex-row flex-wrap mt-4"></aside>
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-              <label className="block text-gray-700 dark:text-gray-400 col-span-4 sm:col-span-2 font-medium text-sm">
-                Category
-              </label>
-              <div className="col-span-8 sm:col-span-4">
-                <div className="mb-2">
-                  <div>
-                    <select
-                      name="category"
-                      id="category"
-                      className="block w-full px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 border h-12 bg-gray-100 border-transparent"
-                    >
-                      <option value="" disabled selected>
-                        Select a category
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-              <label className="block text-sm text-gray-700 dark:text-gray-400 col-span-4 sm:col-span-2 font-medium">
-                Product Price
-              </label>
-              <div className="col-span-8 sm:col-span-4">
-                <div className="flex flex-row">
-                  <span className="inline-flex items-center px-3 rounded rounded-r-none border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm focus:border-green-300 dark:bg-gray-700 dark:text-gray-300 dark:border dark:border-gray-600">
-                    $
-                  </span>
-                  <input
-                    className="block w-full px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 bg-gray-50 h-12 p-2 border rounded-l-none"
-                    type="number"
-                    name="originalPrice"
-                    placeholder="Original Price"
-                    step="0.01"
-                    value=""
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-              <label className="block text-sm text-gray-700 dark:text-gray-400 col-span-4 sm:col-span-2 font-medium">
-                Sale Price
-              </label>
-              <div className="col-span-8 sm:col-span-4">
-                <div className="flex flex-row">
-                  <span className="inline-flex items-center px-3 rounded rounded-r-none border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm focus:border-green-300 dark:bg-gray-700 dark:text-gray-300 dark:border dark:border-gray-600">
-                    $
-                  </span>
-                  <input
-                    className="block w-full px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 bg-gray-50  h-12 p-2 border rounded-l-none"
-                    type="number"
-                    name="price"
-                    placeholder="Sale price"
-                    step="0.01"
-                    value=""
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6 relative">
-              <label className="block text-sm text-gray-700 dark:text-gray-400 col-span-4 sm:col-span-2 font-medium">
-                Product Quantity
-              </label>
-              <div className="col-span-8 sm:col-span-4">
-                <div className="flex flex-row">
-                  <input
-                    className="block w-full px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 bg-gray-50  h-12 p-2 border"
-                    type="number"
-                    name="stock"
-                    placeholder="Product Quantity"
-                    value=""
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-              <label className="block text-sm text-gray-700 dark:text-gray-400 col-span-4 sm:col-span-2 font-medium">
-                Product Slug
-              </label>
-              <div className="col-span-8 sm:col-span-4">
-                <input
-                  className="block w-full px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 border h-12 bg-gray-100 border-transparent"
-                  type="text"
-                  name="slug"
-                  placeholder="Product Slug"
-                  value=""
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-              <label className="block text-sm text-gray-700 dark:text-gray-400 col-span-4 sm:col-span-2 font-medium">
-                Product Tags
-              </label>
-              <div className="col-span-8 sm:col-span-4">
-                <div className="react-tag-input">
-                  <input
-                    className="block w-full px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 border h-12 bg-gray-100 border-transparent"
-                    placeholder="Product Tag (Write then press enter to add new tag)"
-                    value=""
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
+      {addProduct && (
+        <AddProductScreen
+          formState={setAddProduct}
+          categories={allCategories}
+        />
+      )}
 
-      <p className="font-bold text-2xl text-center">Find Products</p>
-      <div className="p-4">
+      <div className="p-4 bg-primary rounded-lg mt-12">
         <form className="py-3 grid gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex">
           <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
             <input
@@ -388,6 +244,53 @@ const ProductsScreen = () => {
             </select>
           </div>
         </form>
+      </div>
+
+      <div className="mt-10">
+        <table className="w-full rounded-lg border-0 border-white border-solid">
+          <thead className="text-xs font-semibold text-left uppercase border-gray-700 text-gray-400 bg-gray-800">
+            <tr>
+              <td className="px-4 py-3 w-[1/9]">Image</td>
+              <td className="px-4 py-3 w-[1/9]">Product Name</td>
+              <td className="px-4 py-3 w-[1/9]">Qty</td>
+              <td className="px-4 py-3 w-[1/9]">Tags</td>
+              <td className="px-4 py-3 w-[1/9]">Category</td>
+              <td className="px-4 py-3 w-[1/9]">Published</td>
+              <td className="px-4 py-3 w-[1/9]">Sale Price</td>
+              <td className="px-4 py-3 w-[1/9]">Cost Price</td>
+            </tr>
+          </thead>
+          <tbody>
+            {allProducts?.map(
+              ({
+                $id,
+                title,
+                images,
+                modelName,
+                modelNumber,
+                description,
+                tags,
+                quantity,
+                salePrice,
+                category,
+                published,
+                costPrice,
+              }) => (
+                <tr key={$id}>
+                  <td className="px-4 py-3 w-[1/9]">{images[0]}</td>
+                  <td className="px-4 py-3 w-[1/9]">{title}</td>
+                  <td className="px-4 py-3 w-[1/9]">{quantity}</td>
+                  {/* tags should be mapped */}
+                  <td className="px-4 py-3 w-[1/9]">{tags}</td>
+                  <td className="px-4 py-3 w-[1/9]">{category.name}</td>
+                  <td className="px-4 py-3 w-[1/9]">{published}</td>
+                  <td className="px-4 py-3 w-[1/9]">{salePrice}</td>
+                  <td className="px-4 py-3 w-[1/9]">{costPrice}</td>
+                </tr>
+              )
+            )}
+          </tbody>
+        </table>
       </div>
     </>
   );
