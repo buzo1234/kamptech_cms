@@ -51,7 +51,7 @@ const LoginScreen = () => {
       className='flex w-full flex-col justify-center items-center bg-secondary p-6'
       style={{ height: '100vh' }}
     >
-      <div className='bg-gray-800 rounded-3xl p-6 flex flex-col'>
+      <div className=' rounded-3xl p-6 flex flex-col'>
         <div className='flex p-3 items-center'>
           <img
             src='logo.png'
