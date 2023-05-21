@@ -160,7 +160,7 @@ const Layout = ({ screen }) => {
                       <span className='ml-2'>Orders</span>
                     </a>
                   </li>
-                  <li className='hover:text-white'>
+                  {/* <li className='hover:text-white'>
                     <a
                       className='px-3 py-4 flex items-center text-xs  font-bold leading-snug'
                       href='/coupons'
@@ -168,7 +168,7 @@ const Layout = ({ screen }) => {
                       <RedeemOutlinedIcon />
                       <span className='ml-2'>Coupons</span>
                     </a>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
             </div>
@@ -265,7 +265,7 @@ const Layout = ({ screen }) => {
                     <span className='ml-2'>Orders</span>
                   </a>
                 </li>
-                <li className='nav-item hover:text-white'>
+                {/* <li className='nav-item hover:text-white'>
                   <a
                     className='px-3 py-4 flex items-center text-xs  font-bold leading-snug'
                     href='/coupons'
@@ -273,7 +273,7 @@ const Layout = ({ screen }) => {
                     <RedeemOutlinedIcon />
                     <span className='ml-2'>Coupons</span>
                   </a>
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>
