@@ -11,9 +11,18 @@ import ProductsScreen from '../screens/ProductsScreen';
 import CategoryScreen from '../screens/CategoryScreen';
 import OrdersScreen from '../screens/OrdersScreen';
 import CouponsScreen from '../screens/CouponsScreen';
+import { getAccountDetails } from '../actions';
 
 const Layout = ({ screen }) => {
   const [navbarOpen, setNavbarOpen] = useState(false);
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    let data = getAccountDetails();
+    setUser(data);
+  }, [])
+
+  console.log(user)
 
   useEffect(() => {
     if(navbarOpen)

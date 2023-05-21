@@ -56,7 +56,7 @@ const deleteCategory = async (id) => {
     const documents = response.documents;
 
     for (const document of documents) {
-      await storage.deleteFile(document.bucketId, document.fileId)
+      await storage.deleteFile(document.bucketId, document.fileId);
       await database
         .deleteDocument(databaseID, categoryCollectionID, document.$id)
         .then(() => {
@@ -117,7 +117,7 @@ const addCategoryImage = async (image) => {
   try {
     return await storage.createFile('6463d825b38c9f1d947c', ID.unique(), image);
   } catch (e) {
-    console.error("msg : " ,e.message);
+    console.error('msg : ', e.message);
   }
 };
 
@@ -157,6 +157,26 @@ const updateOrderStatus = async (documentId, orderStatus) => {
   }
 };
 
+const verifyGoogleAccount = () => {
+  try {
+    account.createOAuth2Session(
+      'google',
+      'localhost:3000/',
+      'localhost:3000/login'
+    );
+  } catch (e) {
+    console.error(e.message);
+  }
+};
+
+const getAccountDetails = () => {
+  try {
+    return account.get();
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
 export {
   createCategory,
   getCategories,
@@ -170,4 +190,6 @@ export {
   getOrders,
   getOrderById,
   updateOrderStatus,
+  verifyGoogleAccount,
+  getAccountDetails,
 };
