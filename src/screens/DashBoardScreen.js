@@ -14,7 +14,6 @@ const DashBoardScreen = () => {
   }, []);
 
   const getLatestOrders = async () => {
-    console.log("Here")
     await getOrders()
       .then((response) => {
         setAllOrders(response.documents);
@@ -41,7 +40,7 @@ const DashBoardScreen = () => {
 
   return (
     <div>
-      <p className="font-bold pb-3   text-2xl">Dashboard preview</p>
+      <p className="font-bold pb-3   text-2xl">Dashboard</p>
       <div class="grid gap-4 mb-8 md:grid-cols-4 xl:grid-cols-4">
         <div class="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex justify-center h-full">
           <div class="p-4 border border-gray-200 justify-between dark:border-gray-800 w-full p-6 rounded-lg text-white dark:text-green-100 bg-teal-500">

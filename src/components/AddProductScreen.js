@@ -205,10 +205,11 @@ function AddProductScreen({ formState, categories }) {
               </div>
             </div>
           </div>
-          <div>
+          <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
             <label className="block text-sm text-gray-700 dark:text-gray-400 col-span-4 sm:col-span-2 font-medium">
               Specifications
             </label>
+            
           </div>
         </div>
       </form>

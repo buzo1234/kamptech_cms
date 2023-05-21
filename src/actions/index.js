@@ -167,7 +167,35 @@ const getProducts = async () => {
     console.log(allProducts);
     return allProducts;
   } catch (e) {
+    console.error("msg: ", e.message);
+  }
+};
+
+const verifyGoogleAccount = () => {
+  try {
+    account.createOAuth2Session(
+      "google",
+      "https://console.techsouqdubai.com/",
+      "https://console.techsouqdubai.com/login"
+    );
+  } catch (e) {
     console.error(e.message);
+  }
+};
+
+const getAccountDetails = async () => {
+  try {
+    return await account.get();
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
+const logout = async () => {
+  try {
+    await account.deleteSession("current");
+  } catch (e) {
+    console.log(e);
   }
 };
 
@@ -185,4 +213,7 @@ export {
   getOrderById,
   updateOrderStatus,
   getProducts,
+  verifyGoogleAccount,
+  getAccountDetails,
+  logout,
 };
