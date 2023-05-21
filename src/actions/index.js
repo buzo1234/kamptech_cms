@@ -5,6 +5,7 @@ import {
   databaseID,
   ordersCollectionID,
   productsCollectionID,
+  adminUserCollectionID,
 } from "../config";
 
 const account = new Account(client);
@@ -173,11 +174,10 @@ const getProducts = async () => {
 
 const verifyGoogleAccount = () => {
   try {
-    account.createOAuth2Session(
-      "google",
-      "https://console.techsouqdubai.com/",
-      "https://console.techsouqdubai.com/login"
-    );
+    const url = window.location.href.includes("localhost")
+      ? "http://localhost:3000"
+      : "https://console.techsouqdubai.com";
+    account.createOAuth2Session("google", `${url}/login`, `${url}/login`);
   } catch (e) {
     console.error(e.message);
   }
@@ -199,6 +199,18 @@ const logout = async () => {
   }
 };
 
+const getAdmins = async () => {
+  try {
+    const admins = await database.listDocuments(
+      databaseID,
+      adminUserCollectionID
+    );
+    return admins;
+  } catch (e) {
+    console.error(e.message);
+  }
+};
+
 export {
   createCategory,
   getCategories,
@@ -216,4 +228,5 @@ export {
   verifyGoogleAccount,
   getAccountDetails,
   logout,
+  getAdmins,
 };

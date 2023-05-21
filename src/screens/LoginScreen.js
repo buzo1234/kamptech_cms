@@ -1,20 +1,41 @@
-import React, { useEffect } from "react";
-import { verifyGoogleAccount, getAccountDetails } from "../actions";
+import React, { useEffect, useState } from "react";
+import {
+  verifyGoogleAccount,
+  getAccountDetails,
+  getAdmins,
+  logout,
+} from "../actions";
 import { useNavigate } from "react-router-dom";
 
 const LoginScreen = () => {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const whiteListEmails = ["karandua2002@gmail.com", "ppratham1180@gmail.com"];
 
   useEffect(() => {
     getUser();
   }, []);
 
   const getUser = async () => {
+    setLoading(true);
     const data = await getAccountDetails();
+    const adminUsers = await getAdmins();
 
-    if (data !== undefined && whiteListEmails.includes(data.email)) {
+    if (
+      data !== undefined &&
+      adminUsers.documents.some((obj) => obj.email === data.email)
+    ) {
       navigate("/");
+    } else {
+      await logoutSession();
+    }
+    setLoading(false);
+  };
+
+  const logoutSession = async () => {
+    try {
+      await logout();
+    } catch (e) {
+      console.log(e.message);
     }
   };
 
@@ -39,19 +60,23 @@ const LoginScreen = () => {
           </span>
         </div>
         <div className="flex justify-center mt-12">
-          <button
-            onClick={() => handleAuth()}
-            className="flex bg-gray-700 rounded-md px-4 py-2 text-white transform hover:-translate-y-[2px] hover:shadow-lg active:scale-95 duration-200 ease-in-out"
-          >
-            <img
-              src="googleLogo.png"
-              alt=""
-              className="w-[25px] h-[25px] object-contain mr-[10px] "
-            />
-            <span className="md:text-lg lg:text-xl xl:text-xl text-md">
-              Sign In with Google!
-            </span>
-          </button>
+          {loading ? (
+            <p className="text-white text-lg">Loading...</p>
+          ) : (
+            <button
+              onClick={() => handleAuth()}
+              className="flex bg-gray-700 rounded-md px-4 py-2 text-white transform hover:-translate-y-[2px] hover:shadow-lg active:scale-95 duration-200 ease-in-out"
+            >
+              <img
+                src="googleLogo.png"
+                alt=""
+                className="w-[25px] h-[25px] object-contain mr-[10px] "
+              />
+              <span className="md:text-lg lg:text-xl xl:text-xl text-md">
+                Sign In with Google!
+              </span>
+            </button>
+          )}
         </div>
       </div>
     </div>
