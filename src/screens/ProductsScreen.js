@@ -43,7 +43,7 @@ const ProductsScreen = () => {
 
   useEffect(() => {
     getAllCategoriesAndProducts();
-  }, []);
+  }, [addProduct, editProduct, deleteProduct]);
 
   const getAllCategoriesAndProducts = async () => {
     await getCategories()
@@ -272,7 +272,7 @@ const ProductsScreen = () => {
         </form>
       </div>
 
-      {allProducts.length > 0 ? <ProductsView allProducts={allProducts} /> : <p className="mt-8">No Products yet. Add manually or import a CSV file</p>}
+      {allProducts.length > 0 ? <div className="my-6"><ProductsView allProducts={allProducts} /></div> : <p className="my-6">No Products yet.</p>}
     </>
   );
 };

@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
+import { uploadProductFilesToBucket, createProduct } from '../actions';
 
 function AddProductScreen({ formState, categories }) {
   const [productData, setProductData] = useState({
     title: '',
     description: '',
     quantity: 0,
-    salePrice: 0.00,
-    costPrice: 0.00,
+    salePrice: 0.0,
+    costPrice: 0.0,
     specifications: [],
     tags: [],
     category: '',
@@ -21,6 +22,84 @@ function AddProductScreen({ formState, categories }) {
 
   const [specification, setSpecification] = useState([]);
 
+  const [uploading, setUploading] = useState(false);
+
+  /* Files */
+  const [selectedfiles, setFiles] = useState([]);
+  const [thumbnails, setThumbnails] = useState([]);
+  const fileInputRef = useRef(null);
+
+  const handleFileSelect = (e) => {
+    const files = Array.from(e.target.files);
+    setFiles([...selectedfiles, ...files]);
+    getThumbnails();
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer.files);
+    setFiles([...selectedfiles, ...files]);
+    getThumbnails();
+  };
+
+  const handleDivClick = () => {
+    fileInputRef.current.click();
+  };
+
+  /* Thumbnails */
+  const getThumbnails = async () => {
+    const thumbnailPromises = selectedfiles.map((file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const thumbnailSrc = event.target.result;
+          resolve(thumbnailSrc);
+        };
+        reader.onerror = (event) => {
+          reject(event.target.error);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    try {
+      const thumbnailResults = await Promise.all(thumbnailPromises);
+      setThumbnails(thumbnailResults);
+    } catch (error) {
+      console.error('Error generating thumbnails:', error);
+    }
+  };
+
+  const handleRemoveFile = (index, e) => {
+    e.preventDefault();
+    const updatedFiles = selectedfiles.filter((_, i) => i !== index);
+    setFiles(updatedFiles);
+  };
+
+  const renderThumbs = () => {
+    return thumbnails.map((thumb, index) => (
+      <div className='relative h-fit'>
+        <button
+          className='absolute -top-1 -right-1 w-8 h-8 rounded-full bg-white text-red-500 '
+          onClick={(e) => handleRemoveFile(index, e)}
+        >
+          <CloseIcon color='red' />
+        </button>
+        <img src={thumb} className='h-[250px] object-contain' />
+      </div>
+    ));
+  };
+
+  useEffect(() => {
+    getThumbnails();
+  }, [selectedfiles]);
+
+  /* ------------------------------ */
+
   const handleTagRemove = (event, index) => {
     const updatedTags = [...productData.tags];
     updatedTags.splice(index, 1);
@@ -28,18 +107,19 @@ function AddProductScreen({ formState, categories }) {
   };
 
   const handleTagInput = (event) => {
+    
     if (
       event.key === 'Enter' &&
       currentTag.trim() !== '' &&
       productData.tags.length < 5
     ) {
+      event.preventDefault();
       setProductData({
         ...productData,
         tags: [...productData.tags, currentTag.trim()],
       });
       setCurrentTag('');
     }
-
   };
 
   const handleRowChange = (index, field, value) => {
@@ -51,9 +131,8 @@ function AddProductScreen({ formState, categories }) {
   const handleRemoveRow = (index) => {
     const updatedRows = [...specification];
     updatedRows.splice(index, 1);
-    
+
     setSpecification(updatedRows);
-    
   };
 
   const handleAddSpecifications = (e) => {
@@ -61,9 +140,38 @@ function AddProductScreen({ formState, categories }) {
     setProductData({ ...productData, specifications: specification });
   };
 
-  const onProductFormSubmit = (e) => {
+  const onProductFormSubmit = async (e) => {
     e.preventDefault();
-    console.log(productData);
+
+    try {
+      var specs = [];
+      for (const spec of productData.specifications) {
+        specs.push(JSON.stringify(spec));
+      }
+      const imagesData = await uploadProductFilesToBucket(selectedfiles);
+      console.log('Image dataa : ', imagesData);
+      setProductData({ ...productData, images: imagesData });
+
+      
+      await createProduct({
+        title: productData.title,
+        description: productData.description,
+        salePrice: productData.salePrice,
+        costPrice: productData.costPrice,
+        quantity: productData.quantity,
+        tags: productData.tags,
+        images: imagesData.urls,
+        fileId: imagesData.ids,
+        category: productData.category,
+        specifications: specs,
+        published: productData.published,
+      }).then(() => {
+        console.log('product added');
+        formState(false);
+      });
+    } catch (e) {
+      console.log(e.message);
+    }
   };
 
   return (
@@ -161,17 +269,17 @@ function AddProductScreen({ formState, categories }) {
                   className='border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md cursor-pointer px-6 pt-5 pb-6'
                   role='button'
                   tabindex='0'
-                  // onDragOver={handleDragOver}
-                  // onDrop={handleDrop}
-                  // onClick={handleDivClick}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                  onClick={handleDivClick}
                 >
                   <input
-                    // onChange={handleFileSelect}
+                    onChange={handleFileSelect}
                     accept='image/*'
                     multiple='true'
                     type='file'
                     autocomplete='off'
-                    // ref={fileInputRef}
+                    ref={fileInputRef}
                     id='fileInput'
                     tabindex='-1'
                     style={{ display: 'none' }}
@@ -200,21 +308,14 @@ function AddProductScreen({ formState, categories }) {
                     (Only *.jpeg, *.webp and *.png image will be accepted)
                   </em>
                 </div>
-                {/* {files ? (
-                  <div className="flex flex-wrap w-full justify-center flex-col items-center mt-3">
-                    {/* <p>Selected file: {files.name}</p>
-                    <p>File size: {files.size} bytes</p> */}
-                {/* {thumbnail.map((thumb, index) => {
-                      <img
-                        src={thumb}
-                        alt="Thumbnail"
-                        className="w-3/4 object-contain rounded-md"
-                      />;
-                    })}
-                  </div> */}
-                {/* ) : (
-                  "" */}
-                {/* )} */}
+
+                {selectedfiles.length > 0 ? (
+                  <div className='flex flex-wrap w-full justify-center space-x-3 space-y-2 items-center mt-3'>
+                    {renderThumbs()}
+                  </div>
+                ) : (
+                  ''
+                )}
 
                 <div className='text-green-500'></div>
                 <aside className='flex flex-row flex-wrap mt-4'></aside>
@@ -233,15 +334,16 @@ function AddProductScreen({ formState, categories }) {
               <select
                 name=''
                 id=''
-                
                 className='block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none'
                 onChange={(e) =>
                   setProductData({ ...productData, category: e.target.value })
                 }
               >
-                <option disabled selected hidden>Select Category</option>
+                <option disabled selected hidden>
+                  Select Category
+                </option>
                 {categories?.map((category, index) => (
-                  <option value={category.name}>{category.name}</option>
+                  <option value={category.$id}>{category.name}</option>
                 ))}
               </select>
             </div>
@@ -384,7 +486,6 @@ function AddProductScreen({ formState, categories }) {
                       { key: '', value: '' },
                     ]);
                   }}
-                  
                 >
                   + Add Row
                 </div>
@@ -416,7 +517,10 @@ function AddProductScreen({ formState, categories }) {
                       }
                       value={spec.value}
                     />
-                    <CloseIcon onClick={() => handleRemoveRow(index)} className='cursor-pointer' />
+                    <CloseIcon
+                      onClick={() => handleRemoveRow(index)}
+                      className='cursor-pointer'
+                    />
                   </div>
                 ))}
               </div>
@@ -431,18 +535,24 @@ function AddProductScreen({ formState, categories }) {
               </label>
             </div>
             <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-2'>
-            
-              
               {productData.specifications.length > 0 ? (
-                <div className="w-full flex  border border-gray-700 rounded-lg ring-1 ring-black ring-opacity-5 mb-8 bg-gray-900 overflow-x-auto">
-                <table className='w-full whitespace-nowrap'>
-                {productData.specifications.map((spec) => (
-                  <tr className='grid grid-cols-2 w-full text-gray-300 border border-gray-700 ring-1 ring-black ring-opacity-5'>
-                    <td className="col-span-1 px-4 py-3 border border-gray-700 ring-1 ring-black ring-opacity-5 "><p className='text-ellipsis w-full overflow-hidden'>{spec.key}</p></td>
-                    <td className="col-span-1 px-4 py-3 border border-gray-700 ring-1 ring-black ring-opacity-5"><p className='text-ellipsis w-full overflow-hidden'>{spec.value}</p></td>
-                  </tr>
-                ))}
-                </table>
+                <div className='w-full flex  border border-gray-700 rounded-lg ring-1 ring-black ring-opacity-5 mb-8 bg-gray-900 overflow-x-auto'>
+                  <table className='w-full whitespace-nowrap'>
+                    {productData.specifications.map((spec) => (
+                      <tr className='grid grid-cols-2 w-full text-gray-300 border border-gray-700 ring-1 ring-black ring-opacity-5'>
+                        <td className='col-span-1 px-4 py-3 border border-gray-700 ring-1 ring-black ring-opacity-5 '>
+                          <p className='text-ellipsis w-full overflow-hidden'>
+                            {spec.key}
+                          </p>
+                        </td>
+                        <td className='col-span-1 px-4 py-3 border border-gray-700 ring-1 ring-black ring-opacity-5'>
+                          <p className='text-ellipsis w-full overflow-hidden'>
+                            {spec.value}
+                          </p>
+                        </td>
+                      </tr>
+                    ))}
+                  </table>
                 </div>
               ) : (
                 <p className='text-gray-300 text-sm col-span-4'>
@@ -450,7 +560,6 @@ function AddProductScreen({ formState, categories }) {
                 </p>
               )}
             </div>
-            
           </div>
 
           {/* Published */}
