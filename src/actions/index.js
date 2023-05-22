@@ -88,6 +88,34 @@ const deleteCategory = async (id) => {
   }
 };
 
+const deleteProduct = async (id) => {
+  try {
+    const response = await database.listDocuments(
+      databaseID,
+      productsCollectionID,
+      [Query.equal('$id', id)]
+    );
+    const documents = response.documents;
+
+    for (const document of documents) {
+      for (const image of document.fileId) {
+        await storage.deleteFile('64652f7768e9d723b587', image);
+      }
+    }
+
+    await database
+      .deleteDocument(databaseID, productsCollectionID, id)
+      .then(() => {
+        console.log('Document deleted successfully');
+      })
+      .catch((error) => {
+        console.error('Error deleting document:', error);
+      });
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
 const getParentCategories = async () => {
   try {
     return await database.listDocuments(databaseID, categoryCollectionID, [
@@ -259,6 +287,7 @@ export {
   getCategories,
   updateCategory,
   deleteCategory,
+  deleteProduct,
   login,
   getUserData,
   addCategoryImage,

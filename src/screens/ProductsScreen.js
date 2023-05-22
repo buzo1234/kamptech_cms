@@ -3,11 +3,16 @@ import { CSVLink } from 'react-csv';
 import { getCategories, getProducts } from '../actions';
 import AddProductScreen from '../components/AddProductScreen';
 import ProductsView from '../components/ProductsView';
+import DeleteProductScreen from '../components/DeleteProductScreen';
 
 const ProductsScreen = () => {
   const [addProduct, setAddProduct] = useState(false);
+
   const [editProduct, setEditProduct] = useState(false);
+  const [editProdData, setEditProdData] = useState();
+
   const [deleteProduct, setDeleteProduct] = useState(false);
+  const [deleteId, setDeleteId] = useState();
 
   const headers = [
     { label: 'Product Title', key: 'title' },
@@ -272,7 +277,18 @@ const ProductsScreen = () => {
         </form>
       </div>
 
-      {allProducts.length > 0 ? <div className="my-6"><ProductsView allProducts={allProducts} /></div> : <p className="my-6">No Products yet.</p>}
+      {allProducts.length > 0 ? <div className="my-6"><ProductsView allProducts={allProducts} setEditId={setEditProdData} setShow={setEditProdData} show={editProduct} setDeleteId={setDeleteId} delShow={deleteProduct} setDelShow={setDeleteProduct}/></div> : <p className="my-6">No Products yet.</p>}
+
+      {/* Delete Product Screen */}
+      {deleteProduct && (
+        <>
+          <div className="absolute w-full h-full z-[100] top-0 left-0 bg-black/30 "></div>
+
+          <div className="absolute  overflow-auto top-0 left-0  z-[200]  w-full h-full bg-transparent flex justify-center items-center mx-auto  " style={{overflow:"auto"}} >
+            <DeleteProductScreen setShow={setDeleteProduct} show={deleteProduct} prodId={deleteId}/>
+          </div>
+        </>
+      )}
     </>
   );
 };

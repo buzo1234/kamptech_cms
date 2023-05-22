@@ -2,18 +2,18 @@ import React, { useEffect, useState, useRef } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import '../styles/toggleSwitch.css';
 import {
-  deleteCategory,
+  deleteProduct
 } from '../actions';
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 
-const DeleteCategoryScreen = ({ setShow, show, catId }) => {
+const DeleteProductScreen = ({ setShow, show, prodId }) => {
   
-
-  const handleDeleteCategory = async () => {
+  console.log(prodId)
+  const handleDeleteProduct = async () => {
     try {
-        console.log(catId);
-      await deleteCategory(catId).then((response) => {
-        console.log('category deleted ', response);
+        console.log(prodId);
+      await deleteProduct(prodId).then((response) => {
+        console.log('product deleted ', response);
         setShow(false);
       });
     } catch (error) {
@@ -26,9 +26,9 @@ const DeleteCategoryScreen = ({ setShow, show, catId }) => {
       <div className='flex w-full justify-center items-center flex-col'>
         <DeleteOutlineSharpIcon className='text-red-500 my-6' style={{width:"40px", height:"40px"}} />
       
-      <p className='text-xl text-center'>Are you Sure! Want to <span className='text-red-500'>Delete</span> this category?</p>
+      <p className='text-xl text-center'>Are you Sure! Want to <span className='text-red-500'>Delete</span> this product?</p>
 
-      <p className='text-sm text-center mt-3 underline'>If this category have any <span className='text-red-500 font-semibold'>Child</span> categories, they will be Deleted too</p>
+      <p className='text-sm text-center mt-3 underline'>Do you really want to delete these records? You can't view this in your list anymore if you delete!</p>
 
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 mt-8 w-full gap-3 mb-3'>
       <button
@@ -37,7 +37,7 @@ const DeleteCategoryScreen = ({ setShow, show, catId }) => {
         >
           No, keep It
         </button>
-      <button onClick={() => handleDeleteCategory()} className='bg-green-400 hover:bg-green-500 text-white  px-3 py-3 rounded-md'>Yes, Delete It</button>
+      <button onClick={() => handleDeleteProduct()} className='bg-green-400 hover:bg-green-500 text-white  px-3 py-3 rounded-md'>Yes, Delete It</button>
       </div>
       
       </div>
@@ -45,4 +45,4 @@ const DeleteCategoryScreen = ({ setShow, show, catId }) => {
   );
 };
 
-export default DeleteCategoryScreen;
+export default DeleteProductScreen;
