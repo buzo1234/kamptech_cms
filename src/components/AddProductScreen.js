@@ -5,14 +5,14 @@ function AddProductScreen({ formState, categories }) {
   const [productData, setProductData] = useState({
     title: '',
     description: '',
-    quantity: '',
-    salePrice: '',
-    costPrice: '',
+    quantity: 0,
+    salePrice: 0.00,
+    costPrice: 0.00,
     specifications: [],
     tags: [],
     category: '',
     images: [],
-    published: '',
+    published: false,
   });
 
   const [currentTag, setCurrentTag] = useState('');
@@ -39,6 +39,7 @@ function AddProductScreen({ formState, categories }) {
       });
       setCurrentTag('');
     }
+
   };
 
   const handleRowChange = (index, field, value) => {
@@ -105,7 +106,7 @@ function AddProductScreen({ formState, categories }) {
           {/* Title */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-3'>
-              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-bold text-gray-300'>
+              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300'>
                 Product Title
               </label>
             </div>
@@ -125,7 +126,7 @@ function AddProductScreen({ formState, categories }) {
           {/* Description */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-3'>
-              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-bold text-gray-300'>
+              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300'>
                 Product Description
               </label>
             </div>
@@ -150,7 +151,7 @@ function AddProductScreen({ formState, categories }) {
           {/* Images */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-3'>
-              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-bold text-gray-300'>
+              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300'>
                 Product Images
               </label>
             </div>
@@ -224,7 +225,7 @@ function AddProductScreen({ formState, categories }) {
           {/* Category */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-3'>
-              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-bold text-gray-300'>
+              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300'>
                 Select Category
               </label>
             </div>
@@ -232,13 +233,13 @@ function AddProductScreen({ formState, categories }) {
               <select
                 name=''
                 id=''
-                placeholder='Select Parent'
+                
                 className='block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none'
                 onChange={(e) =>
                   setProductData({ ...productData, category: e.target.value })
                 }
               >
-                <option value=''>Select Category</option>
+                <option disabled selected hidden>Select Category</option>
                 {categories?.map((category, index) => (
                   <option value={category.name}>{category.name}</option>
                 ))}
@@ -249,7 +250,7 @@ function AddProductScreen({ formState, categories }) {
           {/* Product Price */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-3'>
-              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-bold text-gray-300'>
+              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300'>
                 Product Price
               </label>
             </div>
@@ -278,7 +279,7 @@ function AddProductScreen({ formState, categories }) {
           {/* Sale Price */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-3'>
-              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-bold text-gray-300'>
+              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300'>
                 Sale Price
               </label>
             </div>
@@ -308,7 +309,7 @@ function AddProductScreen({ formState, categories }) {
           {/* Product Quantity */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-3'>
-              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-bold text-gray-300'>
+              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300'>
                 Product Quantity
               </label>
             </div>
@@ -328,7 +329,7 @@ function AddProductScreen({ formState, categories }) {
           {/* Product Tags */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-3'>
-              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-bold text-gray-300'>
+              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300'>
                 Product Tags
               </label>
             </div>
@@ -367,7 +368,7 @@ function AddProductScreen({ formState, categories }) {
           {/* Specifications */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-3'>
-              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-bold text-gray-300'>
+              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300'>
                 Specifications
               </label>
             </div>
@@ -425,30 +426,37 @@ function AddProductScreen({ formState, categories }) {
           {/* Added Specs */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-4'>
             <div className='col-span-1 px-3'>
-              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-bold text-gray-300'>
+              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300'>
                 Added Specifications
               </label>
             </div>
-            <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-3'>
+            <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-2'>
+            
+              
               {productData.specifications.length > 0 ? (
-                productData.specifications.map((spec) => (
-                  <div className='flex w-full text-gray-300'>
-                    <label className='mr-6'>{spec.key}</label>
-                    <label>{spec.value}</label>
-                  </div>
-                ))
+                <div className="w-full flex  border border-gray-700 rounded-lg ring-1 ring-black ring-opacity-5 mb-8 bg-gray-900 overflow-x-auto">
+                <table className='w-full whitespace-nowrap'>
+                {productData.specifications.map((spec) => (
+                  <tr className='grid grid-cols-2 w-full text-gray-300 border border-gray-700 ring-1 ring-black ring-opacity-5'>
+                    <td className="col-span-1 px-4 py-3 border border-gray-700 ring-1 ring-black ring-opacity-5 "><p className='text-ellipsis w-full overflow-hidden'>{spec.key}</p></td>
+                    <td className="col-span-1 px-4 py-3 border border-gray-700 ring-1 ring-black ring-opacity-5"><p className='text-ellipsis w-full overflow-hidden'>{spec.value}</p></td>
+                  </tr>
+                ))}
+                </table>
+                </div>
               ) : (
                 <p className='text-gray-300 text-sm col-span-4'>
                   No Specifications mentioned
                 </p>
               )}
             </div>
+            
           </div>
 
           {/* Published */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
             <div className='col-span-1 px-3'>
-              <p className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-bold text-gray-300'>
+              <p className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300'>
                 Published
               </p>
             </div>
