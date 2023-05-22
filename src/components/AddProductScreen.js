@@ -50,7 +50,9 @@ function AddProductScreen({ formState, categories }) {
   const handleRemoveRow = (index) => {
     const updatedRows = [...specification];
     updatedRows.splice(index, 1);
+    
     setSpecification(updatedRows);
+    
   };
 
   const handleAddSpecifications = (e) => {
@@ -393,7 +395,7 @@ function AddProductScreen({ formState, categories }) {
                 </button>
               </div>
               <div className='flex flex-col w-full overflow-auto'>
-                {specification.map((_, index) => (
+                {specification.map((spec, index) => (
                   <div className='flex mb-2 items-center space-x-3' key={index}>
                     <input
                       type='text'
@@ -402,6 +404,7 @@ function AddProductScreen({ formState, categories }) {
                       onChange={(e) =>
                         handleRowChange(index, 'key', e.target.value)
                       }
+                      value={spec.key}
                     />
                     <input
                       type='text'
@@ -410,6 +413,7 @@ function AddProductScreen({ formState, categories }) {
                       onChange={(e) =>
                         handleRowChange(index, 'value', e.target.value)
                       }
+                      value={spec.value}
                     />
                     <CloseIcon onClick={() => handleRemoveRow(index)} className='cursor-pointer' />
                   </div>
