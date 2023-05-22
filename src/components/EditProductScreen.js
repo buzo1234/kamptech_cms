@@ -105,10 +105,12 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
     e.preventDefault();
     setRemoveThumbs([...removeThumbs, productData.fileId[index]]);
     console.log(productData.fileId);
-    const updatedThumbs = productData.images.filter((_, i) => i !== index);
-    const updateThumbIds = productData.fileId.filter((_, i) => i !== index);
-    setProductData({ ...productData, images: updatedThumbs });
-    setProductData({ ...productData, fileId: updateThumbIds });
+    var updatedThumbArray = JSON.parse(JSON.stringify(productData.images));
+    var updatedThumIdArray = JSON.parse(JSON.stringify(productData.fileId));
+    const updatedThumbs = updatedThumbArray.filter((_, i) => i !== index);
+    const updateThumbIds = updatedThumIdArray.filter((_, i) => i !== index);
+    setProductData({ ...productData, images: updatedThumbs, fileId:updateThumbIds });
+
   };
 
   const handleRemoveFile = (index, e) => {
