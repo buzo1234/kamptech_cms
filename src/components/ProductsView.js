@@ -41,6 +41,7 @@ function ProductsView({
               <td className='px-4 py-3'>Name</td>
 
               <td className='px-4 py-3'>Category</td>
+              <td className='px-4 py-3'>SKU</td>
               <td className='px-4 py-3'>Cost Price</td>
               <td className='px-4 py-3'>Sale Price</td>
               <td className='px-4 py-3'>Qty</td>
@@ -57,7 +58,7 @@ function ProductsView({
                 images,
 
                 description,
-
+                sku,
                 quantity,
                 salePrice,
                 category,
@@ -77,6 +78,8 @@ function ProductsView({
                   {/* LOL wont need it here */}
 
                   <td className='px-4 py-3 '>{category?.name}</td>
+
+                  <td className='px-4 py-3 '>{sku}</td>
                   <td className='px-4 py-3 '>{costPrice}</td>
                   <td className='px-4 py-3 '>{salePrice}</td>
                   <td className='px-4 py-3 '>{quantity}</td>

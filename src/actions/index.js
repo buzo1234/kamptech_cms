@@ -59,6 +59,19 @@ const updateCategory = async (categoryData, id) => {
   }
 };
 
+const updateProduct = async (productData, id) => {
+  try {
+    return await database.updateDocument(
+      databaseID,
+      productsCollectionID,
+      id,
+      productData
+    );
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
 const deleteCategory = async (id) => {
   const catid = id.split('&&')[0];
   console.log(catid);
@@ -163,6 +176,16 @@ const addCategoryImage = async (image) => {
     console.error('msg : ', e.message);
   }
 };
+
+const deleteFiles = async (ids) => {
+  try{
+    for(const id of ids){
+      await storage.deleteFile('64652f7768e9d723b587',id)
+    }
+  }catch(e) {
+    console.log(e.message)
+  }
+}
 
 const uploadProductFilesToBucket = async (selectedFiles) => {
   try {
@@ -286,6 +309,7 @@ export {
   createCategory,
   getCategories,
   updateCategory,
+  updateProduct,
   deleteCategory,
   deleteProduct,
   login,
@@ -303,4 +327,5 @@ export {
   getAdmins,
   uploadProductFilesToBucket,
   createProduct,
+  deleteFiles
 };

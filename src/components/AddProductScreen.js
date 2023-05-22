@@ -138,7 +138,8 @@ function AddProductScreen({ formState, categories }) {
 
   const handleAddSpecifications = (e) => {
     e.preventDefault();
-    setProductData({ ...productData, specifications: specification });
+    var newSpecs = JSON.parse(JSON.stringify(specification));
+    setProductData({ ...productData, specifications: newSpecs });
   };
 
   const onProductFormSubmit = async (e) => {

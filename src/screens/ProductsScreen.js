@@ -4,6 +4,7 @@ import { getCategories, getProducts } from '../actions';
 import AddProductScreen from '../components/AddProductScreen';
 import ProductsView from '../components/ProductsView';
 import DeleteProductScreen from '../components/DeleteProductScreen';
+import EditProductScreen from '../components/EditProductScreen';
 
 const ProductsScreen = () => {
   const [addProduct, setAddProduct] = useState(false);
@@ -277,7 +278,7 @@ const ProductsScreen = () => {
         </form>
       </div>
 
-      {allProducts.length > 0 ? <div className="my-6"><ProductsView allProducts={allProducts} setEditId={setEditProdData} setShow={setEditProdData} show={editProduct} setDeleteId={setDeleteId} delShow={deleteProduct} setDelShow={setDeleteProduct}/></div> : <p className="my-6">No Products yet.</p>}
+      {allProducts.length > 0 ? <div className="my-6"><ProductsView allProducts={allProducts} setEditId={setEditProdData} setShow={setEditProduct} show={editProduct} setDeleteId={setDeleteId} delShow={deleteProduct} setDelShow={setDeleteProduct}/></div> : <p className="my-6">No Products yet.</p>}
 
       {/* Delete Product Screen */}
       {deleteProduct && (
@@ -289,6 +290,18 @@ const ProductsScreen = () => {
           </div>
         </>
       )}
+
+      {/* Edit Product Screen */}
+      {editProduct && (
+        <>
+          <div className="absolute w-full h-full z-[100] top-0 left-0 bg-black/30 "></div>
+
+          <div className="absolute right-0 overflow-auto   z-[200] top-0 6 w-full lg:w-2/3 xl:w-2/3 bg-white transform -translate-x-0 transition duration-300 ease-in-out " style={{minHeight: "100svh", overflow:"auto"}} >
+            <EditProductScreen setShow={setEditProduct} show={editProduct} prodData={editProdData} categories={allCategories}/>
+          </div>
+        </>
+      )}
+      
     </>
   );
 };
