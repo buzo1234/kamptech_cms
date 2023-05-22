@@ -19,15 +19,7 @@ function AddProductScreen({ formState, categories }) {
 
   const [rowCount, setRowCount] = useState(0);
 
-  const [specification, setSpecification] = useState({
-    key: "",
-    value: "",
-  });
-  const [allSpecifications, setAllSpecifications] = useState([]);
-
-  useEffect(() => {
-    setProductData({ ...productData, specifications: allSpecifications });
-  }, [allSpecifications]);
+  const [specification, setSpecification] = useState([]);
 
   const handleTagRemove = (event, index) => {
     const updatedTags = [...productData.tags];
@@ -36,7 +28,11 @@ function AddProductScreen({ formState, categories }) {
   };
 
   const handleTagInput = (event) => {
-    if (event.key === "Enter" && currentTag.trim() !== "") {
+    if (
+      event.key === "Enter" &&
+      currentTag.trim() !== "" &&
+      productData.tags.length < 5
+    ) {
       setProductData({
         ...productData,
         tags: [...productData.tags, currentTag.trim()],
@@ -45,18 +41,21 @@ function AddProductScreen({ formState, categories }) {
     }
   };
 
-  const handleRemoveSpecification = (event, index) => {
-    console.log(index);
-    // const updatedSpecifications = productData.specifications.splice(index, 1);
-    // setAllSpecifications(updatedSpecifications);
-    // setRowCount(rowCount - 1);
+  const handleRowChange = (index, field, value) => {
+    const updatedRows = [...specification];
+    updatedRows[index][field] = value;
+    setSpecification(updatedRows);
   };
 
-  const handleAddSpecifications = (event, type) => {
-    event.preventDefault();
-    if (rowCount > 0) {
-      setAllSpecifications([...allSpecifications, specification]);
-    }
+  const handleRemoveRow = (index) => {
+    const updatedRows = [...specification];
+    updatedRows.splice(index, 1);
+    setSpecification(updatedRows);
+  };
+
+  const handleAddSpecifications = (e) => {
+    e.preventDefault();
+    setProductData({ ...productData, specifications: specification });
   };
 
   const onProductFormSubmit = (e) => {
@@ -337,11 +336,11 @@ function AddProductScreen({ formState, categories }) {
                   type="text"
                   className="block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none"
                   placeholder="Add Unique Product Tags (enter a tag and then press enter, max 5 allowed)"
+                  value={currentTag}
                   onChange={(e) => setCurrentTag(e.target.value)}
                   onKeyDown={(e) => {
                     handleTagInput(e);
                   }}
-                  value={currentTag}
                 />
               </div>
               <div className="flex mt-2 mb-2">
@@ -377,31 +376,30 @@ function AddProductScreen({ formState, categories }) {
                   className="border-0 border-white border-solid px-4 py-2 bg-gray-600 rounded-md "
                   onClick={(e) => {
                     e.preventDefault();
-                    setRowCount(rowCount + 1);
-                    handleAddSpecifications(e, "add");
+                    setSpecification([
+                      ...specification,
+                      { key: "", value: "" },
+                    ]);
                   }}
                 >
                   + Add Row
                 </button>
                 <button
-                  onClick={(e) => handleAddSpecifications(e, "done")}
+                  onClick={handleAddSpecifications}
                   className="bg-green-600 text-white px-4 py-2 rounded-md"
                 >
                   Done
                 </button>
               </div>
               <div className="flex flex-col w-full overflow-auto">
-                {Array.from({length: rowCount}).map((specs, index) => (
+                {specification.map((_, index) => (
                   <div className="flex mb-2" key={index}>
                     <input
                       type="text"
                       placeholder="key"
                       className="block px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-500 bg-gray-700 border h-12 border-transparent mr-10 col-span-2"
                       onChange={(e) =>
-                        setSpecification({
-                          ...specification,
-                          key: e.target.value,
-                        })
+                        handleRowChange(index, "key", e.target.value)
                       }
                     />
                     <input
@@ -409,15 +407,10 @@ function AddProductScreen({ formState, categories }) {
                       placeholder="value"
                       className="block px-3 py-1 text-sm focus:outline-none focus:border-gray-200 bg-gray-700 dark:text-gray-300 leading-5 rounded-md border h-12 border-transparent col-span-2"
                       onChange={(e) =>
-                        setSpecification({
-                          ...specification,
-                          value: e.target.value,
-                        })
+                        handleRowChange(index, "value", e.target.value)
                       }
                     />
-                    <CloseIcon
-                      onClick={(e) => handleRemoveSpecification(e, index)}
-                    />
+                    <CloseIcon onClick={() => handleRemoveRow(index)} />
                   </div>
                 ))}
               </div>
