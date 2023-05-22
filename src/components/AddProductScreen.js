@@ -83,7 +83,7 @@ function AddProductScreen({ formState, categories }) {
 
   const renderThumbs = () => {
     return thumbnails.map((thumb, index) => (
-      <div className='relative bg-black'>
+      <div className='relative '>
         <button
           className='absolute -top-1 -right-1 w-8 h-8 rounded-full bg-white text-red-500 '
           onClick={(e) => handleRemoveFile(index, e)}
