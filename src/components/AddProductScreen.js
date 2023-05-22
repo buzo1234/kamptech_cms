@@ -6,6 +6,7 @@ function AddProductScreen({ formState, categories }) {
   const [productData, setProductData] = useState({
     title: '',
     description: '',
+    sku:'',
     quantity: 0,
     salePrice: 0.0,
     costPrice: 0.0,
@@ -156,6 +157,7 @@ function AddProductScreen({ formState, categories }) {
       await createProduct({
         title: productData.title,
         description: productData.description,
+        sku: productData.sku,
         salePrice: productData.salePrice,
         costPrice: productData.costPrice,
         quantity: productData.quantity,
@@ -253,6 +255,26 @@ function AddProductScreen({ formState, categories }) {
                   })
                 }
               ></textarea>
+            </div>
+          </div>
+
+          {/* SKU */}
+          <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
+            <div className='col-span-1 px-3'>
+              <label className='text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300'>
+                SKU
+              </label>
+            </div>
+            <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-2'>
+              <input
+                className='block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none '
+                type='text'
+                name='title'
+                placeholder='Product SKU'
+                onChange={(e) =>
+                  setProductData({ ...productData, sku: e.target.value })
+                }
+              />
             </div>
           </div>
 
