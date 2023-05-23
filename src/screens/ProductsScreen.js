@@ -11,6 +11,7 @@ const ProductsScreen = () => {
 
   const [searchProduct, setSearchProduct] = useState("");
   const [searchCategory, setSearchCategory] = useState("All");
+  const [priceFilter, setPriceFilter] = useState("All");
 
   const [addProduct, setAddProduct] = useState(false);
 
@@ -19,9 +20,8 @@ const ProductsScreen = () => {
 
   const [deleteProduct, setDeleteProduct] = useState(false);
   const [deleteId, setDeleteId] = useState();
-  let filterProds = [];
 
-  const [filterprods, setFilterProds] = useState([]);
+  const [filterProds, setFilterProds] = useState([]);
 
   const headers = [
     { label: "Product Title", key: "title" },
@@ -46,16 +46,20 @@ const ProductsScreen = () => {
 
   useEffect(() => {
     filterOut();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchProduct, searchCategory]);
+
+  useEffect(() => {
+    handlePriceFilter(priceFilter);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [priceFilter]);
 
   useEffect(() => {
     if (addProduct || editProduct || deleteProduct) {
       document.body.style.overflow = "hidden";
-      //document.getElementById("mainbody").style.overflow = "hidden";
       console.log("hidden");
     } else {
       document.body.style.overflow = "auto";
-      //document.getElementById("mainbody").style.overflow = "auto";
     }
   }, [addProduct, editProduct, deleteProduct]);
 
@@ -90,7 +94,7 @@ const ProductsScreen = () => {
   };
 
   const filterOut = () => {
-    filterProds = allProducts.filter((product) => {
+    const filterProds = allProducts.filter((product) => {
       const prodname =
         product.title.toLowerCase().includes(searchProduct.toLowerCase()) ||
         searchProduct === null ||
@@ -102,22 +106,39 @@ const ProductsScreen = () => {
         searchCategory === null ||
         product.category.$id === searchCategory;
 
-      console.log(prodname, catval);
-
       return prodname && catval;
     });
 
     setFilterProds(filterProds);
-
-    console.log(
-      "filter ",
-      filterProds,
-      searchProduct.toLowerCase(),
-      searchCategory.length
-    );
   };
 
-  const handlePriceFilter = () => {};
+  const handlePriceFilter = (value) => {
+    switch (value) {
+      case "low":
+        setFilterProds(filterProds.sort((a, b) => a.salePrice - b.salePrice));
+        console.log(filterProds);
+        break;
+      case "high":
+        setFilterProds(filterProds.sort((a, b) => b.salePrice - a.salePrice));
+        console.log(filterProds);
+        break;
+      case "published":
+        setFilterProds(allProducts.filter((prod) => prod.published === true));
+        break;
+      case "unpublished":
+        setFilterProds(allProducts.filter((prod) => prod.published !== true));
+        break;
+      case "status-selling":
+        setFilterProds(allProducts.filter((prod) => prod.quantity > 0));
+        break;
+      case "status-out-of-stock":
+        setFilterProds(allProducts.filter((prod) => prod.quantity === 0));
+        break;
+      default:
+        setFilterProds(allProducts);
+        break;
+    }
+  };
 
   return (
     <>
@@ -244,15 +265,18 @@ const ProductsScreen = () => {
           <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
             <select
               className="block w-full px-2 py-1 text-sm dark:text-gray-300 focus:outline-none rounded-md form-select focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:shadow-none focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 leading-5 border h-12 bg-gray-100 border-transparent"
-              onChange={(e) => handlePriceFilter(e)}
+              onChange={(e) => {
+                setPriceFilter(e.target.value);
+                handlePriceFilter(e.target.value);
+              }}
             >
-              <option value="All" hidden="">
+              <option value="All" selected>
                 Price
               </option>
               <option value="low">Low to High</option>
               <option value="high">High to Low</option>
               <option value="published">Published</option>
-              <option value="unPublished">Unpublished</option>
+              <option value="unpublished">Unpublished</option>
               <option value="status-selling">Status - Selling</option>
               <option value="status-out-of-stock"> Status - Sold Out</option>
             </select>
@@ -264,7 +288,7 @@ const ProductsScreen = () => {
         <div className="my-6">
           <ProductsView
             allProducts={allProducts}
-            filter={filterprods}
+            filter={filterProds}
             setEditId={setEditProdData}
             setShow={setEditProduct}
             show={editProduct}

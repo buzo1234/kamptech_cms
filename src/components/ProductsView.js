@@ -13,9 +13,7 @@ function ProductsView({
   setDelShow,
   delShow,
 }) {
-  console.log("In virew ", filter);
   const handleEditClick = (prodData) => {
-    console.log(prodData);
     window.scrollTo({
       top: 0,
       behavior: "smooth",
