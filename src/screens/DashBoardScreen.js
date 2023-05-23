@@ -20,6 +20,7 @@ const DashBoardScreen = () => {
         const totalOrderCount = response.total;
         setAllOrders(response.documents);
         setTotalOrderCount(response.total);
+        console.log(allOrders);
 
         const getTotalProcessing = allOrders.filter(
           (item) => item.Status === "Processing"
@@ -136,7 +137,15 @@ const DashBoardScreen = () => {
                 This Month
               </p>
               <p class="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
-                $10914.72
+                $
+                {allOrders?.reduce(
+                  (total, current) =>
+                    new Date(current.orderTime).getMonth() ===
+                    new Date().getMonth()
+                      ? (total += current.amount)
+                      : 0,
+                  0
+                )}
               </p>
             </div>
           </div>
@@ -162,7 +171,11 @@ const DashBoardScreen = () => {
                 All-Time Sales
               </p>
               <p class="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
-                $42348.78
+                $
+                {allOrders?.reduce(
+                  (total, current) => (total += current.amount),
+                  0
+                )}
               </p>
             </div>
           </div>
