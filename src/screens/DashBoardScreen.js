@@ -308,7 +308,6 @@ const DashBoardScreen = () => {
               <td className="px-4 py-3">Invoice No.</td>
               <td className="px-4 py-3">Order Time</td>
               <td className="px-4 py-3">Customer Name</td>
-              <td className="px-4 py-3">Product</td>
               <td className="px-4 py-3">Amount</td>
               <td className="px-4 py-3">Method</td>
               <td className="px-4 py-3">Status</td>
@@ -340,21 +339,22 @@ const DashBoardScreen = () => {
                         }).format(new Date(orderTime))}
                       </td>
                       <td className="px-4 py-3">{customer}</td>
-                      <td className="px-4 py-3">{product}</td>
                       <td className="px-4 py-3">{amount}</td>
                       <td className="px-4 py-3">{Method}</td>
-                      <td
-                        className={`px-4 py-3 ${
-                          Status === "Delivered"
-                            ? "bg-green-700 px-2 py-[0.5] rounded-lg text-sm"
-                            : Status === "Pending"
-                            ? "bg--700 px-2 py-[0.5] rounded-lg text-sm"
-                            : Status === "Processing"
-                            ? "bg-orange-500-700 px-2 py-[0.5] rounded-lg text-sm"
-                            : "bg-red-700 px-2 py-[0.5] rounded-lg text-sm"
-                        }`}
-                      >
-                        {Status}
+                      <td className="px-4 py-3">
+                        <span
+                          className={`${
+                            Status === "Pending"
+                              ? "bg-orange-700 px-2 py-[0.5] rounded-lg text-sm"
+                              : Status === "Cancel"
+                              ? "bg-red-700 px-2 py-[0.5] rounded-lg text-sm"
+                              : Status === "Delivered"
+                              ? "bg-green-700 px-2 py-[0.5] rounded-lg text-sm"
+                              : "bg-blue-700 px-2 py-[0.5] rounded-lg text-sm"
+                          }`}
+                        >
+                          {Status}
+                        </span>
                       </td>
                     </tr>
                   );

@@ -10,8 +10,7 @@ const ProductsScreen = () => {
   const [searching, setSearching] = useState(false);
 
   const [searchProduct, setSearchProduct] = useState("");
-  const [searchCategory, setSearchCategory] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchCategory, setSearchCategory] = useState("All");
 
   const [addProduct, setAddProduct] = useState(false);
 
@@ -20,6 +19,9 @@ const ProductsScreen = () => {
 
   const [deleteProduct, setDeleteProduct] = useState(false);
   const [deleteId, setDeleteId] = useState();
+  let filterProds = [];
+
+  const [filterprods, setFilterProds] = useState([]);
 
   const headers = [
     { label: "Product Title", key: "title" },
@@ -28,7 +30,7 @@ const ProductsScreen = () => {
     { label: "Product Description", key: "description" },
     { label: "Quantity", key: "quantity" },
     { label: "Product Tags", key: "tags" },
-    { label: "Product Images", key: "images" },
+    { label: "Product Icon", key: "images" },
     { label: "Sale Price", key: "salePrice" },
     { label: "Cost Price", key: "costPrice" },
     { label: "Category", key: "category" },
@@ -41,6 +43,10 @@ const ProductsScreen = () => {
   const [allCategories, setAllCategories] = useState([]);
 
   const [allProducts, setAllProducts] = useState([]);
+
+  useEffect(() => {
+    filterOut();
+  }, [searchProduct, searchCategory]);
 
   useEffect(() => {
     if (addProduct || editProduct || deleteProduct) {
@@ -68,7 +74,7 @@ const ProductsScreen = () => {
     await getProducts()
       .then((response) => {
         setAllProducts(response.documents);
-        setFilteredProducts(response.documents);
+        setFilterProds(response.documents);
       })
       .catch((e) => {
         console.error(e.message);
@@ -77,32 +83,41 @@ const ProductsScreen = () => {
 
   const handleTitleChange = (e) => {
     setSearchProduct(e.target.value);
-    if (searchProduct === "") {
-      setFilteredProducts([]);
-    }
-    handleProductSearch();
   };
 
   const handleCategoryChange = (e) => {
     setSearchCategory(e.target.value);
-    if (searchCategory === "All") {
-      setFilteredProducts([]);
-    }
-    handleProductSearch();
   };
 
-  const handleProductSearch = () => {
-    const filtered = allProducts.filter((product) => {
-      const matchProductTitle =
-        searchProduct === "" ||
-        product.title.toLowerCase().includes(searchProduct.toLowerCase());
-      const matchCategory =
-        searchCategory === "" || product.category === searchCategory;
-      return matchProductTitle && matchCategory;
+  const filterOut = () => {
+    filterProds = allProducts.filter((product) => {
+      const prodname =
+        product.title.toLowerCase().includes(searchProduct.toLowerCase()) ||
+        searchProduct === null ||
+        searchProduct === undefined ||
+        searchProduct === "";
+      const catval =
+        searchCategory === "All" ||
+        searchCategory === undefined ||
+        searchCategory === null ||
+        product.category.$id === searchCategory;
+
+      console.log(prodname, catval);
+
+      return prodname && catval;
     });
 
-    setFilteredProducts(filtered);
+    setFilterProds(filterProds);
+
+    console.log(
+      "filter ",
+      filterProds,
+      searchProduct.toLowerCase(),
+      searchCategory.length
+    );
   };
+
+  const handlePriceFilter = () => {};
 
   return (
     <>
@@ -114,13 +129,13 @@ const ProductsScreen = () => {
           <div className="flex justify-start xl:w-1/2  md:w-full">
             <div className=" lg:flex md:flex flex-grow-0">
               <div className="flex">
-                <div className="lg:flex-1 md:flex-1 mr-3 sm:flex-none">
+                <div className="lg:flex-1 md:flex-1 mr-4 sm:flex-none">
                   <CSVLink
                     target="_blank"
                     headers={headers}
                     data={allProducts}
                     filename={"TechSouqDubai - Products Catalogue"}
-                    className="border flex justify-center items-center border-gray-300 hover:border-green-400 hover:text-green-400  dark:text-gray-300 cursor-pointer h-10 w-20 rounded-md focus:outline-none"
+                    className="border flex justify-center items-center border-gray-300 hover:border-green-400 hover:text-green-400 dark:text-gray-300 cursor-pointer h-10 w-20 rounded-md focus:outline-none"
                   >
                     <svg
                       stroke="currentColor"
@@ -138,87 +153,14 @@ const ProductsScreen = () => {
                       <polyline points="17 8 12 3 7 8"></polyline>
                       <line x1="12" y1="3" x2="12" y2="15"></line>
                     </svg>
-                    <span className="text-xs">Export</span>
+                    <span className="text-sm">Export</span>
                   </CSVLink>
-                </div>
-                <div className="lg:flex-1 md:flex-1 mr-3  sm:flex-none">
-                  <button className="border flex justify-center items-center h-10 w-20 hover:text-yellow-400  border-gray-300 dark:text-gray-300 cursor-pointer  py-2 hover:border-yellow-400 rounded-md focus:outline-none">
-                    <svg
-                      stroke="currentColor"
-                      fill="none"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className=""
-                      height="1em"
-                      width="1em"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="7 10 12 15 17 10"></polyline>
-                      <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                    <span className="text-xs">Import</span>
-                  </button>
                 </div>
               </div>
             </div>
           </div>
-          <div className="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start flex-grow-0">
+          <div className="lg:flex md:flex lg:justify-end xl:w-1/2 md:w-full md:justify-start flex-grow-0">
             <div className="w-full md:w-40 lg:w-40 xl:w-40 mr-3 mb-3 lg:mb-0">
-              <button
-                className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 rounded-lg text-sm text-white bg-green-500 border border-transparent opacity-50 w-full h-12 btn-gray sm:mb-3"
-                disabled=""
-                type="button"
-              >
-                <span className="">
-                  <svg
-                    stroke="currentColor"
-                    fill="none"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    height="1em"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                  </svg>
-                </span>
-                Bulk Action
-              </button>
-            </div>
-            <div className="w-full md:w-32 lg:w-32 xl:w-32 mr-3 mb-3 lg:mb-0">
-              <button
-                className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 rounded-lg text-sm text-white border border-transparent opacity-50 w-full h-12 disabled btn-red bg-red-500"
-                disabled=""
-                type="button"
-              >
-                <span className="">
-                  <svg
-                    stroke="currentColor"
-                    fill="none"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    height="1em"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    <line x1="10" y1="11" x2="10" y2="17"></line>
-                    <line x1="14" y1="11" x2="14" y2="17"></line>
-                  </svg>
-                </span>
-                Delete
-              </button>
-            </div>
-            <div className="w-full md:w-48 lg:w-48 xl:w-48">
               <button
                 className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 rounded-lg text-sm text-white bg-green-700 border border-transparent focus:ring focus:ring-purple-300 w-full h-12"
                 type="button"
@@ -287,17 +229,23 @@ const ProductsScreen = () => {
             ></button>
           </div>
           <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
-            <select className="block w-full px-2 py-1 text-sm dark:text-gray-300 focus:outline-none rounded-md form-select focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:shadow-none focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 leading-5 border h-12 bg-gray-100 border-transparent" onChange={(e) => handleCategoryChange(e)}>
-              <option value="All" hidden="">
+            <select
+              className="block w-full px-2 py-1 text-sm dark:text-gray-300 focus:outline-none rounded-md form-select focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:shadow-none focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 leading-5 border h-12 bg-gray-100 border-transparent"
+              onChange={(e) => handleCategoryChange(e)}
+            >
+              <option value="All" selected>
                 Category
               </option>
               {allCategories.map((category) => (
-                <option>{category.name}</option>
+                <option value={category.$id}>{category.name}</option>
               ))}
             </select>
           </div>
           <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
-            <select className="block w-full px-2 py-1 text-sm dark:text-gray-300 focus:outline-none rounded-md form-select focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:shadow-none focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 leading-5 border h-12 bg-gray-100 border-transparent">
+            <select
+              className="block w-full px-2 py-1 text-sm dark:text-gray-300 focus:outline-none rounded-md form-select focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:shadow-none focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 leading-5 border h-12 bg-gray-100 border-transparent"
+              onChange={(e) => handlePriceFilter(e)}
+            >
               <option value="All" hidden="">
                 Price
               </option>
@@ -307,8 +255,6 @@ const ProductsScreen = () => {
               <option value="unPublished">Unpublished</option>
               <option value="status-selling">Status - Selling</option>
               <option value="status-out-of-stock"> Status - Sold Out</option>
-              <option value="date-added-asc">Date Added (Asc)</option>
-              <option value="date-added-desc">Date Added (Desc)</option>
             </select>
           </div>
         </form>
@@ -318,7 +264,7 @@ const ProductsScreen = () => {
         <div className="my-6">
           <ProductsView
             allProducts={allProducts}
-            filteredProducts={filteredProducts}
+            filter={filterprods}
             setEditId={setEditProdData}
             setShow={setEditProduct}
             show={editProduct}

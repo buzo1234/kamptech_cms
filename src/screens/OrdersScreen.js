@@ -201,7 +201,6 @@ const OrdersScreen = () => {
                   <td className="px-4 py-3">Invoice No.</td>
                   <td className="px-4 py-3">Order Time</td>
                   <td className="px-4 py-3">Customer Name</td>
-                  <td className="px-4 py-3">Product</td>
                   <td className="px-4 py-3">Amount</td>
                   <td className="px-4 py-3">Method</td>
                   <td className="px-4 py-3">Status</td>
@@ -216,7 +215,6 @@ const OrdersScreen = () => {
                         invoice,
                         orderTime,
                         customer,
-                        product,
                         amount,
                         Method,
                         Status,
@@ -233,10 +231,23 @@ const OrdersScreen = () => {
                             }).format(new Date(orderTime))}
                           </td>
                           <td className="px-4 py-3">{customer}</td>
-                          <td className="px-4 py-3">{product}</td>
                           <td className="px-4 py-3">{amount}</td>
                           <td className="px-4 py-3">{Method}</td>
-                          <td className="px-4 py-3">{Status}</td>
+                          <td className="px-4 py-3">
+                            <span
+                              className={`${
+                                Status === "Pending"
+                                  ? "bg-orange-700 px-2 py-[0.5] rounded-lg text-sm"
+                                  : Status === "Cancel"
+                                  ? "bg-red-700 px-2 py-[0.5] rounded-lg text-sm"
+                                  : Status === "Delivered"
+                                  ? "bg-green-700 px-2 py-[0.5] rounded-lg text-sm"
+                                  : "bg-blue-700 px-2 py-[0.5] rounded-lg text-sm"
+                              }`}
+                            >
+                              {Status}
+                            </span>
+                          </td>
                           <td className="px-4 py-3">
                             <select
                               className="block w-full text-sm text-gray-300 focus:outline-none rounded-md form-select dark:border-gray-600 focus:shadow-none focus:border-gray-500 dark:bg-gray-700 leading-5 border h-6 bg-gray-100 border-transparent"
@@ -276,10 +287,23 @@ const OrdersScreen = () => {
                               }).format(new Date(orderTime))}
                             </td>
                             <td className="px-4 py-3">{customer}</td>
-                            <td className="px-4 py-3">{product}</td>
                             <td className="px-4 py-3">{amount}</td>
                             <td className="px-4 py-3">{Method}</td>
-                            <td className="px-4 py-3">{Status}</td>
+                            <td className="px-4 py-3">
+                              <span
+                                className={`${
+                                  Status === "Pending"
+                                    ? "bg-orange-700 px-2 py-[0.5] rounded-lg text-sm"
+                                    : Status === "Cancel"
+                                    ? "bg-red-700 px-2 py-[0.5] rounded-lg text-sm"
+                                    : Status === "Delivered"
+                                    ? "bg-green-700 px-2 py-[0.5] rounded-lg text-sm"
+                                    : "bg-blue-700 px-2 py-[0.5] rounded-lg text-sm"
+                                }`}
+                              >
+                                {Status}
+                              </span>
+                            </td>
                             <td className="px-4 py-3">
                               <select
                                 className="block w-full text-sm text-gray-300 focus:outline-none rounded-md form-select dark:border-gray-600 focus:shadow-none focus:border-gray-500 dark:bg-gray-700 leading-5 border h-6 bg-gray-100 border-transparent"
