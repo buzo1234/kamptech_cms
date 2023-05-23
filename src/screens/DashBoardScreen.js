@@ -69,12 +69,12 @@ const DashBoardScreen = () => {
                   Today Orders
                 </p>
                 <p class="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
-                  $0.00
+                  1
                 </p>
               </div>
               <div class="flex text-center text-xs font-normal text-gray-50 dark:text-gray-100">
                 <div class="px-1 mt-3">Cash : $0.00</div>
-                <div class="px-1 mt-3">Card : $0.00</div>
+                <div class="px-1 mt-3">Card : $5000.00</div>
                 <div class="px-1 mt-3">Credit : $0.00</div>
               </div>
             </div>
@@ -102,11 +102,11 @@ const DashBoardScreen = () => {
                   Yesterday Orders
                 </p>
                 <p class="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
-                  $1260.00
+                  $0.00
                 </p>
               </div>
               <div class="flex text-center text-xs font-normal text-gray-50 dark:text-gray-100">
-                <div class="px-1 mt-3">Cash : $1260.00</div>
+                <div class="px-1 mt-3">Cash : $0.00</div>
                 <div class="px-1 mt-3">Card : $0.00</div>
                 <div class="px-1 mt-3">Credit : $0.00</div>
               </div>
