@@ -16,7 +16,7 @@ const DashBoardScreen = () => {
   const getLatestOrders = async () => {
     await getOrders()
       .then((response) => {
-        const allOrders = response.documents
+        const allOrders = response.documents;
         const totalOrderCount = response.total;
         setAllOrders(response.documents);
         setTotalOrderCount(response.total);
@@ -31,11 +31,13 @@ const DashBoardScreen = () => {
         ).length;
         setTotalDelivered(getTotalDelivered);
 
-        const getTotalPending = allOrders.filter(item => item.Status === "Pending");
+        const getTotalPending = allOrders.filter(
+          (item) => item.Status === "Pending"
+        );
         let pendingAmount = 0;
         const pendingLength = getTotalPending.length;
-        getTotalPending.map(item => pendingAmount += item.amount);
-        setTotalPendingOrders({pendingAmount, pendingLength})
+        getTotalPending.map((item) => (pendingAmount += item.amount));
+        setTotalPendingOrders({ pendingAmount, pendingLength });
       })
       .catch((e) => console.log(e.message));
   };
@@ -341,7 +343,19 @@ const DashBoardScreen = () => {
                       <td className="px-4 py-3">{product}</td>
                       <td className="px-4 py-3">{amount}</td>
                       <td className="px-4 py-3">{Method}</td>
-                      <td className="px-4 py-3">{Status}</td>
+                      <td
+                        className={`px-4 py-3 ${
+                          Status === "Delivered"
+                            ? "bg-green-700 px-2 py-[0.5] rounded-lg text-sm"
+                            : Status === "Pending"
+                            ? "bg--700 px-2 py-[0.5] rounded-lg text-sm"
+                            : Status === "Processing"
+                            ? "bg-orange-500-700 px-2 py-[0.5] rounded-lg text-sm"
+                            : "bg-red-700 px-2 py-[0.5] rounded-lg text-sm"
+                        }`}
+                      >
+                        {Status}
+                      </td>
                     </tr>
                   );
                 }
