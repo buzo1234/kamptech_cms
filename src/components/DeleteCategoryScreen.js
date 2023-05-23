@@ -8,8 +8,10 @@ import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 
 const DeleteCategoryScreen = ({ setShow, show, catId }) => {
   
+  const [deleting, setDeleting] = useState(false)
 
   const handleDeleteCategory = async () => {
+    setDeleting(true);
     try {
         console.log(catId);
       await deleteCategory(catId).then((response) => {
@@ -19,6 +21,7 @@ const DeleteCategoryScreen = ({ setShow, show, catId }) => {
     } catch (error) {
       console.log(error);
     }
+    setDeleting(false);
   };
 
   return (
@@ -37,7 +40,7 @@ const DeleteCategoryScreen = ({ setShow, show, catId }) => {
         >
           No, keep It
         </button>
-      <button onClick={() => handleDeleteCategory()} className='bg-green-400 hover:bg-green-500 text-white  px-3 py-3 rounded-md'>Yes, Delete It</button>
+      <button onClick={() => handleDeleteCategory()} className={deleting ? 'bg-green-400 hover:bg-green-500 text-white  px-3 py-3 rounded-md cursor-not-allowed disabled' : 'bg-green-400 hover:bg-green-500 text-white  px-3 py-3 rounded-md'}>{deleting ? 'Deleting...' : 'Yes, Delete It'}</button>
       </div>
       
       </div>

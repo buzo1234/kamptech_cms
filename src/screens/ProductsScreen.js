@@ -29,13 +29,14 @@ const ProductsScreen = () => {
 
   useEffect(() => {
     filterOut();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchProduct, searchCategory]);
 
-  useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchProduct, searchCategory, priceFilter]);
+
+  /*  useEffect(() => {
     handlePriceFilter(priceFilter);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [priceFilter]);
+  }, [priceFilter]); */
 
   useEffect(() => {
     if (addProduct || editProduct || deleteProduct) {
@@ -93,7 +94,7 @@ const ProductsScreen = () => {
   };
 
   const filterOut = () => {
-    const filterProds = allProducts.filter((product) => {
+    let filterProds = allProducts.filter((product) => {
       const prodname =
         product.title.toLowerCase().includes(searchProduct.toLowerCase()) ||
         searchProduct === null ||
@@ -108,81 +109,106 @@ const ProductsScreen = () => {
       return prodname && catval;
     });
 
-    setFilterProds(filterProds);
-  };
+    console.log("Before Switch ", filterProds);
 
-  const handlePriceFilter = (value) => {
-    switch (value) {
+    switch (priceFilter) {
       case "low":
-        setFilterProds(filterProds.sort((a, b) => a.salePrice - b.salePrice));
+        filterProds = filterProds.sort((a, b) => a.salePrice - b.salePrice);
         console.log(filterProds);
         break;
       case "high":
-        setFilterProds(filterProds.sort((a, b) => b.salePrice - a.salePrice));
+        filterProds = filterProds.sort((a, b) => b.salePrice - a.salePrice);
         console.log(filterProds);
         break;
       case "published":
-        setFilterProds(filterProds.filter((prod) => prod.published === true));
+        filterProds = filterProds.filter((prod) => prod.published === true);
         break;
       case "unpublished":
-        setFilterProds(filterProds.filter((prod) => prod.published !== true));
+        filterProds = filterProds.filter((prod) => prod.published !== true);
         break;
       case "status-selling":
-        setFilterProds(filterProds.filter((prod) => prod.quantity > 0));
+        filterProds = filterProds.filter((prod) => prod.quantity > 0);
         break;
       case "status-out-of-stock":
-        setFilterProds(filterProds.filter((prod) => prod.quantity === 0));
+        filterProds = filterProds.filter((prod) => prod.quantity === 0);
         break;
       default:
         break;
     }
+
+    console.log("After Switch ", filterProds);
+
+    setFilterProds(filterProds);
   };
+
+  /* const handlePriceFilter = (value) => {
+    switch (value) {
+      case 'low':
+        setFilterProds(filterProds.sort((a, b) => a.salePrice - b.salePrice));
+        console.log(filterProds);
+        break;
+      case 'high':
+        setFilterProds(filterProds.sort((a, b) => b.salePrice - a.salePrice));
+        console.log(filterProds);
+        break;
+      case 'published':
+        setFilterProds(filterProds.filter((prod) => prod.published === true));
+        break;
+      case 'unpublished':
+        setFilterProds(filterProds.filter((prod) => prod.published !== true));
+        break;
+      case 'status-selling':
+        setFilterProds(filterProds.filter((prod) => prod.quantity > 0));
+        break;
+      case 'status-out-of-stock':
+        setFilterProds(filterProds.filter((prod) => prod.quantity === 0));
+        break;
+      default:
+        setFilterProds(filterProds);
+        break;
+    }
+  }; */
 
   return (
     <>
       <div>
-        <p className="font-bold text-2xl">Products</p>
+        <p className="font-bold text-2xl pb-3">Products</p>
       </div>
-      <div>
-        <form className="py-4 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6 xl:flex rounded-md">
-          <div className="flex justify-start xl:w-1/2  md:w-full">
-            <div className=" lg:flex md:flex flex-grow-0">
-              <div className="flex">
-                <div className="lg:flex-1 md:flex-1 mr-4 sm:flex-none">
-                  <CSVLink
-                    target="_blank"
-                    headers={headers}
-                    data={allProducts.map((prod) => ({
-                      ...prod,
-                      category: prod.category.name,
-                    }))}
-                    filename={"TechSouqDubai - Products Catalogue"}
-                    className="border flex justify-center items-center border-gray-300 hover:border-green-400 hover:text-green-400 dark:text-gray-300 cursor-pointer h-10 w-20 rounded-md focus:outline-none"
-                  >
-                    <svg
-                      stroke="currentColor"
-                      fill="none"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className=""
-                      height="1em"
-                      width="1em"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="17 8 12 3 7 8"></polyline>
-                      <line x1="12" y1="3" x2="12" y2="15"></line>
-                    </svg>
-                    <span className="text-sm">Export</span>
-                  </CSVLink>
-                </div>
-              </div>
-            </div>
+      <div className="bg-gray-800 px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 ">
+        <form className="py-6 grid grid-cols-2 gap-y-3">
+          <div className="col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1">
+            <CSVLink
+              target="_blank"
+              headers={headers}
+              data={allProducts.map((prod) => ({
+                ...prod,
+                category: prod.category.name,
+              }))}
+              filename={"TechSouqDubai - Products Catalogue"}
+              className="border flex justify-center items-center border-gray-300 hover:border-green-400 hover:text-green-400 dark:text-gray-300 cursor-pointer h-10 w-20 rounded-md focus:outline-none"
+            >
+              <svg
+                stroke="currentColor"
+                fill="none"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className=""
+                height="1em"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span className="text-sm">Export</span>
+            </CSVLink>
           </div>
-          <div className="lg:flex md:flex lg:justify-end xl:w-1/2 md:w-full md:justify-start flex-grow-0">
-            <div className="w-full md:w-40 lg:w-40 xl:w-40 mr-3 mb-3 lg:mb-0">
+
+          <div className="col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1 flex w-full justify-end">
+            <div className="w-full md:w-48 lg:w-48 xl:w-48">
               <button
                 className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 rounded-lg text-sm text-white bg-green-700 border border-transparent focus:ring focus:ring-purple-300 w-full h-12"
                 type="button"
@@ -268,7 +294,6 @@ const ProductsScreen = () => {
               className="block w-full px-2 py-1 text-sm dark:text-gray-300 focus:outline-none rounded-md form-select focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:shadow-none focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 leading-5 border h-12 bg-gray-100 border-transparent"
               onChange={(e) => {
                 setPriceFilter(e.target.value);
-                handlePriceFilter(e.target.value);
               }}
             >
               <option value="All" selected>
@@ -299,7 +324,7 @@ const ProductsScreen = () => {
           />
         </div>
       ) : (
-        <p className="my-6">No Products yet.</p>
+        <p className="my-6">No Products yet...</p>
       )}
 
       {/* Delete Product Screen */}

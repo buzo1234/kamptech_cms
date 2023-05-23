@@ -13,6 +13,8 @@ function ProductsView({
   setDelShow,
   delShow,
 }) {
+
+  console.log("In View" ,filter)
   const handleEditClick = (prodData) => {
     window.scrollTo({
       top: 0,
@@ -51,85 +53,7 @@ function ProductsView({
             </tr>
           </thead>
           <tbody>
-            {allProducts.length > 0 && filter.length === allProducts.length
-              ? allProducts.map(
-                  (
-                    {
-                      $id,
-                      title,
-                      images,
-                      description,
-                      sku,
-                      quantity,
-                      salePrice,
-                      category,
-                      published,
-                      costPrice,
-                    },
-                    index
-                  ) => (
-                    <tr key={$id}>
-                      <td className="px-4 py-3 ">
-                        <img
-                          src={images[0]}
-                          className="w-[50px] h-[50px] object-contain"
-                        />
-                      </td>
-                      <td className="px-4 py-3 ">{title}</td>
-
-                      {/* tags should be mapped */}
-                      {/* LOL wont need it here */}
-
-                      <td className="px-4 py-3 ">{category?.name}</td>
-
-                      <td className="px-4 py-3 ">{sku}</td>
-                      <td className="px-4 py-3 ">{costPrice}</td>
-                      <td className="px-4 py-3 ">{salePrice}</td>
-                      <td className="px-4 py-3 ">{quantity}</td>
-                      <td className="px-4 py-3 ">
-                        {quantity > 0 ? (
-                          <span className="bg-green-700 px-2 py-[0.5] rounded-lg text-sm">
-                            Selling
-                          </span>
-                        ) : (
-                          <span className="bg-red-700 px-2 py-[0.5] rounded-lg text-sm">
-                            Sold Out
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 ">
-                        <input
-                          type="checkbox"
-                          checked={published}
-                          className="w-5 h-5 rounded-lg bg-green-600"
-                        />
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex justify-evenly w-full">
-                          <button
-                            className="mr-2"
-                            onClick={() => handleEditClick(allProducts[index])}
-                          >
-                            <BorderColorSharpIcon
-                              className="hover:text-green-600"
-                              style={{ width: "19px", height: "19px" }}
-                            />
-                          </button>
-                          <button
-                            className="mr-2"
-                            onClick={() => handleDeleteClick($id)}
-                          >
-                            <DeleteOutlineSharpIcon
-                              className="hover:text-red-600"
-                              style={{ width: "19px", height: "19px" }}
-                            />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                )
-              : filter.map(
+            { filter.map(
                   (
                     {
                       $id,
