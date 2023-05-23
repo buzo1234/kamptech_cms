@@ -5,7 +5,7 @@ import DeleteOutlineSharpIcon from "@mui/icons-material/DeleteOutlineSharp";
 
 function ProductsView({
   allProducts,
-  filteredProducts,
+  filter,
   setEditId,
   setShow,
   show,
@@ -14,7 +14,6 @@ function ProductsView({
   delShow,
 }) {
   const handleEditClick = (prodData) => {
-    console.log(prodData);
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -52,7 +51,7 @@ function ProductsView({
             </tr>
           </thead>
           <tbody>
-            {allProducts.length > 0 && filteredProducts.length === 0
+            {allProducts.length > 0 && filter.length === allProducts.length
               ? allProducts.map(
                   (
                     {
@@ -130,7 +129,7 @@ function ProductsView({
                     </tr>
                   )
                 )
-              : filteredProducts.map(
+              : filter.map(
                   (
                     {
                       $id,
