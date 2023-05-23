@@ -7,8 +7,6 @@ import DeleteProductScreen from "../components/DeleteProductScreen";
 import EditProductScreen from "../components/EditProductScreen";
 
 const ProductsScreen = () => {
-  const [searching, setSearching] = useState(false);
-
   const [searchProduct, setSearchProduct] = useState("");
   const [searchCategory, setSearchCategory] = useState("All");
   const [priceFilter, setPriceFilter] = useState("All");
@@ -49,6 +47,7 @@ const ProductsScreen = () => {
 
   useEffect(() => {
     getAllCategoriesAndProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addProduct, editProduct, deleteProduct]);
 
   const getAllCategoriesAndProducts = async () => {
