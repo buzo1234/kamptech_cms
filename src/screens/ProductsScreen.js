@@ -173,8 +173,8 @@ const ProductsScreen = () => {
       <div>
         <p className="font-bold text-2xl pb-3">Products</p>
       </div>
-      <div className="bg-gray-800 px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 ">
-        <form className="py-6 grid grid-cols-2 gap-y-3">
+      <div className="bg-primary px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 py-4">
+        <form className="items-center justify-center grid grid-cols-2 gap-y-3">
           <div className="col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1">
             <CSVLink
               target="_blank"
