@@ -22,6 +22,7 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
     fileId: prodData.fileId,
   });
 
+
   useEffect(() => {
     const arr = [];
     const specCopy = Array.from(prodData.specifications, (item) => item);
@@ -195,7 +196,7 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
 
   const onProductFormSubmit = async (e) => {
     e.preventDefault();
-
+    setUploading(true);
     try {
       var specs = [];
       for (const spec of productData.specifications) {
@@ -241,6 +242,8 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
     } catch (e) {
       console.log(e.message);
     }
+
+    setUploading(false);
   };
 
   return (
@@ -272,9 +275,9 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
         </button>
         <button
           onClick={onProductFormSubmit}
-          className='bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold '
+          className={uploading ? 'bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold cursor-not-allowed disabled' : 'bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold'}
         >
-          Update Product
+          { uploading ? 'Uploading...' : 'Update Product'}
         </button>
       </div>
 

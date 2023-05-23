@@ -6,7 +6,7 @@ function AddProductScreen({ formState, categories }) {
   const [productData, setProductData] = useState({
     title: '',
     description: '',
-    sku:'',
+    sku: '',
     quantity: 0,
     salePrice: 0.0,
     costPrice: 0.0,
@@ -108,7 +108,6 @@ function AddProductScreen({ formState, categories }) {
   };
 
   const handleTagInput = (event) => {
-    
     if (
       event.key === 'Enter' &&
       currentTag.trim() !== '' &&
@@ -144,6 +143,7 @@ function AddProductScreen({ formState, categories }) {
 
   const onProductFormSubmit = async (e) => {
     e.preventDefault();
+    setUploading(true);
 
     try {
       var specs = [];
@@ -154,7 +154,6 @@ function AddProductScreen({ formState, categories }) {
       console.log('Image dataa : ', imagesData);
       setProductData({ ...productData, images: imagesData });
 
-      
       await createProduct({
         title: productData.title,
         description: productData.description,
@@ -175,6 +174,8 @@ function AddProductScreen({ formState, categories }) {
     } catch (e) {
       console.log(e.message);
     }
+
+    setUploading(false);
   };
 
   return (
@@ -206,9 +207,13 @@ function AddProductScreen({ formState, categories }) {
         </button>
         <button
           onClick={onProductFormSubmit}
-          className='bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold '
+          className={
+            uploading ? 'bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold cursor-not-allowed disabled' : 
+            'bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold ' 
+           
+          }
         >
-          Add Product
+          {uploading ? 'Uploading...' : 'Add Product'}
         </button>
       </div>
 

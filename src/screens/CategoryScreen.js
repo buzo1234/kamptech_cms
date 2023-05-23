@@ -46,11 +46,10 @@ const CategoryScreen = () => {
       <div class={"relative z-20" + (addCat ? " overflow-none" : "")} id="mainbody">
         <p className="font-bold pb-3   text-2xl ">Category</p>
         <div className="bg-gray-800 px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 ">
-          <form class="py-6 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6  xl:flex ">
-            <div class="flex justify-start xl:w-1/2  md:w-full ">
-              <div class=" lg:flex md:flex flex-grow-0">
-                <div class="flex">
-                  <div class="lg:flex-1 md:flex-1 mr-3 sm:flex-none">
+          <form class="py-6 grid grid-cols-2">
+            
+               
+                  <div className="col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1">
                     <button
                       class="border flex justify-center items-center border-white hover:border-green-400 hover:text-green-400  dark:text-white cursor-pointer h-10 w-20 rounded-md focus:outline-none"
                       fdprocessedid="k2ha3j"
@@ -73,8 +72,8 @@ const CategoryScreen = () => {
                       </svg>
                       <span class="text-xs ">Export</span>
                     </button>
-                  </div>
-                  <div class="lg:flex-1 md:flex-1 mr-3  sm:flex-none">
+                 
+                  {/* <div class="lg:flex-1 md:flex-1 mr-3  sm:flex-none">
                     <button
                       class="border flex justify-center items-center h-10 w-20 hover:text-yellow-500  border-white dark:text-white cursor-pointer  py-2 hover:border-yellow-500 rounded-md focus:outline-none"
                       fdprocessedid="b9mgoj"
@@ -97,12 +96,12 @@ const CategoryScreen = () => {
                       </svg>
                       <span class="text-xs">Import</span>
                     </button>
-                  </div>
-                </div>
+                  </div> */}
+               
               </div>
-            </div>
-            <div class="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start flex-grow-0">
-              <div class="w-full md:w-40 lg:w-40 xl:w-40 mr-3 mb-3 lg:mb-0">
+            
+            <div className="col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1 flex w-full justify-end">
+              {/* <div class="w-full md:w-40 lg:w-40 xl:w-40 mr-3 mb-3 lg:mb-0">
                 <button
                   class="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 rounded-lg text-sm text-white bg-green-500 border border-transparent opacity-50 w-full h-12 btn-gray sm:mb-3"
                   disabled=""
@@ -153,7 +152,7 @@ const CategoryScreen = () => {
                   </span>
                   Delete
                 </button>
-              </div>
+              </div> */}
               <div className="w-full md:w-48 lg:w-48 xl:w-48">
                 <button
                   className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 text-sm text-white bg-green-700 border border-transparent active:bg-green-600 focus:ring focus:ring-purple-300 w-full rounded-md h-12"

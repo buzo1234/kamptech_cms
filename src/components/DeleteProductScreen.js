@@ -7,9 +7,12 @@ import {
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 
 const DeleteProductScreen = ({ setShow, show, prodId }) => {
+
+  const [deleting ,setDeleting] = useState(false);
   
   console.log(prodId)
   const handleDeleteProduct = async () => {
+    setDeleting(true);
     try {
         console.log(prodId);
       await deleteProduct(prodId).then((response) => {
@@ -19,6 +22,7 @@ const DeleteProductScreen = ({ setShow, show, prodId }) => {
     } catch (error) {
       console.log(error);
     }
+    setDeleting(false);
   };
 
   return (
@@ -37,7 +41,7 @@ const DeleteProductScreen = ({ setShow, show, prodId }) => {
         >
           No, keep It
         </button>
-      <button onClick={() => handleDeleteProduct()} className='bg-green-400 hover:bg-green-500 text-white  px-3 py-3 rounded-md'>Yes, Delete It</button>
+      <button onClick={() => handleDeleteProduct()} className={deleting ? 'bg-green-400 hover:bg-green-500 text-white  px-3 py-3 rounded-md cursor-not-allowed diabled' : 'bg-green-400 hover:bg-green-500 text-white  px-3 py-3 rounded-md'}>{deleting ? 'Deleting...' : 'Yes, Delete It'}</button>
       </div>
       
       </div>

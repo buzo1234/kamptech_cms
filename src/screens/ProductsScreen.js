@@ -328,7 +328,7 @@ const ProductsScreen = () => {
           />
         </div>
       ) : (
-        <p className="my-6">No Products yet.</p>
+        <p className="my-6">No Products yet...</p>
       )}
 
       {/* Delete Product Screen */}

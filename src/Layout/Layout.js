@@ -58,7 +58,7 @@ const Layout = ({ screen }) => {
   return (
     <div className='App h-screen relative bg-secondary'>
       {loading ? (
-        <div className='flex w-full h-screen justity-center items-center'>
+        <div className='flex w-full h-screen justify-center items-center text-white'>
           Loading...
         </div>
       ) : (

@@ -25,6 +25,7 @@ const UpdateCategoryScreen = ({ setShow, show, catData }) => {
 
   const [files, setFiles] = useState();
   const [thumbnail, setThumbnail] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   const [parentList, setParentCat] = useState([]);
 
@@ -96,6 +97,7 @@ const UpdateCategoryScreen = ({ setShow, show, catData }) => {
   }; */
 
   const handleAddCategory = async () => {
+    setUploading(true);
     try {
       var urlImage = categoryData.image;
       var urlData = {$id: categoryData.fileId, bucketId: categoryData.bucketId}
@@ -126,6 +128,7 @@ const UpdateCategoryScreen = ({ setShow, show, catData }) => {
     } catch (error) {
       console.log(error);
     }
+    setUploading(false);
   };
 
   const handleDivClick = () => {
@@ -160,7 +163,7 @@ const UpdateCategoryScreen = ({ setShow, show, catData }) => {
           Cancel
         </button>
         <button
-          className='bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold '
+          className={uploading ? 'bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold cursor-not-allowed disabled' : 'bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold '}
           onClick={() => handleAddCategory()}
         >
           Update Category

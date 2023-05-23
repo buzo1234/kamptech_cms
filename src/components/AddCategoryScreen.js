@@ -22,6 +22,8 @@ const AddCategoryScreen = ({ setShow, show }) => {
   const [files, setFiles] = useState();
   const [thumbnail, setThumbnail] = useState("");
 
+  const [uploading, setUploading] = useState(false);
+
   const [parentList, setParentCat] = useState([]);
 
   const fileInputRef = useRef(null);
@@ -85,6 +87,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
   }; */
 
   const handleAddCategory = async () => {
+    setUploading(true);
     try {
       var urlData = await addCategoryImage(files);
 
@@ -107,6 +110,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
     } catch (error) {
       console.log(error);
     }
+    setUploading(false);
   };
 
   const handleDivClick = () => {
@@ -141,10 +145,10 @@ const AddCategoryScreen = ({ setShow, show }) => {
           Cancel
         </button>
         <button
-          className="bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold "
+          className={uploading ? "bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold cursor-not-allowed disabled" :"bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold "}
           onClick={() => handleAddCategory()}
         >
-          Add Category
+          {uploading ? 'Uploading...' : 'Add Category'}
         </button>
       </div>
 
