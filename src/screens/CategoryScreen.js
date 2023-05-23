@@ -58,11 +58,9 @@ const CategoryScreen = () => {
       >
         <p className="font-bold pb-3   text-2xl ">Category</p>
         <div className="bg-primary px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 py-4">
-          <form class="md:pb-0 items-center justify-center grid gap-4 lg:gap-6 xl:gap-6 xl:flex">
-            <div class="flex justify-start xl:w-1/2 md:w-full">
-              <div class=" lg:flex md:flex flex-grow-0">
-                <div class="flex">
-                  <div class="lg:flex-1 md:flex-1 mr-3 sm:flex-none">
+          <form className="items-center justify-center grid grid-cols-2 gap-y-3">
+           
+                  <div className="col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1">
                     <CSVLink
                       data={categories.map((category) => ({
                         ...category,
@@ -93,10 +91,8 @@ const CategoryScreen = () => {
                       <span class="text-xs ">Export</span>
                     </CSVLink>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div class="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start flex-grow-0">
+                
+            <div className="col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1 flex w-full justify-end">
               <div className="w-full md:w-48 lg:w-48 xl:w-48">
                 <button
                   className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 text-sm text-white bg-green-700 border border-transparent active:bg-green-600 focus:ring focus:ring-purple-300 w-full rounded-md h-12"
