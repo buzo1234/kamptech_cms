@@ -4,6 +4,7 @@ import { getCategories } from "../actions";
 import CategoriesView from "../components/CategoriesView";
 import UpdateCategoryScreen from "../components/UpdateCategoryScreen";
 import DeleteCategoryScreen from "../components/DeleteCategoryScreen";
+import { CSVLink } from "react-csv";
 
 const CategoryScreen = () => {
   const [addCat, setAddCat] = useState(false);
@@ -14,6 +15,14 @@ const CategoryScreen = () => {
 
   const [deleteBox, setDeleteBox] = useState(false);
   const [deleteId, setDeleteId] = useState();
+
+  const categoryHeaders = [
+    { label: "Name", key: "name" },
+    { label: "Description", key: "desc" },
+    { label: "Published", key: "published" },
+    { label: "Icon", key: "image" },
+    { label: "Parent Category", key: "parent" },
+  ];
 
   useEffect(() => {
     if (addCat || editCat || deleteBox) {
@@ -31,7 +40,7 @@ const CategoryScreen = () => {
   }, [addCat, editCat, deleteBox]);
 
   const getCatData = async () => {
-    console.log("here")
+    console.log("here");
     try {
       await getCategories()
         .then((response) => setCategories(response.documents))
@@ -43,15 +52,25 @@ const CategoryScreen = () => {
 
   return (
     <>
-      <div class={"relative z-20" + (addCat ? " overflow-none" : "")} id="mainbody">
+      <div
+        class={"relative z-20" + (addCat ? " overflow-none" : "")}
+        id="mainbody"
+      >
         <p className="font-bold pb-3   text-2xl ">Category</p>
-        <div className="bg-gray-800 px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 ">
+        <div className="bg-primary px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 ">
           <form class="py-6 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6  xl:flex ">
             <div class="flex justify-start xl:w-1/2  md:w-full ">
               <div class=" lg:flex md:flex flex-grow-0">
                 <div class="flex">
                   <div class="lg:flex-1 md:flex-1 mr-3 sm:flex-none">
-                    <button
+                    <CSVLink
+                      data={categories.map((category) => ({
+                        ...category,
+                        parent: category.parent.split("&&")[1],
+                      }))}
+                      headers={categoryHeaders}
+                      filename={"TechSouqDubai Categories List"}
+                      target="_blank"
                       class="border flex justify-center items-center border-white hover:border-green-400 hover:text-green-400  dark:text-white cursor-pointer h-10 w-20 rounded-md focus:outline-none"
                       fdprocessedid="k2ha3j"
                     >
@@ -72,7 +91,7 @@ const CategoryScreen = () => {
                         <line x1="12" y1="3" x2="12" y2="15"></line>
                       </svg>
                       <span class="text-xs ">Export</span>
-                    </button>
+                    </CSVLink>
                   </div>
                   <div class="lg:flex-1 md:flex-1 mr-3  sm:flex-none">
                     <button
@@ -194,7 +213,15 @@ const CategoryScreen = () => {
 
         {/* Show Categories */}
         <div className="my-6">
-          <CategoriesView catList={categories} setEditId={setEditCatData} setShow={setEditCat} show={editCat} setDeleteId={setDeleteId} delShow={deleteBox} setDelShow={setDeleteBox}/>
+          <CategoriesView
+            catList={categories}
+            setEditId={setEditCatData}
+            setShow={setEditCat}
+            show={editCat}
+            setDeleteId={setDeleteId}
+            delShow={deleteBox}
+            setDelShow={setDeleteBox}
+          />
         </div>
       </div>
 
@@ -203,7 +230,10 @@ const CategoryScreen = () => {
         <>
           <div className="absolute w-full h-full z-[100] top-0 left-0 bg-black/30 "></div>
 
-          <div className="absolute right-0 overflow-auto   z-[200] top-0 6 w-full lg:w-2/3 xl:w-2/3 bg-white transform -translate-x-0 transition duration-300 ease-in-out " style={{minHeight: "100svh", overflow:"auto"}} >
+          <div
+            className="absolute right-0 overflow-auto   z-[200] top-0 6 w-full lg:w-2/3 xl:w-2/3 bg-white transform -translate-x-0 transition duration-300 ease-in-out "
+            style={{ minHeight: "100svh", overflow: "auto" }}
+          >
             <AddCategoryScreen setShow={setAddCat} show={addCat} />
           </div>
         </>
@@ -214,8 +244,15 @@ const CategoryScreen = () => {
         <>
           <div className="absolute w-full h-full z-[100] top-0 left-0 bg-black/30 "></div>
 
-          <div className="absolute right-0 overflow-auto   z-[200] top-0 6 w-full lg:w-2/3 xl:w-2/3 bg-white transform -translate-x-0 transition duration-300 ease-in-out " style={{minHeight: "100svh", overflow:"auto"}} >
-            <UpdateCategoryScreen setShow={setEditCat} show={editCat} catData={editCatData}/>
+          <div
+            className="absolute right-0 overflow-auto   z-[200] top-0 6 w-full lg:w-2/3 xl:w-2/3 bg-white transform -translate-x-0 transition duration-300 ease-in-out "
+            style={{ minHeight: "100svh", overflow: "auto" }}
+          >
+            <UpdateCategoryScreen
+              setShow={setEditCat}
+              show={editCat}
+              catData={editCatData}
+            />
           </div>
         </>
       )}
@@ -225,12 +262,18 @@ const CategoryScreen = () => {
         <>
           <div className="absolute w-full h-full z-[100] top-0 left-0 bg-black/30 "></div>
 
-          <div className="absolute  overflow-auto top-0 left-0  z-[200]  w-full h-full bg-transparent flex justify-center items-center mx-auto  " style={{overflow:"auto"}} >
-            <DeleteCategoryScreen setShow={setDeleteBox} show={deleteBox} catId={deleteId}/>
+          <div
+            className="absolute  overflow-auto top-0 left-0  z-[200]  w-full h-full bg-transparent flex justify-center items-center mx-auto  "
+            style={{ overflow: "auto" }}
+          >
+            <DeleteCategoryScreen
+              setShow={setDeleteBox}
+              show={deleteBox}
+              catId={deleteId}
+            />
           </div>
         </>
       )}
-
     </>
   );
 };

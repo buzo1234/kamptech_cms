@@ -36,7 +36,7 @@ const CategoriesView = ({
       {catList ? (
         <div className="w-full overflow-hidden border border-gray-700 rounded-lg ring-1 ring-black ring-opacity-5 mb-8 bg-gray-900 overflow-x-auto">
           <table className="w-full whitespace-nowrap">
-            <thead className="text-xs font-semibold tracking-wide text-left uppercase border-b border-gray-700 text-gray-400 bg-gray-800">
+            <thead className="text-xs font-semibold tracking-wide text-left uppercase border-b border-gray-700 text-gray-400 bg-primary">
               <tr>
                 <td className="px-4 py-3">Icon</td>
                 <td className="px-4 py-3">Name</td>

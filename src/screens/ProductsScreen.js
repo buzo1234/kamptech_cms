@@ -23,23 +23,6 @@ const ProductsScreen = () => {
 
   const [filterProds, setFilterProds] = useState([]);
 
-  const headers = [
-    { label: "Product Title", key: "title" },
-    { label: "Model Name", key: "modelName" },
-    { label: "Model Number", key: "modelNumber" },
-    { label: "Product Description", key: "description" },
-    { label: "Quantity", key: "quantity" },
-    { label: "Product Tags", key: "tags" },
-    { label: "Product Icon", key: "images" },
-    { label: "Sale Price", key: "salePrice" },
-    { label: "Cost Price", key: "costPrice" },
-    { label: "Category", key: "category" },
-    { label: "Published", key: "published" },
-    // { label: "Colors", key: "color" },
-    // { label: "Coupons", key: "coupon" },
-    // { label: "Barcode", key: "barcode" },
-  ];
-
   const [allCategories, setAllCategories] = useState([]);
 
   const [allProducts, setAllProducts] = useState([]);
@@ -79,11 +62,27 @@ const ProductsScreen = () => {
       .then((response) => {
         setAllProducts(response.documents);
         setFilterProds(response.documents);
+        console.log("allProducts: ", allProducts);
       })
       .catch((e) => {
         console.error(e.message);
       });
   };
+
+  const headers = [
+    { label: "Product Title", key: "title" },
+    { label: "Product Description", key: "description" },
+    { label: "Quantity", key: "quantity" },
+    { label: "Product Tags", key: "tags" },
+    { label: "Product Icon", key: "images" },
+    { label: "Sale Price", key: "salePrice" },
+    { label: "Cost Price", key: "costPrice" },
+    { label: "Category", key: "category" },
+    { label: "Published", key: "published" },
+    // { label: "Colors", key: "color" },
+    // { label: "Coupons", key: "coupon" },
+    // { label: "Barcode", key: "barcode" },
+  ];
 
   const handleTitleChange = (e) => {
     setSearchProduct(e.target.value);
@@ -123,19 +122,18 @@ const ProductsScreen = () => {
         console.log(filterProds);
         break;
       case "published":
-        setFilterProds(allProducts.filter((prod) => prod.published === true));
+        setFilterProds(filterProds.filter((prod) => prod.published === true));
         break;
       case "unpublished":
-        setFilterProds(allProducts.filter((prod) => prod.published !== true));
+        setFilterProds(filterProds.filter((prod) => prod.published !== true));
         break;
       case "status-selling":
-        setFilterProds(allProducts.filter((prod) => prod.quantity > 0));
+        setFilterProds(filterProds.filter((prod) => prod.quantity > 0));
         break;
       case "status-out-of-stock":
-        setFilterProds(allProducts.filter((prod) => prod.quantity === 0));
+        setFilterProds(filterProds.filter((prod) => prod.quantity === 0));
         break;
       default:
-        setFilterProds(allProducts);
         break;
     }
   };
@@ -146,7 +144,7 @@ const ProductsScreen = () => {
         <p className="font-bold text-2xl">Products</p>
       </div>
       <div>
-        <form className="py-3 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6  xl:flex">
+        <form className="py-4 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6 xl:flex rounded-md">
           <div className="flex justify-start xl:w-1/2  md:w-full">
             <div className=" lg:flex md:flex flex-grow-0">
               <div className="flex">
@@ -154,7 +152,10 @@ const ProductsScreen = () => {
                   <CSVLink
                     target="_blank"
                     headers={headers}
-                    data={allProducts}
+                    data={allProducts.map((prod) => ({
+                      ...prod,
+                      category: prod.category.name,
+                    }))}
                     filename={"TechSouqDubai - Products Catalogue"}
                     className="border flex justify-center items-center border-gray-300 hover:border-green-400 hover:text-green-400 dark:text-gray-300 cursor-pointer h-10 w-20 rounded-md focus:outline-none"
                   >
