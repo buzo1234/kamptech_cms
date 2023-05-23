@@ -134,7 +134,6 @@ const ProductsScreen = () => {
         filterProds = filterProds.filter((prod) => prod.quantity === 0);
         break;
       default:
-        
         break;
     }
 
