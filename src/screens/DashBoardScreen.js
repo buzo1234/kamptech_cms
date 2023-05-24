@@ -107,7 +107,7 @@ const DashBoardScreen = () => {
                   Card: $
                   {todaysOrders.reduce(
                     (total, current) =>
-                      current.Method === "Card" ? (total += current.amount) : 0,
+                      current.Method !== "Cash" ? (total += current.amount) : 0,
                     0
                   )}
                 </div>
