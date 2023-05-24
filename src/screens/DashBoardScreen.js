@@ -168,7 +168,7 @@ const DashBoardScreen = () => {
           </div>
         </div>
         <div className="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex justify-center text-center h-full">
-          <div className="p-4 border border-gray-200 dark:border-gray-800 w-full p-6 rounded-lg text-white dark:text-green-100 bg-blue-500">
+          <div className="p-4 border border-gray-200 dark:border-gray-800 w-full rounded-lg text-white dark:text-green-100 bg-blue-500">
             <div className="text-center inline-block text-3xl text-white dark:text-green-100 bg-blue-500">
               <svg
                 stroke="currentColor"
@@ -205,7 +205,7 @@ const DashBoardScreen = () => {
           </div>
         </div>
         <div className="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex justify-center text-center h-full">
-          <div className="p-4 border border-gray-200 dark:border-gray-800 w-full p-6 rounded-lg text-white dark:text-green-100 bg-green-500">
+          <div className="p-4 border border-gray-200 dark:border-gray-800 w-full rounded-lg text-white dark:text-green-100 bg-green-500">
             <div className="text-center inline-block text-3xl text-white dark:text-green-100 bg-green-500">
               <svg
                 stroke="currentColor"
