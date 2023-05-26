@@ -59,39 +59,38 @@ const CategoryScreen = () => {
         <p className="font-bold pb-3   text-2xl ">Category</p>
         <div className="bg-primary px-3 shadow-xs rounded-lg ring-1 ring-black ring-opacity-10 py-4">
           <form className="items-center justify-center grid grid-cols-2 gap-y-3">
-           
-                  <div className="col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1">
-                    <CSVLink
-                      data={categories.map((category) => ({
-                        ...category,
-                        parent: category.parent.split("&&")[1],
-                      }))}
-                      headers={categoryHeaders}
-                      filename={"TechSouqDubai Categories List"}
-                      target="_blank"
-                      class="border flex justify-center items-center border-white hover:border-green-400 hover:text-green-400  dark:text-white cursor-pointer h-10 w-20 rounded-md focus:outline-none"
-                      fdprocessedid="k2ha3j"
-                    >
-                      <svg
-                        stroke="currentColor"
-                        fill="none"
-                        stroke-width="2"
-                        viewBox="0 0 24 24"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="mr-2"
-                        height="1em"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="17 8 12 3 7 8"></polyline>
-                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                      </svg>
-                      <span class="text-xs ">Export</span>
-                    </CSVLink>
-                  </div>
-                
+            <div className="col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1">
+              <CSVLink
+                data={categories.map((category) => ({
+                  ...category,
+                  parent: category.parent.split("&&")[1],
+                }))}
+                headers={categoryHeaders}
+                filename={"TechSouqDubai Categories List"}
+                target="_blank"
+                class="border flex justify-center items-center border-white hover:border-green-400 hover:text-green-400  dark:text-white cursor-pointer h-10 w-20 rounded-md focus:outline-none"
+                fdprocessedid="k2ha3j"
+              >
+                <svg
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="mr-2"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <span class="text-xs ">Export</span>
+              </CSVLink>
+            </div>
+
             <div className="col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1 flex w-full justify-end">
               <div className="w-full md:w-48 lg:w-48 xl:w-48">
                 <button

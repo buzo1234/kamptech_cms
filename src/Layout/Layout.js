@@ -38,7 +38,6 @@ const Layout = ({ screen }) => {
   const getUser = async () => {
     setLoading(true);
     const data = await getAccountDetails();
-    console.log(data);
     setUser(data);
     if (data === undefined) {
       await logoutSession();

@@ -7,6 +7,8 @@ const DashBoardScreen = () => {
   const [totalProcessing, setTotalProcessing] = useState(0);
   const [totalDelivered, setTotalDelivered] = useState(0);
   const [totalPendingOrders, setTotalPendingOrders] = useState({});
+  const [todaysOrders, setTodaysOrders] = useState([]);
+  const [yesterdaysOrders, setYesterdaysOrders] = useState([]);
 
   useEffect(() => {
     getLatestOrders();
@@ -17,10 +19,8 @@ const DashBoardScreen = () => {
     await getOrders()
       .then((response) => {
         const allOrders = response.documents;
-        const totalOrderCount = response.total;
         setAllOrders(response.documents);
         setTotalOrderCount(response.total);
-        console.log(allOrders);
 
         const getTotalProcessing = allOrders.filter(
           (item) => item.Status === "Processing"
@@ -39,6 +39,22 @@ const DashBoardScreen = () => {
         const pendingLength = getTotalPending.length;
         getTotalPending.map((item) => (pendingAmount += item.amount));
         setTotalPendingOrders({ pendingAmount, pendingLength });
+
+        setTodaysOrders(
+          response.documents.map((order) =>
+            new Date(order.orderTime).getDate() === new Date().getDate()
+              ? order
+              : { amount: 0 }
+          )
+        );
+
+        setYesterdaysOrders(
+          response.documents.map((order) =>
+            new Date(order.orderTime).getDate() === new Date().getDate() - 1
+              ? order
+              : { amount: 0 }
+          )
+        );
       })
       .catch((e) => console.log(e.message));
   };
@@ -46,11 +62,11 @@ const DashBoardScreen = () => {
   return (
     <div>
       <p className="font-bold pb-3   text-2xl">Dashboard</p>
-      <div class="grid gap-4 mb-8 md:grid-cols-4 xl:grid-cols-4">
-        <div class="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex justify-center h-full">
-          <div class="p-4 border border-gray-200 justify-between dark:border-gray-800 w-full p-6 rounded-lg text-white dark:text-green-100 bg-teal-500">
-            <div class="text-center xl:mb-0 mb-3">
-              <div class="text-center inline-block text-3xl text-white dark:text-green-100 bg-teal-500">
+      <div className="grid gap-4 mb-8 md:grid-cols-4 xl:grid-cols-4">
+        <div className="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex justify-center h-full">
+          <div className="p-4 border border-gray-200 justify-between dark:border-gray-800 w-full rounded-lg text-white dark:text-green-100 bg-teal-500">
+            <div className="text-center xl:mb-0 mb-3">
+              <div className="text-center inline-block text-3xl text-white dark:text-green-100 bg-teal-500">
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
@@ -65,25 +81,44 @@ const DashBoardScreen = () => {
                 </svg>
               </div>
               <div>
-                <p class="mb-3 text-base font-medium text-gray-50 dark:text-gray-100">
+                <p className="mb-3 text-base font-medium text-gray-50 dark:text-gray-100">
                   Today Orders
                 </p>
-                <p class="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
-                  1
+                <p className="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
+                  $
+                  {todaysOrders
+                    ? todaysOrders.reduce(
+                        (total, current) => (total += current.amount),
+                        0
+                      )
+                    : 0}
                 </p>
               </div>
-              <div class="flex text-center text-xs font-normal text-gray-50 dark:text-gray-100">
-                <div class="px-1 mt-3">Cash : $0.00</div>
-                <div class="px-1 mt-3">Card : $5000.00</div>
-                <div class="px-1 mt-3">Credit : $0.00</div>
+              <div className="flex items-center justify-center text-center text-xs font-normal text-gray-50 dark:text-gray-100">
+                <div className="px-1 mt-3">
+                  Cash: $
+                  {todaysOrders.reduce(
+                    (total, current) =>
+                      current.Method === "Cash" ? (total += current.amount) : 0,
+                    0
+                  )}
+                </div>
+                <div className="px-1 mt-3">
+                  Card: $
+                  {todaysOrders.reduce(
+                    (total, current) =>
+                      current.Method !== "Cash" ? (total += current.amount) : 0,
+                    0
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex justify-center h-full">
-          <div class="p-4 border border-gray-200 justify-between dark:border-gray-800 w-full rounded-lg text-white dark:text-orange-100 bg-orange-400">
-            <div class="text-center xl:mb-0 mb-3">
-              <div class="text-center inline-block text-3xl text-white dark:text-orange-100 bg-orange-400">
+        <div className="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex justify-center h-full">
+          <div className="p-4 border border-gray-200 justify-between dark:border-gray-800 w-full rounded-lg text-white dark:text-orange-100 bg-orange-400">
+            <div className="text-center xl:mb-0 mb-3">
+              <div className="text-center inline-block text-3xl text-white dark:text-orange-100 bg-orange-400">
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
@@ -98,24 +133,43 @@ const DashBoardScreen = () => {
                 </svg>
               </div>
               <div>
-                <p class="mb-3 text-base font-medium text-gray-50 dark:text-gray-100">
+                <p className="mb-3 text-base font-medium text-gray-50 dark:text-gray-100">
                   Yesterday Orders
                 </p>
-                <p class="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
-                  $0.00
+                <p className="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
+                  $
+                  {yesterdaysOrders
+                    ? yesterdaysOrders.reduce(
+                        (total, current) => (total += current.amount),
+                        0
+                      )
+                    : 0}
                 </p>
               </div>
-              <div class="flex text-center text-xs font-normal text-gray-50 dark:text-gray-100">
-                <div class="px-1 mt-3">Cash : $0.00</div>
-                <div class="px-1 mt-3">Card : $0.00</div>
-                <div class="px-1 mt-3">Credit : $0.00</div>
+              <div className="flex text-center items-center justify-center text-xs font-normal text-gray-50 dark:text-gray-100">
+                <div className="px-1 mt-3">
+                  Cash: $
+                  {yesterdaysOrders.reduce(
+                    (total, current) =>
+                      current.Method === "Cash" ? (total += current.amount) : 0,
+                    0
+                  )}
+                </div>
+                <div className="px-1 mt-3">
+                  Card: $
+                  {yesterdaysOrders.reduce(
+                    (total, current) =>
+                      current.Method === "Card" ? (total += current.amount) : 0,
+                    0
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex justify-center text-center h-full">
-          <div class="p-4 border border-gray-200 dark:border-gray-800 w-full p-6 rounded-lg text-white dark:text-green-100 bg-blue-500">
-            <div class="text-center inline-block text-3xl text-white dark:text-green-100 bg-blue-500">
+        <div className="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex justify-center text-center h-full">
+          <div className="p-4 border border-gray-200 dark:border-gray-800 w-full rounded-lg text-white dark:text-green-100 bg-blue-500">
+            <div className="text-center inline-block text-3xl text-white dark:text-green-100 bg-blue-500">
               <svg
                 stroke="currentColor"
                 fill="none"
@@ -133,10 +187,10 @@ const DashBoardScreen = () => {
               </svg>
             </div>
             <div>
-              <p class="mb-3 text-base font-medium text-gray-50 dark:text-gray-100">
+              <p className="mb-3 text-base font-medium text-gray-50 dark:text-gray-100">
                 This Month
               </p>
-              <p class="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
+              <p className="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
                 $
                 {allOrders?.reduce(
                   (total, current) =>
@@ -150,9 +204,9 @@ const DashBoardScreen = () => {
             </div>
           </div>
         </div>
-        <div class="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex justify-center text-center h-full">
-          <div class="p-4 border border-gray-200 dark:border-gray-800 w-full p-6 rounded-lg text-white dark:text-green-100 bg-green-500">
-            <div class="text-center inline-block text-3xl text-white dark:text-green-100 bg-green-500">
+        <div className="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex justify-center text-center h-full">
+          <div className="p-4 border border-gray-200 dark:border-gray-800 w-full rounded-lg text-white dark:text-green-100 bg-green-500">
+            <div className="text-center inline-block text-3xl text-white dark:text-green-100 bg-green-500">
               <svg
                 stroke="currentColor"
                 fill="currentColor"
@@ -167,10 +221,10 @@ const DashBoardScreen = () => {
               </svg>
             </div>
             <div>
-              <p class="mb-3 text-base font-medium text-gray-50 dark:text-gray-100">
+              <p className="mb-3 text-base font-medium text-gray-50 dark:text-gray-100">
                 All-Time Sales
               </p>
-              <p class="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
+              <p className="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
                 $
                 {allOrders?.reduce(
                   (total, current) => (total += current.amount),
@@ -183,10 +237,10 @@ const DashBoardScreen = () => {
       </div>
 
       {/* Next  */}
-      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <div class="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex h-full">
-          <div class="p-4 flex items-center border border-gray-200 dark:border-gray-800 w-full rounded-lg">
-            <div class="flex items-center justify-center p-3 rounded-full h-12 w-12 text-center mr-4 text-lg text-orange-600 dark:text-orange-100 bg-orange-100 dark:bg-orange-500">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex h-full">
+          <div className="p-4 flex items-center border border-gray-200 dark:border-gray-800 w-full rounded-lg">
+            <div className="flex items-center justify-center p-3 rounded-full h-12 w-12 text-center mr-4 text-lg text-orange-600 dark:text-orange-100 bg-orange-100 dark:bg-orange-500">
               <svg
                 stroke="currentColor"
                 fill="none"
@@ -204,18 +258,18 @@ const DashBoardScreen = () => {
               </svg>
             </div>
             <div>
-              <h6 class="text-sm mb-1 font-medium text-gray-600 dark:text-gray-400">
+              <h6 className="text-sm mb-1 font-medium text-gray-600 dark:text-gray-400">
                 <span>Total Orders</span>{" "}
               </h6>
-              <p class="text-2xl font-bold leading-none text-gray-600 dark:text-gray-200">
+              <p className="text-2xl font-bold leading-none text-gray-600 dark:text-gray-200">
                 {totalOrderCount}
               </p>
             </div>
           </div>
         </div>
-        <div class="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex h-full">
-          <div class="p-4 flex items-center border border-gray-200 dark:border-gray-800 w-full rounded-lg">
-            <div class="flex items-center justify-center p-3 rounded-full h-12 w-12 text-center mr-4 text-lg text-blue-600 dark:text-blue-100 bg-blue-100 dark:bg-blue-500">
+        <div className="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex h-full">
+          <div className="p-4 flex items-center border border-gray-200 dark:border-gray-800 w-full rounded-lg">
+            <div className="flex items-center justify-center p-3 rounded-full h-12 w-12 text-center mr-4 text-lg text-blue-600 dark:text-blue-100 bg-blue-100 dark:bg-blue-500">
               <svg
                 stroke="currentColor"
                 fill="none"
@@ -233,21 +287,21 @@ const DashBoardScreen = () => {
               </svg>
             </div>
             <div>
-              <h6 class="text-sm mb-1 font-medium text-gray-600 dark:text-gray-400">
+              <h6 className="text-sm mb-1 font-medium text-gray-600 dark:text-gray-400">
                 <span>Orders Pending</span>{" "}
-                <span class="text-red-500 text-sm font-semibold">
+                <span className="text-red-500 text-sm font-semibold">
                   {"(" + totalPendingOrders.pendingAmount + ")"}
                 </span>
               </h6>
-              <p class="text-2xl font-bold leading-none text-gray-600 dark:text-gray-200">
+              <p className="text-2xl font-bold leading-none text-gray-600 dark:text-gray-200">
                 {totalPendingOrders.pendingLength}
               </p>
             </div>
           </div>
         </div>
-        <div class="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex h-full">
-          <div class="p-4 flex items-center border border-gray-200 dark:border-gray-800 w-full rounded-lg">
-            <div class="flex items-center justify-center p-3 rounded-full h-12 w-12 text-center mr-4 text-lg text-teal-600 dark:text-teal-100 bg-teal-100 dark:bg-teal-500">
+        <div className="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex h-full">
+          <div className="p-4 flex items-center border border-gray-200 dark:border-gray-800 w-full rounded-lg">
+            <div className="flex items-center justify-center p-3 rounded-full h-12 w-12 text-center mr-4 text-lg text-teal-600 dark:text-teal-100 bg-teal-100 dark:bg-teal-500">
               <svg
                 stroke="currentColor"
                 fill="none"
@@ -266,18 +320,18 @@ const DashBoardScreen = () => {
               </svg>
             </div>
             <div>
-              <h6 class="text-sm mb-1 font-medium text-gray-600 dark:text-gray-400">
+              <h6 className="text-sm mb-1 font-medium text-gray-600 dark:text-gray-400">
                 <span>Orders Processing</span>{" "}
               </h6>
-              <p class="text-2xl font-bold leading-none text-gray-600 dark:text-gray-200">
+              <p className="text-2xl font-bold leading-none text-gray-600 dark:text-gray-200">
                 {totalProcessing}
               </p>
             </div>
           </div>
         </div>
-        <div class="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex h-full">
-          <div class="p-4 flex items-center border border-gray-200 dark:border-gray-800 w-full rounded-lg">
-            <div class="flex items-center justify-center p-3 rounded-full h-12 w-12 text-center mr-4 text-lg text-green-600 dark:text-green-100 bg-green-100 dark:bg-green-500">
+        <div className="min-w-0 rounded-lg ring-1 ring-black ring-opacity-4 overflow-hidden bg-white dark:bg-gray-800 flex h-full">
+          <div className="p-4 flex items-center border border-gray-200 dark:border-gray-800 w-full rounded-lg">
+            <div className="flex items-center justify-center p-3 rounded-full h-12 w-12 text-center mr-4 text-lg text-green-600 dark:text-green-100 bg-green-100 dark:bg-green-500">
               <svg
                 stroke="currentColor"
                 fill="none"
@@ -293,10 +347,10 @@ const DashBoardScreen = () => {
               </svg>
             </div>
             <div>
-              <h6 class="text-sm mb-1 font-medium text-gray-600 dark:text-gray-400">
+              <h6 className="text-sm mb-1 font-medium text-gray-600 dark:text-gray-400">
                 <span>Orders Delivered</span>{" "}
               </h6>
-              <p class="text-2xl font-bold leading-none text-gray-600 dark:text-gray-200">
+              <p className="text-2xl font-bold leading-none text-gray-600 dark:text-gray-200">
                 {totalDelivered}
               </p>
             </div>
