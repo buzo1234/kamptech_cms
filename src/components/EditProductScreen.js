@@ -5,6 +5,8 @@ import {
   updateProduct,
   deleteFiles,
 } from '../actions';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 function EditProductScreen({ setShow, show, prodData, categories }) {
   const [productData, setProductData] = useState({
@@ -246,6 +248,28 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
     setUploading(false);
   };
 
+
+  const modules = {
+    toolbar: [
+      [{ 'header': [1, 2, false] }],
+      ['bold', 'italic', 'underline','strike', 'blockquote'],
+      [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+      ['link', 'image'],
+      ['clean']
+    ],
+  }
+
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'bullet', 'indent',
+    'link', 'image'
+  ]
+
+  function setDescription(val) {
+    setProductData({...productData, description:val})
+  }
+
   return (
     <div
       className='bg-gray-800 flex z-40 shadow-inner flex-col w-full fixed overflow-auto'
@@ -313,7 +337,7 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
             </div>
 
             <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-2'>
-              <textarea
+              {/* <textarea
                 className='block p-3 w-full text-sm px-3 py-1 text-gray-300 rounded-md focus:outline-none form-textarea  border-gray-600 focus:border-gray-500 bg-gray-700 focus:ring-gray-700 focus:ring  border  border-transparent'
                 name='description'
                 placeholder='Product Description'
@@ -326,7 +350,10 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
                     description: e.target.value,
                   })
                 }
-              ></textarea>
+              ></textarea> */}
+              <ReactQuill 
+              
+              name='description' modules={modules} formats={formats} theme="snow" value={productData.description} className='text-black border-none max-h-[400px] overflow-y-auto' onChange={setDescription} style={{backgroundColor:"white", }}/>
             </div>
           </div>
 

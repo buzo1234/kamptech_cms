@@ -1,6 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { uploadProductFilesToBucket, createProduct } from '../actions';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function AddProductScreen({ formState, categories }) {
   const [productData, setProductData] = useState({
@@ -16,6 +20,11 @@ function AddProductScreen({ formState, categories }) {
     images: [],
     published: false,
   });
+
+  /* const [desc, setDesc] = useState('');
+  console.log(desc) */
+
+  console.log(productData.description.length);
 
   const [currentTag, setCurrentTag] = useState('');
 
@@ -178,11 +187,45 @@ function AddProductScreen({ formState, categories }) {
     setUploading(false);
   };
 
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [
+        { list: 'ordered' },
+        { list: 'bullet' },
+        { indent: '-1' },
+        { indent: '+1' },
+      ],
+      ['link', 'image'],
+      ['clean'],
+    ],
+  };
+
+  const formats = [
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'indent',
+    'link',
+    'image',
+  ];
+
+  function setDescription(val) {
+    setProductData({ ...productData, description: val });
+  }
+
   return (
     <div
       className='bg-gray-800 flex z-40 shadow-inner flex-col w-full fixed overflow-auto'
       style={{ height: '100svh' }}
     >
+      <ToastContainer />
       <div className='flex justify-between items-center py-6 px-3 bg-gray-900'>
         <div className='flex flex-col mr-2 text-gray-300 '>
           <p className='font-semibold'>Add Product</p>
@@ -208,9 +251,9 @@ function AddProductScreen({ formState, categories }) {
         <button
           onClick={onProductFormSubmit}
           className={
-            uploading ? 'bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold cursor-not-allowed disabled' : 
-            'bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold ' 
-           
+            uploading
+              ? 'bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold cursor-not-allowed disabled'
+              : 'bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold '
           }
         >
           {uploading ? 'Uploading...' : 'Add Product'}
@@ -248,7 +291,7 @@ function AddProductScreen({ formState, categories }) {
             </div>
 
             <div className='col-span-1 lg:col-span-3 xl:col-span-3 px-2'>
-              <textarea
+              {/*  <textarea
                 className='block p-3 w-full text-sm px-3 py-1 text-gray-300 rounded-md focus:outline-none form-textarea  border-gray-600 focus:border-gray-500 bg-gray-700 focus:ring-gray-700 focus:ring  border  border-transparent'
                 name='description'
                 placeholder='Product Description'
@@ -260,7 +303,18 @@ function AddProductScreen({ formState, categories }) {
                     description: e.target.value,
                   })
                 }
-              ></textarea>
+              ></textarea> */}
+              <ReactQuill
+                name='description'
+                modules={modules}
+                formats={formats}
+                theme='snow'
+                value={productData.description}
+                className='text-black border-none max-h-[400px] overflow-y-auto'
+                onChange={setDescription}
+                style={{ backgroundColor: 'white' }}
+              />
+              {/* <div className='h-[500px] w-full'></div> */}
             </div>
           </div>
 
