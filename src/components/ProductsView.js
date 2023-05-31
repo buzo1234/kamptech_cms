@@ -12,7 +12,7 @@ function ProductsView({
   setDeleteId,
   setDelShow,
   delShow,
-  currency,
+  currency: defCurrency,
 }) {
   const conversionRate = 3.67;
   const handleEditClick = (prodData) => {
@@ -66,6 +66,7 @@ function ProductsView({
                   category,
                   published,
                   costPrice,
+                  currency,
                 },
                 index
               ) => (
@@ -78,22 +79,25 @@ function ProductsView({
                   </td>
                   <td className="px-4 py-3 ">{title}</td>
 
-                  {/* tags should be mapped */}
-                  {/* LOL wont need it here */}
-
                   <td className="px-4 py-3 ">{category?.name}</td>
 
                   <td className="px-4 py-3 ">{sku}</td>
-                  <td className="px-4 py-3 ">{`${
-                    currency === "usd"
-                      ? "$" + costPrice
-                      : "AED " + costPrice * conversionRate
-                  }`}</td>
-                  <td className="px-4 py-3 ">{`${
-                    currency === "usd"
-                      ? "$" + salePrice
-                      : "AED " + salePrice * conversionRate
-                  }`}</td>
+                  <td className="px-4 py-3 ">
+                    {defCurrency === "usd" ? "$" : "AED "}
+                    {defCurrency === currency
+                      ? costPrice
+                      : defCurrency === "aed"
+                      ? (costPrice * conversionRate).toFixed(2)
+                      : (costPrice / conversionRate).toFixed(2)}
+                  </td>
+                  <td className="px-4 py-3 ">
+                    {defCurrency === "usd" ? "$" : "AED "}
+                    {defCurrency === currency
+                      ? salePrice
+                      : defCurrency === "aed"
+                      ? (salePrice * conversionRate).toFixed(2)
+                      : (salePrice / conversionRate).toFixed(2)}
+                  </td>
                   <td className="px-4 py-3 ">{quantity}</td>
                   <td className="px-4 py-3 ">
                     {quantity > 0 ? (
