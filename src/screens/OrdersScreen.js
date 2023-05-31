@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { CSVLink } from "react-csv";
 import { getOrderById, getOrders, updateOrderStatus } from "../actions";
 
-const OrdersScreen = () => {
+const OrdersScreen = ({ currency }) => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filtered, setFiltered] = useState([]);
@@ -12,6 +12,7 @@ const OrdersScreen = () => {
   const [endDate, setEndDate] = useState();
 
   const [allOrders, setAllOrders] = useState([]);
+  const conversionRate = 3.67;
 
   const headers = [
     { label: "Invoice No.", key: "invoice" },
@@ -231,7 +232,11 @@ const OrdersScreen = () => {
                             }).format(new Date(orderTime))}
                           </td>
                           <td className="px-4 py-3">{customer}</td>
-                          <td className="px-4 py-3">{amount}</td>
+                          <td className="px-4 py-3">{`${
+                            currency === "usd"
+                              ? "$" + amount
+                              : "AED " + amount * conversionRate
+                          }`}</td>
                           <td className="px-4 py-3">{Method}</td>
                           <td className="px-4 py-3">
                             <span
@@ -287,7 +292,11 @@ const OrdersScreen = () => {
                               }).format(new Date(orderTime))}
                             </td>
                             <td className="px-4 py-3">{customer}</td>
-                            <td className="px-4 py-3">{amount}</td>
+                            <td className="px-4 py-3">{`${
+                              currency === "usd"
+                                ? "$" + amount
+                                : "AED " + amount * conversionRate
+                            }`}</td>
                             <td className="px-4 py-3">{Method}</td>
                             <td className="px-4 py-3">
                               <span

@@ -6,7 +6,7 @@ import ProductsView from "../components/ProductsView";
 import DeleteProductScreen from "../components/DeleteProductScreen";
 import EditProductScreen from "../components/EditProductScreen";
 
-const ProductsScreen = () => {
+const ProductsScreen = ({currency}) => {
   const [searchProduct, setSearchProduct] = useState("");
   const [searchCategory, setSearchCategory] = useState("All");
   const [priceFilter, setPriceFilter] = useState("All");
@@ -320,6 +320,7 @@ const ProductsScreen = () => {
             setDeleteId={setDeleteId}
             delShow={deleteProduct}
             setDelShow={setDeleteProduct}
+            currency={currency}
           />
         </div>
       ) : (

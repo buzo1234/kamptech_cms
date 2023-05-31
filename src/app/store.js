@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./userSlice";
+import currencyReducer from "./currencySlice";
 import {
   persistReducer,
   FLUSH,
@@ -17,7 +17,7 @@ const persistConfig = {
   storage: localStorage,
 };
 
-export const persistedReducer = persistReducer(persistConfig, userReducer);
+export const persistedReducer = persistReducer(persistConfig, currencyReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
