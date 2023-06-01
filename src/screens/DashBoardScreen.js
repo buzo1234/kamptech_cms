@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getOrders } from "../actions";
 
-const DashBoardScreen = () => {
+const DashBoardScreen = ({ currency }) => {
   const [allOrders, setAllOrders] = useState([]);
   const [totalOrderCount, setTotalOrderCount] = useState(0);
   const [totalProcessing, setTotalProcessing] = useState(0);
@@ -9,6 +9,7 @@ const DashBoardScreen = () => {
   const [totalPendingOrders, setTotalPendingOrders] = useState({});
   const [todaysOrders, setTodaysOrders] = useState([]);
   const [yesterdaysOrders, setYesterdaysOrders] = useState([]);
+  const conversionRate = 3.67;
 
   useEffect(() => {
     getLatestOrders();
@@ -85,29 +86,40 @@ const DashBoardScreen = () => {
                   Today Orders
                 </p>
                 <p className="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
-                  $
+                  {currency === "usd" ? "$" : "AED "}
                   {todaysOrders
-                    ? todaysOrders.reduce(
-                        (total, current) => (total += current.amount),
-                        0
-                      )
+                    ? todaysOrders.reduce((total, current) => {
+                        if (currency === "usd") {
+                          return (total += current.amount);
+                        } else {
+                          return (total += current.amount * conversionRate);
+                        }
+                      }, 0)
                     : 0}
                 </p>
               </div>
               <div className="flex items-center justify-center text-center text-xs font-normal text-gray-50 dark:text-gray-100">
                 <div className="px-1 mt-3">
-                  Cash: $
+                  Cash: {currency === "usd" ? "$" : "AED "}
                   {todaysOrders.reduce(
                     (total, current) =>
-                      current.Method === "Cash" ? (total += current.amount) : 0,
+                      current.Method === "Cash"
+                        ? currency === "usd"
+                          ? (total += current.amount)
+                          : (total += current.amount * conversionRate)
+                        : 0,
                     0
                   )}
                 </div>
                 <div className="px-1 mt-3">
-                  Card: $
+                  Card: {currency === "usd" ? "$" : "AED "}
                   {todaysOrders.reduce(
                     (total, current) =>
-                      current.Method !== "Cash" ? (total += current.amount) : 0,
+                      current.Method !== "Cash"
+                        ? currency === "usd"
+                          ? (total += current.amount)
+                          : (total += current.amount * conversionRate)
+                        : 0,
                     0
                   )}
                 </div>
@@ -137,29 +149,40 @@ const DashBoardScreen = () => {
                   Yesterday Orders
                 </p>
                 <p className="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
-                  $
+                  {currency === "usd" ? "$" : "AED "}
                   {yesterdaysOrders
-                    ? yesterdaysOrders.reduce(
-                        (total, current) => (total += current.amount),
-                        0
-                      )
+                    ? yesterdaysOrders.reduce((total, current) => {
+                        if (currency === "usd") {
+                          return (total += current.amount);
+                        } else {
+                          return (total += current.amount * conversionRate);
+                        }
+                      }, 0)
                     : 0}
                 </p>
               </div>
               <div className="flex text-center items-center justify-center text-xs font-normal text-gray-50 dark:text-gray-100">
                 <div className="px-1 mt-3">
-                  Cash: $
+                  Cash: {currency === "usd" ? "$" : "AED "}
                   {yesterdaysOrders.reduce(
                     (total, current) =>
-                      current.Method === "Cash" ? (total += current.amount) : 0,
+                      current.Method === "Cash"
+                        ? currency === "usd"
+                          ? (total += current.amount)
+                          : (total += current.amount * conversionRate)
+                        : 0,
                     0
                   )}
                 </div>
                 <div className="px-1 mt-3">
-                  Card: $
+                  Card: {currency === "usd" ? "$" : "AED "}
                   {yesterdaysOrders.reduce(
                     (total, current) =>
-                      current.Method === "Card" ? (total += current.amount) : 0,
+                      current.Method === "Card"
+                        ? currency === "usd"
+                          ? (total += current.amount)
+                          : (total += current.amount * conversionRate)
+                        : 0,
                     0
                   )}
                 </div>
@@ -191,12 +214,14 @@ const DashBoardScreen = () => {
                 This Month
               </p>
               <p className="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
-                $
+                {currency === "usd" ? "$" : "AED "}
                 {allOrders?.reduce(
                   (total, current) =>
                     new Date(current.orderTime).getMonth() ===
                     new Date().getMonth()
-                      ? (total += current.amount)
+                      ? currency === "usd"
+                        ? (total += current.amount)
+                        : (total += current.amount * conversionRate)
                       : 0,
                   0
                 )}
@@ -225,11 +250,14 @@ const DashBoardScreen = () => {
                 All-Time Sales
               </p>
               <p className="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
-                $
-                {allOrders?.reduce(
-                  (total, current) => (total += current.amount),
-                  0
-                )}
+                {currency === "usd" ? "$" : "AED "}
+                {allOrders?.reduce((total, current) => {
+                  if (currency === "usd") {
+                    return (total += current.amount);
+                  } else {
+                    return (total += current.amount * conversionRate);
+                  }
+                }, 0)}
               </p>
             </div>
           </div>
@@ -290,7 +318,12 @@ const DashBoardScreen = () => {
               <h6 className="text-sm mb-1 font-medium text-gray-600 dark:text-gray-400">
                 <span>Orders Pending</span>{" "}
                 <span className="text-red-500 text-sm font-semibold">
-                  {"(" + totalPendingOrders.pendingAmount + ")"}
+                  {`${
+                    currency === "usd"
+                      ? "$" + totalPendingOrders.pendingAmount
+                      : "AED " +
+                        totalPendingOrders.pendingAmount * conversionRate
+                  }`}
                 </span>
               </h6>
               <p className="text-2xl font-bold leading-none text-gray-600 dark:text-gray-200">
@@ -406,7 +439,11 @@ const DashBoardScreen = () => {
                         }).format(new Date(orderTime))}
                       </td>
                       <td className="px-4 py-3">{customer}</td>
-                      <td className="px-4 py-3">{amount}</td>
+                      <td className="px-4 py-3">{`${
+                        currency === "usd"
+                          ? "$" + amount
+                          : "AED " + amount * conversionRate
+                      }`}</td>
                       <td className="px-4 py-3">{Method}</td>
                       <td className="px-4 py-3">
                         <span
