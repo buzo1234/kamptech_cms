@@ -220,6 +220,48 @@ function AddProductScreen({ formState, categories }) {
     setProductData({ ...productData, description: val });
   }
 
+
+  /* category options */
+  const categoryMap = {};
+
+  categories.forEach(category => {
+    const parentId = category.parent;
+    
+    if (parentId === "isParent") {
+      // Category itself is a parent
+      if(!categoryMap['isParent']){
+        categoryMap['isParent'] = [];
+      }
+      categoryMap['isParent'].push(category);
+    } else {
+      // Category has a valid parent ID
+      if (!categoryMap[parentId.split('&&')[0]]) {
+        categoryMap[parentId.split('&&')[0]] = [];
+      }
+      categoryMap[parentId.split('&&')[0]].push(category);
+    }
+  });
+
+  function generateOptions(categoryMap, parentId = 'isParent', level = 0) {
+    console.log(categoryMap)
+    const options = [];
+    
+    const children = categoryMap[parentId];
+    
+    if (children) {
+      children.forEach(child => {
+        const indent = Array(level).fill('\xa0-').join(''); // Use non-breaking spaces for indentation
+        
+        options.push(<option key={child.$id} value={child.$id}>{indent}{child.name}</option>);
+        
+        const grandchildren = generateOptions(categoryMap, child.$id, level + 1);
+        options.push(...grandchildren);
+      });
+    }
+    
+    return options;
+  }
+
   return (
     <div
       className='bg-gray-800 flex z-40 shadow-inner flex-col w-full fixed overflow-auto'
@@ -424,9 +466,10 @@ function AddProductScreen({ formState, categories }) {
                 <option disabled selected hidden>
                   Select Category
                 </option>
-                {categories?.map((category, index) => (
+                {/* {categories?.map((category, index) => (
                   <option value={category.$id}>{category.name}</option>
-                ))}
+                ))} */}
+                {generateOptions(categoryMap)}
               </select>
             </div>
           </div>

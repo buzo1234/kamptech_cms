@@ -24,7 +24,6 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
     fileId: prodData.fileId,
   });
 
-
   useEffect(() => {
     const arr = [];
     const specCopy = Array.from(prodData.specifications, (item) => item);
@@ -112,8 +111,11 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
     var updatedThumIdArray = JSON.parse(JSON.stringify(productData.fileId));
     const updatedThumbs = updatedThumbArray.filter((_, i) => i !== index);
     const updateThumbIds = updatedThumIdArray.filter((_, i) => i !== index);
-    setProductData({ ...productData, images: updatedThumbs, fileId:updateThumbIds });
-
+    setProductData({
+      ...productData,
+      images: updatedThumbs,
+      fileId: updateThumbIds,
+    });
   };
 
   const handleRemoveFile = (index, e) => {
@@ -248,26 +250,87 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
     setUploading(false);
   };
 
-
   const modules = {
     toolbar: [
-      [{ 'header': [1, 2, false] }],
-      ['bold', 'italic', 'underline','strike', 'blockquote'],
-      [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+      [{ header: [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [
+        { list: 'ordered' },
+        { list: 'bullet' },
+        { indent: '-1' },
+        { indent: '+1' },
+      ],
       ['link', 'image'],
-      ['clean']
+      ['clean'],
     ],
-  }
+  };
 
   const formats = [
     'header',
-    'bold', 'italic', 'underline', 'strike', 'blockquote',
-    'list', 'bullet', 'indent',
-    'link', 'image'
-  ]
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'indent',
+    'link',
+    'image',
+  ];
 
   function setDescription(val) {
-    setProductData({...productData, description:val})
+    setProductData({ ...productData, description: val });
+  }
+
+  /* category options */
+  const categoryMap = {};
+
+  categories.forEach((category) => {
+    const parentId = category.parent;
+
+    if (parentId === 'isParent') {
+      // Category itself is a parent
+      if (!categoryMap['isParent']) {
+        categoryMap['isParent'] = [];
+      }
+      categoryMap['isParent'].push(category);
+    } else {
+      // Category has a valid parent ID
+      if (!categoryMap[parentId.split('&&')[0]]) {
+        categoryMap[parentId.split('&&')[0]] = [];
+      }
+      categoryMap[parentId.split('&&')[0]].push(category);
+    }
+  });
+
+  function generateOptions(categoryMap, parentId = 'isParent', level = 0) {
+    console.log(categoryMap);
+    const options = [];
+
+    const children = categoryMap[parentId];
+
+    if (children) {
+      children.forEach((child) => {
+        const indent = Array(level).fill('\xa0-').join(''); // Use non-breaking spaces for indentation
+
+        options.push(
+          <option key={child.$id} value={child.$id}>
+            {indent}
+            {child.name}
+          </option>
+        );
+
+        const grandchildren = generateOptions(
+          categoryMap,
+          child.$id,
+          level + 1
+        );
+        options.push(...grandchildren);
+      });
+    }
+
+    return options;
   }
 
   return (
@@ -299,9 +362,13 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
         </button>
         <button
           onClick={onProductFormSubmit}
-          className={uploading ? 'bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold cursor-not-allowed disabled' : 'bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold'}
+          className={
+            uploading
+              ? 'bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold cursor-not-allowed disabled'
+              : 'bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold'
+          }
         >
-          { uploading ? 'Uploading...' : 'Update Product'}
+          {uploading ? 'Uploading...' : 'Update Product'}
         </button>
       </div>
 
@@ -351,9 +418,16 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
                   })
                 }
               ></textarea> */}
-              <ReactQuill 
-              
-              name='description' modules={modules} formats={formats} theme="snow" value={productData.description} className='text-black border-none max-h-[400px] overflow-y-auto' onChange={setDescription} style={{backgroundColor:"white", }}/>
+              <ReactQuill
+                name='description'
+                modules={modules}
+                formats={formats}
+                theme='snow'
+                value={productData.description}
+                className='text-black border-none max-h-[400px] overflow-y-auto'
+                onChange={setDescription}
+                style={{ backgroundColor: 'white' }}
+              />
             </div>
           </div>
 
@@ -466,9 +540,10 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
                 <option disabled selected hidden>
                   Select Category
                 </option>
-                {categories?.map((category, index) => (
+                {/* {categories?.map((category, index) => (
                   <option value={category.$id}>{category.name}</option>
-                ))}
+                ))} */}
+                {generateOptions(categoryMap)}
               </select>
             </div>
           </div>
