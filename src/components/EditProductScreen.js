@@ -23,7 +23,12 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
     published: prodData.published,
     fileId: prodData.fileId,
     currency: prodData.currency,
+    serial: prodData.serial,
+    invoice: prodData.invoice,
+    quantityUpdate: prodData.quantityUpdate,
   });
+
+  const [quantityUpdate, setQuantityUpdate] = useState(prodData.quantityUpdate);
 
   useEffect(() => {
     const arr = [];
@@ -157,28 +162,64 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
 
   useEffect(() => {
     getThumbnails();
+    console.log(productData);
   }, [selectedfiles]);
 
   /* ------------------------------ */
 
-  const handleTagRemove = (event, index) => {
-    const updatedTags = [...productData.tags];
-    updatedTags.splice(index, 1);
-    setProductData({ ...productData, tags: updatedTags });
+  const [serial, setSerial] = useState("");
+  const [invoice, setInvoice] = useState("");
+
+  const handleTagRemove = (event, index, type) => {
+    switch (type) {
+      case "serial":
+        const updatedSerial = [...productData.serial];
+        updatedSerial.splice(index, 1);
+        setProductData({ ...productData, serial: updatedSerial });
+        break;
+      case "invoice":
+        const updatedInvoice = [...productData.invoice];
+        updatedInvoice.splice(index, 1);
+        setProductData({ ...productData, invoice: updatedInvoice });
+        break;
+      default:
+        const updatedTags = [...productData.tags];
+        updatedTags.splice(index, 1);
+        setProductData({ ...productData, tags: updatedTags });
+    }
   };
 
-  const handleTagInput = (event) => {
-    if (
-      event.key === "Enter" &&
-      currentTag.trim() !== "" &&
-      productData.tags.length < 5
-    ) {
+  const handleTagInput = (event, type = "tag") => {
+    if (event.key === "Enter") {
       event.preventDefault();
-      setProductData({
-        ...productData,
-        tags: [...productData.tags, currentTag.trim()],
-      });
-      setCurrentTag("");
+      switch (type) {
+        case "serial":
+          if (serial.trim() !== "") {
+            setProductData({
+              ...productData,
+              serial: [...productData.serial, serial.trim()],
+            });
+          }
+          setSerial("");
+          break;
+        case "invoice":
+          if (invoice.trim() !== "") {
+            setProductData({
+              ...productData,
+              invoice: [...productData.invoice, invoice.trim()],
+            });
+          }
+          setInvoice("");
+          break;
+        default:
+          if (currentTag.trim() !== "" && productData.tags.length < 5) {
+            setProductData({
+              ...productData,
+              tags: [...productData.tags, currentTag.trim()],
+            });
+            setCurrentTag("");
+          }
+      }
     }
   };
 
@@ -225,6 +266,21 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
         setProductData({ ...productData, fileId: newFileIdArray });
       }
 
+      let newUpdate = "";
+      if (productData.quantity > 0) {
+        const lastUpdate = JSON.parse(prodData.quantityUpdate.slice(-1));
+        // console.log(lastUpdate);
+        newUpdate = JSON.stringify({
+          date: new Date(),
+          quantityBefore: lastUpdate.quantityAfter,
+          quantityAfter: productData.quantity,
+        });
+        // console.log(newUpdate);
+        prodData.quantityUpdate.push(newUpdate);
+        // console.log(prodData.quantityUpdate);
+        // console.log(typeof prodData.quantityUpdate);
+      }
+
       await updateProduct(
         {
           title: productData.title,
@@ -240,6 +296,10 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
           specifications: specs,
           published: productData.published,
           currency,
+          serial: productData.serial,
+          invoice: productData.invoice,
+          quantityUpdate:
+            newUpdate !== "" && prodData.quantityUpdate,
         },
         prodData.$id
       ).then(() => {
@@ -256,30 +316,30 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
   const modules = {
     toolbar: [
       [{ header: [1, 2, false] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      ["bold", "italic", "underline", "strike", "blockquote"],
       [
-        { list: 'ordered' },
-        { list: 'bullet' },
-        { indent: '-1' },
-        { indent: '+1' },
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
       ],
-      ['link', 'image'],
-      ['clean'],
+      ["link", "image"],
+      ["clean"],
     ],
   };
 
   const formats = [
-    'header',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'indent',
-    'link',
-    'image',
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "link",
+    "image",
   ];
 
   function setDescription(val) {
@@ -292,30 +352,29 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
   categories.forEach((category) => {
     const parentId = category.parent;
 
-    if (parentId === 'isParent') {
+    if (parentId === "isParent") {
       // Category itself is a parent
-      if (!categoryMap['isParent']) {
-        categoryMap['isParent'] = [];
+      if (!categoryMap["isParent"]) {
+        categoryMap["isParent"] = [];
       }
-      categoryMap['isParent'].push(category);
+      categoryMap["isParent"].push(category);
     } else {
       // Category has a valid parent ID
-      if (!categoryMap[parentId.split('&&')[0]]) {
-        categoryMap[parentId.split('&&')[0]] = [];
+      if (!categoryMap[parentId.split("&&")[0]]) {
+        categoryMap[parentId.split("&&")[0]] = [];
       }
-      categoryMap[parentId.split('&&')[0]].push(category);
+      categoryMap[parentId.split("&&")[0]].push(category);
     }
   });
 
-  function generateOptions(categoryMap, parentId = 'isParent', level = 0) {
-    console.log(categoryMap);
+  function generateOptions(categoryMap, parentId = "isParent", level = 0) {
     const options = [];
 
     const children = categoryMap[parentId];
 
     if (children) {
       children.forEach((child) => {
-        const indent = Array(level).fill('\xa0-').join(''); // Use non-breaking spaces for indentation
+        const indent = Array(level).fill("\xa0-").join(""); // Use non-breaking spaces for indentation
 
         options.push(
           <option key={child.$id} value={child.$id}>
@@ -367,11 +426,11 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
           onClick={onProductFormSubmit}
           className={
             uploading
-              ? 'bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold cursor-not-allowed disabled'
-              : 'bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold'
+              ? "bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold cursor-not-allowed disabled"
+              : "bg-green-400 col-span-1 py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold"
           }
         >
-          { uploading ? 'Uploading...' : 'Update Product'}
+          {uploading ? "Uploading..." : "Update Product"}
         </button>
       </div>
 
@@ -422,14 +481,14 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
                 }
               ></textarea> */}
               <ReactQuill
-                name='description'
+                name="description"
                 modules={modules}
                 formats={formats}
-                theme='snow'
+                theme="snow"
                 value={productData.description}
-                className='text-black border-none max-h-[400px] overflow-y-auto'
+                className="text-black border-none max-h-[400px] overflow-y-auto"
                 onChange={setDescription}
-                style={{ backgroundColor: 'white' }}
+                style={{ backgroundColor: "white" }}
               />
             </div>
           </div>
@@ -630,7 +689,7 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
               <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
-                Product Quantity
+                Total Product Quantity
               </label>
             </div>
             <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
@@ -678,6 +737,84 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
                       className="cursor-pointer"
                       onClick={(e) => {
                         handleTagRemove(e, index);
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Serial */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
+            <div className="col-span-1 px-3">
+              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+                Product Serial Numbers
+              </label>
+            </div>
+            <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
+              <div>
+                <input
+                  type="text"
+                  className="block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none"
+                  placeholder="Add Serial Numbers"
+                  value={serial}
+                  onChange={(e) => setSerial(e.target.value)}
+                  onKeyDown={(e) => {
+                    handleTagInput(e, "serial");
+                  }}
+                />
+              </div>
+              <div className="flex mt-2 mb-2">
+                {productData.serial?.map((serialTag, index) => (
+                  <div
+                    key={index}
+                    className="border-1 bg-green-700 border-white rounded-md border-solid  flex items-center justify-between px-2 py-1 mr-2"
+                  >
+                    <p>{serialTag}</p>
+                    <CloseIcon
+                      className="cursor-pointer"
+                      onClick={(e) => {
+                        handleTagRemove(e, index, "serial");
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Invoice */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
+            <div className="col-span-1 px-3">
+              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+                Product Invoice Numbers
+              </label>
+            </div>
+            <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
+              <div>
+                <input
+                  type="text"
+                  className="block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none"
+                  placeholder="Add Invoice Numbers"
+                  value={invoice}
+                  onChange={(e) => setInvoice(e.target.value)}
+                  onKeyDown={(e) => {
+                    handleTagInput(e, "invoice");
+                  }}
+                />
+              </div>
+              <div className="flex mt-2 mb-2">
+                {productData.invoice?.map((inv, index) => (
+                  <div
+                    key={index}
+                    className="border-1 bg-green-700 border-white rounded-md border-solid  flex items-center justify-between px-2 py-1 mr-2"
+                  >
+                    <p>{inv}</p>
+                    <CloseIcon
+                      className="cursor-pointer"
+                      onClick={(e) => {
+                        handleTagRemove(e, index, "invoice");
                       }}
                     />
                   </div>

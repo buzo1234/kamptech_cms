@@ -6,7 +6,7 @@ import ProductsView from "../components/ProductsView";
 import DeleteProductScreen from "../components/DeleteProductScreen";
 import EditProductScreen from "../components/EditProductScreen";
 
-const ProductsScreen = ({currency}) => {
+const ProductsScreen = ({ currency }) => {
   const [searchProduct, setSearchProduct] = useState("");
   const [searchCategory, setSearchCategory] = useState("All");
   const [priceFilter, setPriceFilter] = useState("All");
@@ -39,7 +39,6 @@ const ProductsScreen = ({currency}) => {
   useEffect(() => {
     if (addProduct || editProduct || deleteProduct) {
       document.body.style.overflow = "hidden";
-      console.log("hidden");
     } else {
       document.body.style.overflow = "auto";
     }
@@ -54,7 +53,6 @@ const ProductsScreen = ({currency}) => {
     await getCategories()
       .then((response) => {
         setAllCategories(response.documents);
-        console.log(response.documents);
       })
       .catch((e) => console.log(e.message));
 
@@ -62,7 +60,6 @@ const ProductsScreen = ({currency}) => {
       .then((response) => {
         setAllProducts(response.documents);
         setFilterProds(response.documents);
-        console.log("allProducts: ", allProducts);
       })
       .catch((e) => {
         console.error(e.message);
@@ -108,8 +105,6 @@ const ProductsScreen = ({currency}) => {
       return prodname && catval;
     });
 
-    console.log("Before Switch ", filterProds);
-
     switch (priceFilter) {
       case "low":
         filterProds = filterProds.sort((a, b) => a.salePrice - b.salePrice);
@@ -134,8 +129,6 @@ const ProductsScreen = ({currency}) => {
       default:
         break;
     }
-
-    console.log("After Switch ", filterProds);
 
     setFilterProds(filterProds);
   };
@@ -280,11 +273,11 @@ const ProductsScreen = ({currency}) => {
               className="block w-full px-2 py-1 text-sm dark:text-gray-300 focus:outline-none rounded-md form-select focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:shadow-none focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 leading-5 border h-12 bg-gray-100 border-transparent"
               onChange={(e) => handleCategoryChange(e)}
             >
-              <option value="All" selected>
-                Category
-              </option>
+              <option value="All">Category</option>
               {allCategories.map((category) => (
-                <option value={category.$id}>{category.name}</option>
+                <option key={category.$id} value={category.$id}>
+                  {category.name}
+                </option>
               ))}
             </select>
           </div>
@@ -295,7 +288,7 @@ const ProductsScreen = ({currency}) => {
                 setPriceFilter(e.target.value);
               }}
             >
-              <option value="All" selected>
+              <option value="All" defaultValue="price">
                 Price
               </option>
               <option value="low">Low to High</option>

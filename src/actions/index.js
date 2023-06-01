@@ -259,7 +259,6 @@ const getProducts = async () => {
       databaseID,
       productsCollectionID
     );
-    console.log(allProducts);
     return allProducts;
   } catch (e) {
     console.error('msg: ', e.message);

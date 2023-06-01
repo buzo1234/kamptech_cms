@@ -32,7 +32,6 @@ const Layout = ({ screen }) => {
   useEffect(() => {
     if (navbarOpen) {
       document.body.style.overflow = "hidden";
-      console.log("hidden");
     } else {
       document.body.style.overflow = "auto";
     }
