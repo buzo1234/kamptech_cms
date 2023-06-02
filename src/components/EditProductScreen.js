@@ -28,12 +28,7 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
     quantityUpdate: prodData.quantityUpdate,
   });
 
-  const [quantityUpdateList, setQuantityUpdateList] = useState(
-    prodData.quantityUpdate
-  );
-  const lastUpdatedQty = JSON.parse(
-    quantityUpdateList.slice(-1)[0]
-  ).quantityAfter;
+  const lastUpdated = JSON.parse(prodData.quantityUpdate.slice(-1));
 
   useEffect(() => {
     const arr = [];
@@ -270,21 +265,19 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
         setProductData({ ...productData, fileId: newFileIdArray });
       }
 
-      let newUpdate = "";
       if (
         productData.quantity >= 0 &&
-        productData.quantity !== lastUpdatedQty
+        productData.quantity !== lastUpdated.quantityAfter
+        && prodData.quantityUpdate.length > 1
       ) {
-        const lastUpdate = JSON.parse(prodData.quantityUpdate.slice(-1));
-        console.log(lastUpdate);
-        newUpdate = JSON.stringify({
+        const newUpdate = JSON.stringify({
           date: new Date(),
-          quantityBefore: lastUpdate.quantityAfter,
+          quantityBefore: lastUpdated.quantityAfter,
           quantityAfter: productData.quantity,
         });
         console.log(newUpdate);
-        prodData.quantityUpdate.push(newUpdate);
-        console.log(prodData.quantityUpdate);
+        productData.quantityUpdate.push(newUpdate);
+        console.log(productData.quantityUpdate);
         console.log(typeof prodData.quantityUpdate);
       }
 
@@ -305,7 +298,7 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
           currency,
           serial: productData.serial,
           invoice: productData.invoice,
-          quantityUpdate: newUpdate !== "" && prodData.quantityUpdate,
+          quantityUpdate: productData.quantityUpdate,
         },
         prodData.$id
       ).then(() => {
@@ -772,7 +765,7 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
                 />
               </div>
               <div className="flex mt-2 mb-2">
-                {productData.serial?.map((serialTag, index) => (
+                {prodData.serial?.map((serialTag, index) => (
                   <div
                     key={index}
                     className="border-1 bg-green-700 border-white rounded-md border-solid  flex items-center justify-between px-2 py-1 mr-2"
@@ -811,7 +804,7 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
                 />
               </div>
               <div className="flex mt-2 mb-2">
-                {productData.invoice?.map((inv, index) => (
+                {prodData.invoice?.map((inv, index) => (
                   <div
                     key={index}
                     className="border-1 bg-green-700 border-white rounded-md border-solid  flex items-center justify-between px-2 py-1 mr-2"
