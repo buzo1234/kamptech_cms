@@ -31,6 +31,9 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
   const [quantityUpdateList, setQuantityUpdateList] = useState(
     prodData.quantityUpdate
   );
+  const lastUpdatedQty = JSON.parse(
+    quantityUpdateList.slice(-1)[0]
+  ).quantityAfter;
 
   useEffect(() => {
     const arr = [];
@@ -268,7 +271,10 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
       }
 
       let newUpdate = "";
-      if (productData.quantity >= 0) {
+      if (
+        productData.quantity >= 0 &&
+        productData.quantity !== lastUpdatedQty
+      ) {
         const lastUpdate = JSON.parse(prodData.quantityUpdate.slice(-1));
         console.log(lastUpdate);
         newUpdate = JSON.stringify({
