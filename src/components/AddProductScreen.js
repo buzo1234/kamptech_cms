@@ -28,6 +28,8 @@ function AddProductScreen({ formState, categories }) {
   /* const [desc, setDesc] = useState('');
   console.log(desc) */
 
+  const [toast, setToast] = useState({ show: false, text: "" });
+
   const [currentTag, setCurrentTag] = useState("");
 
   const [rowCount, setRowCount] = useState(0);

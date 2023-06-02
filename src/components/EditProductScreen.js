@@ -28,7 +28,9 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
     quantityUpdate: prodData.quantityUpdate,
   });
 
-  const [quantityUpdate, setQuantityUpdate] = useState(prodData.quantityUpdate);
+  const [quantityUpdateList, setQuantityUpdateList] = useState(
+    prodData.quantityUpdate
+  );
 
   useEffect(() => {
     const arr = [];
@@ -162,7 +164,6 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
 
   useEffect(() => {
     getThumbnails();
-    console.log(productData);
   }, [selectedfiles]);
 
   /* ------------------------------ */
@@ -267,18 +268,18 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
       }
 
       let newUpdate = "";
-      if (productData.quantity > 0) {
+      if (productData.quantity >= 0) {
         const lastUpdate = JSON.parse(prodData.quantityUpdate.slice(-1));
-        // console.log(lastUpdate);
+        console.log(lastUpdate);
         newUpdate = JSON.stringify({
           date: new Date(),
           quantityBefore: lastUpdate.quantityAfter,
           quantityAfter: productData.quantity,
         });
-        // console.log(newUpdate);
+        console.log(newUpdate);
         prodData.quantityUpdate.push(newUpdate);
-        // console.log(prodData.quantityUpdate);
-        // console.log(typeof prodData.quantityUpdate);
+        console.log(prodData.quantityUpdate);
+        console.log(typeof prodData.quantityUpdate);
       }
 
       await updateProduct(
@@ -298,8 +299,7 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
           currency,
           serial: productData.serial,
           invoice: productData.invoice,
-          quantityUpdate:
-            newUpdate !== "" && prodData.quantityUpdate,
+          quantityUpdate: newUpdate !== "" && prodData.quantityUpdate,
         },
         prodData.$id
       ).then(() => {
