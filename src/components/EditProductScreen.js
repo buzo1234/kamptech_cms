@@ -305,7 +305,7 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
           currency,
           serial: productData.serial,
           invoice: productData.invoice,
-          quantityUpdate: newUpdate !== "" && prodData.quantityUpdate,
+          quantityUpdate: prodData.quantityUpdate,
         },
         prodData.$id
       ).then(() => {
