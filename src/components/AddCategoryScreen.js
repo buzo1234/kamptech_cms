@@ -9,6 +9,7 @@ import {
   addCategoryImage,
   getParentCategories,
 } from "../actions";
+import { ToastContainer, toast } from "react-toastify";
 
 const AddCategoryScreen = ({ setShow, show }) => {
   const [categoryData, setcategoryData] = useState({
@@ -87,30 +88,41 @@ const AddCategoryScreen = ({ setShow, show }) => {
   }; */
 
   const handleAddCategory = async () => {
-    setUploading(true);
-    try {
-      var urlData = await addCategoryImage(files);
+    let formComplete = true;
+    if (categoryData.name === "") {
+      formComplete = false;
+      toast.error("Please enter a category name");
+    } else if (files === null || files === undefined) {
+      formComplete = false;
+      toast.error("Please add atlease one image");
+    } else {
+      try {
+        setUploading(true);
+        if (formComplete) {
+          let urlData = await addCategoryImage(files);
 
-      var urlImage = `https://appwrite.techsouqdubai.com/v1/storage/buckets/${urlData.bucketId}/files/${urlData.$id}/view?project=646339a61beac87efd09`;
-      console.log("image", urlImage);
-      setcategoryData({ ...categoryData, image: urlImage });
-      console.log("data", categoryData);
-      await createCategory({
-        name: categoryData.name,
-        desc: categoryData.desc,
-        image: urlImage,
-        parent: categoryData.parent,
-        published: categoryData.published,
-        fileId: urlData.$id,
-        bucketId: urlData.bucketId,
-      }).then(() => {
-        console.log("category created");
-        setShow(false);
-      });
-    } catch (error) {
-      console.log(error);
+          let urlImage = `https://appwrite.techsouqdubai.com/v1/storage/buckets/${urlData.bucketId}/files/${urlData.$id}/view?project=646339a61beac87efd09`;
+          console.log("image", urlImage);
+          setcategoryData({ ...categoryData, image: urlImage });
+          console.log("data", categoryData);
+          await createCategory({
+            name: categoryData.name,
+            desc: categoryData.desc,
+            image: urlImage,
+            parent: categoryData.parent,
+            published: categoryData.published,
+            fileId: urlData.$id,
+            bucketId: urlData.bucketId,
+          }).then(() => {
+            console.log("category created");
+            setUploading(false);
+            setShow(false);
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
-    setUploading(false);
   };
 
   const handleDivClick = () => {
@@ -145,14 +157,20 @@ const AddCategoryScreen = ({ setShow, show }) => {
           Cancel
         </button>
         <button
-          className={uploading ? "bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold cursor-not-allowed disabled" :"bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold "}
+          className={
+            uploading
+              ? "bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold cursor-not-allowed disabled"
+              : "bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold "
+          }
           onClick={() => handleAddCategory()}
         >
-          {uploading ? 'Uploading...' : 'Add Category'}
+          {uploading ? "Uploading..." : "Add Category"}
         </button>
       </div>
 
       <div className="overflow-y-auto pb-40 bg-gray-800 scrollbar-hide">
+        <ToastContainer />
+
         <form>
           {/* Title */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">

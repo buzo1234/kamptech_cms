@@ -7,6 +7,7 @@ import {
 } from "../actions";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { ToastContainer, toast } from "react-toastify";
 
 function EditProductScreen({ setShow, show, prodData, categories }) {
   const [productData, setProductData] = useState({
@@ -243,73 +244,98 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
 
   const onProductFormSubmit = async (e) => {
     e.preventDefault();
-    setUploading(true);
-    try {
-      var specs = [];
-      for (const spec of productData.specifications) {
-        specs.push(JSON.stringify(spec));
+    let formComplete = true;
+    if (productData.title === "") {
+      formComplete = false;
+      toast.error("Please enter product title");
+    } else if (productData.sku === "") {
+      formComplete = false;
+      toast.error("Please enter product sku");
+    } else if (productData.category === "") {
+      formComplete = false;
+      toast.error("Please assign product category");
+    } else if (selectedfiles.length === 0) {
+      formComplete = false;
+      toast.error("Please add atlease one image");
+    } else if (productData.quantity < 0) {
+      formComplete = false;
+      toast.error("Please enter product quantity");
+    } else if (productData.salePrice < 0) {
+      formComplete = false;
+      toast.error("Please enter sale price");
+    } else if (productData.costPrice < 0) {
+      formComplete = false;
+      toast.error("Please enter cost price");
+    } else {
+      try {
+        setUploading(true);
+        if (formComplete) {
+          var specs = [];
+          for (const spec of productData.specifications) {
+            specs.push(JSON.stringify(spec));
+          }
+
+          var newUrlArray = productData.images;
+          var newFileIdArray = productData.fileId;
+
+          if (removeThumbs.length > 0) {
+            await deleteFiles(removeThumbs);
+          }
+
+          if (selectedfiles.length > 0) {
+            var imagesData = await uploadProductFilesToBucket(selectedfiles);
+            newUrlArray = [...productData.images, ...imagesData.urls];
+            newFileIdArray = [...productData.fileId, ...imagesData.ids];
+            setProductData({ ...productData, images: newUrlArray });
+            setProductData({ ...productData, fileId: newFileIdArray });
+          }
+
+          if (
+            productData.quantity >= 0 &&
+            productData.quantity !== lastUpdated.quantityAfter &&
+            prodData.quantityUpdate.length > 1
+          ) {
+            const newUpdate = JSON.stringify({
+              date: new Date(),
+              quantityBefore: lastUpdated.quantityAfter,
+              quantityAfter: productData.quantity,
+            });
+            console.log(newUpdate);
+            productData.quantityUpdate.push(newUpdate);
+            console.log(productData.quantityUpdate);
+            console.log(typeof prodData.quantityUpdate);
+          }
+
+          await updateProduct(
+            {
+              title: productData.title,
+              description: productData.description,
+              sku: productData.sku,
+              salePrice: productData.salePrice,
+              costPrice: productData.costPrice,
+              quantity: productData.quantity,
+              tags: productData.tags,
+              images: newUrlArray,
+              fileId: newFileIdArray,
+              category: productData.category,
+              specifications: specs,
+              published: productData.published,
+              currency,
+              serial: productData.serial,
+              invoice: productData.invoice,
+              quantityUpdate: productData.quantityUpdate,
+            },
+            prodData.$id
+          ).then(() => {
+            console.log("product added");
+            setUploading(false);
+            setShow(false);
+          });
+        }
+      } catch (e) {
+        console.log(e.message);
       }
-
-      var newUrlArray = productData.images;
-      var newFileIdArray = productData.fileId;
-
-      if (removeThumbs.length > 0) {
-        await deleteFiles(removeThumbs);
-      }
-
-      if (selectedfiles.length > 0) {
-        var imagesData = await uploadProductFilesToBucket(selectedfiles);
-        newUrlArray = [...productData.images, ...imagesData.urls];
-        newFileIdArray = [...productData.fileId, ...imagesData.ids];
-        setProductData({ ...productData, images: newUrlArray });
-        setProductData({ ...productData, fileId: newFileIdArray });
-      }
-
-      if (
-        productData.quantity >= 0 &&
-        productData.quantity !== lastUpdated.quantityAfter
-        && prodData.quantityUpdate.length > 1
-      ) {
-        const newUpdate = JSON.stringify({
-          date: new Date(),
-          quantityBefore: lastUpdated.quantityAfter,
-          quantityAfter: productData.quantity,
-        });
-        console.log(newUpdate);
-        productData.quantityUpdate.push(newUpdate);
-        console.log(productData.quantityUpdate);
-        console.log(typeof prodData.quantityUpdate);
-      }
-
-      await updateProduct(
-        {
-          title: productData.title,
-          description: productData.description,
-          sku: productData.sku,
-          salePrice: productData.salePrice,
-          costPrice: productData.costPrice,
-          quantity: productData.quantity,
-          tags: productData.tags,
-          images: newUrlArray,
-          fileId: newFileIdArray,
-          category: productData.category,
-          specifications: specs,
-          published: productData.published,
-          currency,
-          serial: productData.serial,
-          invoice: productData.invoice,
-          quantityUpdate: productData.quantityUpdate,
-        },
-        prodData.$id
-      ).then(() => {
-        console.log("product added");
-        setShow(false);
-      });
-    } catch (e) {
-      console.log(e.message);
     }
-
-    setUploading(false);
   };
 
   const modules = {
@@ -413,7 +439,7 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
           <CloseIcon style={{ width: "20px", height: "20px" }} />
         </button>
       </div>
-
+      <ToastContainer />
       <div className="fixed inset-x-0 bottom-0  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2  justify-evenly px-3 py-6 bg-gray-900 gap-x-6 gap-y-3 z-50">
         <button
           className="bg-gray-700 col-span-1  py-2 w-full rounded-lg text-gray-500 hover:bg-gray-800 hover:text-red-700 font-semibold  border border-gray-700"

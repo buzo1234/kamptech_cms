@@ -28,8 +28,6 @@ function AddProductScreen({ formState, categories }) {
   /* const [desc, setDesc] = useState('');
   console.log(desc) */
 
-  const [toast, setToast] = useState({ show: false, text: "" });
-
   const [currentTag, setCurrentTag] = useState("");
 
   const [rowCount, setRowCount] = useState(0);
@@ -190,54 +188,80 @@ function AddProductScreen({ formState, categories }) {
     setProductData({ ...productData, specifications: newSpecs });
   };
 
+  let formComplete = true;
   const onProductFormSubmit = async (e) => {
     e.preventDefault();
-    setUploading(true);
+    if (productData.title === "") {
+      formComplete = false;
+      toast.error("Please enter product title");
+    } else if (productData.sku === "") {
+      formComplete = false;
+      toast.error("Please enter product sku");
+    } else if (productData.category === "") {
+      formComplete = false;
+      toast.error("Please assign product category");
+    } else if (selectedfiles.length === 0) {
+      formComplete = false;
+      toast.error("Please add atlease one image");
+    } else if (productData.quantity < 0) {
+      formComplete = false;
+      toast.error("Please enter product quantity");
+    } else if (productData.salePrice < 0) {
+      formComplete = false;
+      toast.error("Please enter sale price");
+    } else if (productData.costPrice < 0) {
+      formComplete = false;
+      toast.error("Please enter cost price");
+    } else {
+      try {
+        setUploading(true);
+        if (formComplete) {
+          var specs = [];
+          for (const spec of productData.specifications) {
+            specs.push(JSON.stringify(spec));
+          }
+          const imagesData = await uploadProductFilesToBucket(selectedfiles);
+          console.log("Image dataa : ", imagesData);
+          setProductData({ ...productData, images: imagesData });
 
-    try {
-      var specs = [];
-      for (const spec of productData.specifications) {
-        specs.push(JSON.stringify(spec));
+          const quantityUpdate = [];
+          if (productData.quantity >= 0) {
+            quantityUpdate.push(
+              JSON.stringify({
+                date: new Date(),
+                quantityBefore: 0,
+                quantityAfter: productData.quantity,
+              })
+            );
+          }
+
+          await createProduct({
+            title: productData.title,
+            description: productData.description,
+            sku: productData.sku,
+            salePrice: productData.salePrice,
+            costPrice: productData.costPrice,
+            quantity: productData.quantity,
+            tags: productData.tags,
+            images: imagesData.urls,
+            fileId: imagesData.ids,
+            category: productData.category,
+            specifications: specs,
+            published: productData.published,
+            currency,
+            serial: productData.serial,
+            invoice: productData.invoice,
+            quantityUpdate: quantityUpdate,
+          }).then(() => {
+            console.log("product added");
+            setUploading(false);
+            formState(false);
+          });
+          toast.success("Product successfully added");
+        }
+      } catch (e) {
+        console.log(e.message);
       }
-      const imagesData = await uploadProductFilesToBucket(selectedfiles);
-      console.log("Image dataa : ", imagesData);
-      setProductData({ ...productData, images: imagesData });
-
-      const quantityUpdate = [];
-      if (productData.quantity > 0) {
-        quantityUpdate.push(
-          JSON.stringify({
-            date: new Date(),
-            quantityBefore: 0,
-            quantityAfter: productData.quantity,
-          })
-        );
-      }
-
-      await createProduct({
-        title: productData.title,
-        description: productData.description,
-        sku: productData.sku,
-        salePrice: productData.salePrice,
-        costPrice: productData.costPrice,
-        quantity: productData.quantity,
-        tags: productData.tags,
-        images: imagesData.urls,
-        fileId: imagesData.ids,
-        category: productData.category,
-        specifications: specs,
-        published: productData.published,
-        currency,
-        serial: productData.serial,
-        invoice: productData.invoice,
-        quantityUpdate: quantityUpdate,
-      }).then(() => {
-        console.log("product added");
-        setUploading(false);
-        formState(false);
-      });
-    } catch (e) {
-      console.log(e.message);
     }
   };
 
