@@ -240,7 +240,7 @@ const AddCategoryScreen = ({ setShow, show }) => {
                 placeholder="Select Parent"
                 className="block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none "
               >
-                <option value="" disabled selected hidden>
+                <option value="isParent" selected hidden>
                   Select Parent
                 </option>
 

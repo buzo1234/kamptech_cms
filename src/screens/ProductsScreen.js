@@ -174,7 +174,7 @@ const ProductsScreen = ({ currency }) => {
               headers={headers}
               data={allProducts.map((prod) => ({
                 ...prod,
-                category: prod.category.name,
+                category: prod.category?.name,
               }))}
               filename={"TechSouqDubai - Products Catalogue"}
               className="border flex justify-center items-center border-gray-300 hover:border-green-400 hover:text-green-400 dark:text-gray-300 cursor-pointer h-10 w-20 rounded-md focus:outline-none"

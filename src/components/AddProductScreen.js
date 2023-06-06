@@ -25,6 +25,8 @@ function AddProductScreen({ formState, categories }) {
     quantityUpdate: [],
   });
 
+  //console.log("HERE",categories)
+
   /* const [desc, setDesc] = useState('');
   console.log(desc) */
 
@@ -305,11 +307,12 @@ function AddProductScreen({ formState, categories }) {
     const parentId = category.parent;
 
     if (parentId === "isParent") {
+      //console.log(category.name)
       // Category itself is a parent
       if (!categoryMap["isParent"]) {
         categoryMap["isParent"] = [];
       }
-      categoryMap["isParent"].push(category);
+      categoryMap['isParent'].push(category);
     } else {
       // Category has a valid parent ID
       if (!categoryMap[parentId.split("&&")[0]]) {
@@ -319,7 +322,10 @@ function AddProductScreen({ formState, categories }) {
     }
   });
 
-  function generateOptions(categoryMap, parentId = "isParent", level = 0) {
+  console.log(categoryMap)
+
+  function generateOptions(categoryMap, parentId = 'isParent', level = 0) {
+    //console.log(categoryMap)
     const options = [];
 
     const children = categoryMap[parentId];
