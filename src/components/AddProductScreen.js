@@ -223,7 +223,6 @@ function AddProductScreen({ formState, categories }) {
             specs.push(JSON.stringify(spec));
           }
           const imagesData = await uploadProductFilesToBucket(selectedfiles);
-          console.log("Image dataa : ", imagesData);
           setProductData({ ...productData, images: imagesData });
 
           const quantityUpdate = [];

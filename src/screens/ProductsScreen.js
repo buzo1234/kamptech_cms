@@ -70,6 +70,7 @@ const ProductsScreen = ({ currency }) => {
     { label: "Product Title", key: "title" },
     { label: "Product Description", key: "description" },
     { label: "Quantity", key: "quantity" },
+    { label: "Qty last updated", key: "quantityUpdate" },
     { label: "Product Tags", key: "tags" },
     { label: "Product Icon", key: "images" },
     { label: "Sale Price", key: "salePrice" },
@@ -172,10 +173,26 @@ const ProductsScreen = ({ currency }) => {
             <CSVLink
               target="_blank"
               headers={headers}
-              data={allProducts.map((prod) => ({
-                ...prod,
-                category: prod.category?.name,
-              }))}
+              data={allProducts.map((prod) => {
+                let lastUpdatedDate = new Date(
+                  JSON.parse(prod.quantityUpdate.slice(-1)[0]).date
+                );
+                const day = lastUpdatedDate.getDate();
+                const month = lastUpdatedDate.getMonth() + 1;
+                const year = lastUpdatedDate.getFullYear();
+                const hours = lastUpdatedDate.getHours();
+                const mins = lastUpdatedDate.getMinutes();
+
+                return {
+                  ...prod,
+                  category: prod.category?.name || "No category assigned",
+                  quantityUpdate: `${day < 10 ? "0" + day : day}/${
+                    month < 10 ? "0" + month : month
+                  }/${year} - ${hours < 10 ? "0" + hours : hours}:${
+                    mins < 10 ? "0" + mins : mins
+                  }`,
+                };
+              })}
               filename={"TechSouqDubai - Products Catalogue"}
               className="border flex justify-center items-center border-gray-300 hover:border-green-400 hover:text-green-400 dark:text-gray-300 cursor-pointer h-10 w-20 rounded-md focus:outline-none"
             >

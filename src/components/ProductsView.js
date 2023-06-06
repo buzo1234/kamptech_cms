@@ -90,7 +90,9 @@ function ProductsView({
                     </td>
                     <td className="px-4 py-3 ">{title}</td>
 
-                    <td className="px-4 py-3 ">{category?.name}</td>
+                    <td className="px-4 py-3 ">
+                      {category?.name || "No Category Assigned"}
+                    </td>
 
                     <td className="px-4 py-3 ">{sku}</td>
                     <td className="px-4 py-3 ">
