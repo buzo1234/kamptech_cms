@@ -6,7 +6,7 @@ import "react-quill/dist/quill.snow.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function AddProductScreen({ formState, categories }) {
+function AddProductScreen({ formState, categories, skus }) {
   const [productData, setProductData] = useState({
     title: "",
     description: "",
@@ -43,6 +43,8 @@ function AddProductScreen({ formState, categories }) {
   const [selectedfiles, setFiles] = useState([]);
   const [thumbnails, setThumbnails] = useState([]);
   const fileInputRef = useRef(null);
+
+  console.log("skus", skus)
 
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
@@ -196,9 +198,12 @@ function AddProductScreen({ formState, categories }) {
     if (productData.title === "") {
       formComplete = false;
       toast.error("Please enter product title");
-    } else if (productData.sku === "") {
+    } else if (productData.sku === "" ) {
       formComplete = false;
       toast.error("Please enter product sku");
+    }else if(skus.includes(productData.sku.trim())) {
+      formComplete = false;
+      toast.error("This SKU number already exists");
     } else if (productData.category === "") {
       formComplete = false;
       toast.error("Please assign product category");
@@ -239,7 +244,7 @@ function AddProductScreen({ formState, categories }) {
           await createProduct({
             title: productData.title,
             description: productData.description,
-            sku: productData.sku,
+            sku: productData.sku.trim(),
             salePrice: productData.salePrice,
             costPrice: productData.costPrice,
             quantity: productData.quantity,

@@ -24,6 +24,7 @@ const ProductsScreen = ({ currency }) => {
   const [allCategories, setAllCategories] = useState([]);
 
   const [allProducts, setAllProducts] = useState([]);
+  const [skus, setSkus] = useState([]);
 
   useEffect(() => {
     filterOut();
@@ -59,6 +60,7 @@ const ProductsScreen = ({ currency }) => {
     await getProducts()
       .then((response) => {
         setAllProducts(response.documents);
+        setSkus(response.documents.map(obj => obj.sku))
         setFilterProds(response.documents);
       })
       .catch((e) => {
@@ -264,6 +266,7 @@ const ProductsScreen = ({ currency }) => {
             <AddProductScreen
               formState={setAddProduct}
               categories={allCategories}
+              skus = {skus}
             />
           </div>
         </>
