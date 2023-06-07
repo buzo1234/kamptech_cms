@@ -251,7 +251,7 @@ function EditProductScreen({ setShow, show, prodData, categories, skus }) {
     } else if (productData.sku === "") {
       formComplete = false;
       toast.error("Please enter product sku");
-    }else if(skus.includes(productData.sku.trim())) {
+    }else if(skus.includes(productData.sku.trim()) && prodData.sku.trim() !== productData.sku.trim()) {
       formComplete = false;
       toast.error("This SKU number already exists");
     } else if (productData.category === "") {
