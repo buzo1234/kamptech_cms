@@ -9,11 +9,11 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { ToastContainer, toast } from "react-toastify";
 
-function EditProductScreen({ setShow, show, prodData, categories }) {
+function EditProductScreen({ setShow, show, prodData, categories, skus }) {
   const [productData, setProductData] = useState({
     title: prodData.title,
     description: prodData.description,
-    sku: prodData.sku,
+    sku: prodData.sku.trim(),
     quantity: prodData.quantity,
     salePrice: prodData.salePrice,
     costPrice: prodData.costPrice,
@@ -251,6 +251,9 @@ function EditProductScreen({ setShow, show, prodData, categories }) {
     } else if (productData.sku === "") {
       formComplete = false;
       toast.error("Please enter product sku");
+    }else if(skus.includes(productData.sku.trim())) {
+      formComplete = false;
+      toast.error("This SKU number already exists");
     } else if (productData.category === "") {
       formComplete = false;
       toast.error("Please assign product category");
