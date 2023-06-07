@@ -10,7 +10,6 @@ const DeleteProductScreen = ({ setShow, show, prodId }) => {
 
   const [deleting ,setDeleting] = useState(false);
   
-  console.log(prodId)
   const handleDeleteProduct = async () => {
     setDeleting(true);
     try {
