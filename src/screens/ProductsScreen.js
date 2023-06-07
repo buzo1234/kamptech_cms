@@ -276,7 +276,7 @@ const ProductsScreen = ({ currency }) => {
         <form className='py-3 grid gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex'>
           <div className='flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow'>
             <input
-              className='block w-full px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 border h-12 bg-gray-100 border-transparent'
+              className='block w-full px-3 py-1 text-sm focus:outline-none text-black leading-5 rounded-md  border-gray-200 dark:border-gray-600 focus:ring   border h-12 bg-gray-100 border-transparent'
               type='search'
               name='search'
               placeholder='Search Product'
@@ -290,7 +290,7 @@ const ProductsScreen = ({ currency }) => {
           </div>
           <div className='flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow'>
             <select
-              className='block w-full px-2 py-1 text-sm dark:text-gray-300 focus:outline-none rounded-md form-select focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:shadow-none focus:ring focus:ring-green-300 dark:focus:border-gray-500 dark:focus:ring-gray-300 dark:bg-gray-700 leading-5 border h-12 bg-gray-100 border-transparent'
+              className='block w-full px-2 py-1 text-sm text-black  focus:outline-none rounded-md form-select focus:border-gray-200 border-gray-200  focus:shadow-none focus:ring    leading-5 border h-12 bg-gray-100 border-transparent'
               onChange={(e) => handleCategoryChange(e)}
             >
               <option value='All'>Category</option>
