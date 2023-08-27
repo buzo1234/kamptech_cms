@@ -33,8 +33,6 @@ function AddProductScreen({ formState, categories, skus }) {
 
   const [currentTag, setCurrentTag] = useState("");
 
-  const [rowCount, setRowCount] = useState(0);
-
   const [specification, setSpecification] = useState([]);
 
   /* invoice: */
@@ -240,14 +238,12 @@ function AddProductScreen({ formState, categories, skus }) {
     } else if (productData.quantity < 0) {
       formComplete = false;
       toast.error("Please enter product quantity");
-    } else if (!productData.contactForPrice) {
-      if (productData.salePrice < 0) {
-        formComplete = false;
-        toast.error("Please enter sale price");
-      } else if (productData.costPrice < 0) {
-        formComplete = false;
-        toast.error("Please enter cost price");
-      }
+    } else if (!productData.contactForPrice && productData.salePrice < 0) {
+      formComplete = false;
+      toast.error("Please enter sale price");
+    } else if (!productData.contactForPrice && productData.costPrice < 0) {
+      formComplete = false;
+      toast.error("Please enter cost price");
     } else {
       try {
         setUploading(true);
@@ -431,7 +427,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Title */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Product Title
               </label>
             </div>
@@ -451,7 +447,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Description */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Product Description
               </label>
             </div>
@@ -474,7 +470,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* SKU */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 SKU {skus[-1] && `(last used : {${skus[-1]}})`}
               </label>
             </div>
@@ -494,7 +490,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Images */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Product Images
               </label>
             </div>
@@ -561,7 +557,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Category */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Select Category
               </label>
             </div>
@@ -587,7 +583,7 @@ function AddProductScreen({ formState, categories, skus }) {
 
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <p className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <p className="text-sm mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Contact for Price
               </p>
             </div>
@@ -614,7 +610,7 @@ function AddProductScreen({ formState, categories, skus }) {
               {/* Product Price */}
               <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
                 <div className="col-span-1 px-3">
-                  <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+                  <label className="text-sm mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                     Product Price
                   </label>
                 </div>
@@ -650,7 +646,7 @@ function AddProductScreen({ formState, categories, skus }) {
               {/* Sale Price */}
               <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
                 <div className="col-span-1 px-3">
-                  <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+                  <label className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                     Sale Price
                   </label>
                 </div>
@@ -689,7 +685,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Product Quantity */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Product Quantity
               </label>
             </div>
@@ -709,7 +705,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Product Tags */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Product Tags
               </label>
             </div>
@@ -748,7 +744,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Serial */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Product Serial Numbers
               </label>
             </div>
@@ -787,7 +783,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Invoice */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Product Invoice Numbers
               </label>
             </div>
@@ -875,7 +871,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Specifications */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Specifications
               </label>
             </div>
@@ -935,7 +931,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Added Specs */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-4">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Added Specifications
               </label>
             </div>
@@ -970,7 +966,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Published */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <p className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <p className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Published
               </p>
             </div>
