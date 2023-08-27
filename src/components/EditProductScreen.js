@@ -15,6 +15,7 @@ function EditProductScreen({ setShow, show, prodData, categories, skus }) {
     description: prodData.description,
     sku: prodData.sku.trim(),
     quantity: prodData.quantity,
+    contactForPrice: prodData.contactForPrice,
     salePrice: prodData.salePrice,
     costPrice: prodData.costPrice,
     specifications: [],
@@ -282,10 +283,10 @@ function EditProductScreen({ setShow, show, prodData, categories, skus }) {
     } else if (productData.quantity < 0) {
       formComplete = false;
       toast.error("Please enter product quantity");
-    } else if (productData.salePrice < 0) {
+    } else if (!productData.contactForPrice && !productData.salePrice) {
       formComplete = false;
       toast.error("Please enter sale price");
-    } else if (productData.costPrice < 0) {
+    } else if (!productData.contactForPrice && !productData.costPrice) {
       formComplete = false;
       toast.error("Please enter cost price");
     } else {
@@ -322,10 +323,7 @@ function EditProductScreen({ setShow, show, prodData, categories, skus }) {
               quantityBefore: lastUpdated.quantityAfter,
               quantityAfter: productData.quantity,
             });
-            console.log(newUpdate);
             productData.quantityUpdate.push(newUpdate);
-            console.log(productData.quantityUpdate);
-            console.log(typeof prodData.quantityUpdate);
           }
 
           const invoices = productData.invoice.map((inv) =>
@@ -337,6 +335,7 @@ function EditProductScreen({ setShow, show, prodData, categories, skus }) {
               title: productData.title,
               description: productData.description,
               sku: productData.sku,
+              contactForPrice: productData.contactForPrice,
               salePrice: productData.salePrice,
               costPrice: productData.costPrice,
               quantity: productData.quantity,
@@ -517,20 +516,6 @@ function EditProductScreen({ setShow, show, prodData, categories, skus }) {
             </div>
 
             <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
-              {/* <textarea
-                className='block p-3 w-full text-sm px-3 py-1 text-gray-300 rounded-md focus:outline-none form-textarea  border-gray-600 focus:border-gray-500 bg-gray-700 focus:ring-gray-700 focus:ring  border  border-transparent'
-                name='description'
-                placeholder='Product Description'
-                rows='4'
-                value={productData.description}
-                spellCheck={true}
-                onChange={(e) =>
-                  setProductData({
-                    ...productData,
-                    description: e.target.value,
-                  })
-                }
-              ></textarea> */}
               <ReactQuill
                 name="description"
                 modules={modules}
@@ -658,81 +643,108 @@ function EditProductScreen({ setShow, show, prodData, categories, skus }) {
               </select>
             </div>
           </div>
-
-          {/* Product Price */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
-                Product Price
-              </label>
+              <p className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+                Contact for Price
+              </p>
             </div>
-            <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
-              <div className="flex flex-row">
-                <span className="inline-flex items-center px-3 rounded rounded-r-none border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm focus:border-green-300 dark:bg-gray-700 dark:text-gray-300 dark:border dark:border-gray-600">
-                  <select
-                    className="bg-gray-700 border-none text-md text-gray-300 cursor-pointer appearance-none shadow-sm focus:outline-none"
-                    value={currency}
-                    onChange={(e) => setCurrency(e.target.value)}
-                  >
-                    <option value="usd">USD</option>
-                    <option value="aed">AED</option>
-                  </select>
-                </span>
-                <input
-                  className="block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none rounded-l-none "
-                  type="number"
-                  name="originalPrice"
-                  placeholder="Original Price"
-                  step="0.01"
-                  value={productData.costPrice}
-                  onChange={(e) =>
-                    setProductData({
-                      ...productData,
-                      costPrice: e.target.value,
-                    })
-                  }
-                />
-              </div>
+            <div
+              className="col-span-1 lg:col-span-3 xl:col-span-3 px-2 relative cursor-pointer"
+              onClick={() => {
+                setProductData({
+                  ...productData,
+                  contactForPrice: !productData.contactForPrice,
+                  salePrice: 0.0,
+                  costPrice: 0.0,
+                });
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={productData.contactForPrice}
+                class="sr-only peer"
+              />
+              <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[13px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
             </div>
           </div>
 
-          {/* Sale Price */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
-            <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
-                Sale Price
-              </label>
-            </div>
-
-            <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
-              <div className="flex flex-row">
-                <span className="inline-flex items-center px-3 rounded rounded-r-none border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm focus:border-green-300 dark:bg-gray-700 dark:text-gray-300 dark:border dark:border-gray-600">
-                  <select
-                    className="bg-gray-700 border-none text-md text-gray-300 cursor-pointer appearance-none shadow-sm focus:outline-none"
-                    value={currency}
-                    onChange={(e) => setCurrency(e.target.value)}
-                  >
-                    <option value="usd">USD</option>
-                    <option value="aed">AED</option>
-                  </select>
-                </span>
-                <input
-                  className="block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none rounded-l-none "
-                  type="number"
-                  name="price"
-                  placeholder="Sale price"
-                  step="0.01"
-                  value={productData.salePrice}
-                  onChange={(e) =>
-                    setProductData({
-                      ...productData,
-                      salePrice: e.target.value,
-                    })
-                  }
-                />
+          {!productData.contactForPrice && (
+            <>
+              {/* Product Price */}
+              <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
+                <div className="col-span-1 px-3">
+                  <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+                    Product Price
+                  </label>
+                </div>
+                <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
+                  <div className="flex flex-row">
+                    <span className="inline-flex items-center px-3 rounded rounded-r-none border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm focus:border-green-300 dark:bg-gray-700 dark:text-gray-300 dark:border dark:border-gray-600">
+                      <select
+                        className="bg-gray-700 border-none text-md text-gray-300 cursor-pointer appearance-none shadow-sm focus:outline-none"
+                        value={currency}
+                        onChange={(e) => setCurrency(e.target.value)}
+                      >
+                        <option value="usd">USD</option>
+                        <option value="aed">AED</option>
+                      </select>
+                    </span>
+                    <input
+                      className="block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none rounded-l-none "
+                      type="number"
+                      name="originalPrice"
+                      placeholder="Original Price"
+                      step="0.01"
+                      onChange={(e) =>
+                        setProductData({
+                          ...productData,
+                          costPrice: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+
+              {/* Sale Price */}
+              <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
+                <div className="col-span-1 px-3">
+                  <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+                    Sale Price
+                  </label>
+                </div>
+
+                <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
+                  <div className="flex flex-row">
+                    <span className="inline-flex items-center px-3 rounded rounded-r-none border border-r-0 border-gray-300 bg-gray-50 text-sm focus:border-green-300 dark:bg-gray-700 text-gray-300 dark:border dark:border-gray-600">
+                      <select
+                        className="bg-gray-700 border-none rounded-md text-gray-300 cursor-pointer appearance-none shadow-sm focus:outline-none"
+                        value={currency}
+                        onChange={(e) => setCurrency(e.target.value)}
+                      >
+                        <option value="usd">USD</option>
+                        <option value="aed">AED</option>
+                      </select>
+                    </span>
+                    <input
+                      className="block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none rounded-l-none "
+                      type="number"
+                      name="price"
+                      placeholder="Sale price"
+                      step="0.01"
+                      onChange={(e) =>
+                        setProductData({
+                          ...productData,
+                          salePrice: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Product Quantity */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
