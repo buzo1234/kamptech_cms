@@ -8,6 +8,10 @@ import {
   getUserData,
   addCategoryImage,
   getParentCategories,
+  getParentCategoriesNew,
+  updateCategoryRelation,
+  createCategoryRelation,
+  deleteCategoryRelation,
 } from '../actions';
 
 const UpdateCategoryScreen = ({ setShow, show, catData }) => {
@@ -19,15 +23,16 @@ const UpdateCategoryScreen = ({ setShow, show, catData }) => {
     published: catData.published,
     bucketId: catData.bucketId,
     fileId: catData.fileId,
+    newParent: catData.newParent,
   });
-
-  
 
   const [files, setFiles] = useState();
   const [thumbnail, setThumbnail] = useState('');
   const [uploading, setUploading] = useState(false);
 
   const [parentList, setParentCat] = useState([]);
+
+  const [parentCategories, setParentCategories] = useState([]);
 
   const fileInputRef = useRef(null);
 
@@ -40,11 +45,20 @@ const UpdateCategoryScreen = ({ setShow, show, catData }) => {
         console.log(e.message);
       });
     getParentList();
+    getParentListNew();
   }, []);
 
   /* useEffect(() => {
     loginHandler();
   }, []); */
+
+  const getParentListNew = async () => {
+    getParentCategoriesNew()
+      .then((response) => {
+        setParentCategories(response);
+      })
+      .catch((e) => console.log(e.message));
+  };
 
   const getParentList = async () => {
     const parentCategories = await getParentCategories()
@@ -100,29 +114,54 @@ const UpdateCategoryScreen = ({ setShow, show, catData }) => {
     setUploading(true);
     try {
       var urlImage = categoryData.image;
-      var urlData = {$id: categoryData.fileId, bucketId: categoryData.bucketId}
+      var urlData = {
+        $id: categoryData.fileId,
+        bucketId: categoryData.bucketId,
+      };
 
-      console.log("files ",files);
-     
-      if (files!==null && files!==undefined) {
-    
+      console.log('files ', files);
+
+      if (files !== null && files !== undefined) {
         urlData = await addCategoryImage(files);
         urlImage = `https://appwrite.techsouqdubai.com/v1/storage/buckets/${urlData.bucketId}/files/${urlData.$id}/view?project=646339a61beac87efd09`;
         console.log('image', urlImage);
         setcategoryData({ ...categoryData, image: urlImage });
       }
-      
+
       console.log('data', urlData);
-      await updateCategory({
-        name: categoryData.name,
-        desc: categoryData.desc,
-        image: urlImage,
-        parent: categoryData.parent,
-        published: categoryData.published,
-        fileId: urlData.$id,
-        bucketId: urlData.bucketId
-      }, catData.$id).then(() => {
+      await updateCategory(
+        {
+          name: categoryData.name,
+          desc: categoryData.desc,
+          image: urlImage,
+          parent: categoryData.parent,
+          published: categoryData.published,
+          fileId: urlData.$id,
+          bucketId: urlData.bucketId,
+        },
+        catData.$id
+      ).then(() => {
         console.log('category created');
+        if (categoryData.parent !== catData.parent) {
+          if (categoryData.parent === 'isParent') {
+            /* delete relation */
+            deleteCategoryRelation(catData.newParent[0]?.$id);
+          } else {
+            if (catData.newParent.length > 0) {
+              /* update relation */
+              updateCategoryRelation(catData.newParent[0]?.$id, {
+                parent: categoryData.parent,
+                child: catData.$id,
+              });
+            } else {
+              /* create relation */
+              createCategoryRelation({
+                parent: categoryData.parent,
+                child: catData.$id,
+              });
+            }
+          }
+        }
         setShow(false);
       });
     } catch (error) {
@@ -134,6 +173,8 @@ const UpdateCategoryScreen = ({ setShow, show, catData }) => {
   const handleDivClick = () => {
     fileInputRef.current.click();
   };
+
+  console.log(parentCategories);
 
   return (
     <div
@@ -163,7 +204,11 @@ const UpdateCategoryScreen = ({ setShow, show, catData }) => {
           Cancel
         </button>
         <button
-          className={uploading ? 'bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold cursor-not-allowed disabled' : 'bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold '}
+          className={
+            uploading
+              ? 'bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold cursor-not-allowed disabled'
+              : 'bg-green-400 col-span-1   py-2 w-full rounded-lg text-white hover:bg-green-500 font-semibold '
+          }
           onClick={() => handleAddCategory()}
         >
           Update Category
@@ -249,7 +294,7 @@ const UpdateCategoryScreen = ({ setShow, show, catData }) => {
 
                 <option value='isParent'>Set as Parent Category</option>
                 {parentList.map((val, index) => (
-                  <option value={`${val.$id}&&${val.name}`} key={index}>
+                  <option value={val.$id} key={index}>
                     {val.name}
                   </option>
                 ))}

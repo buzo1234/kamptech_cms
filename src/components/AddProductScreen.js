@@ -195,6 +195,8 @@ function AddProductScreen({ formState, categories, skus }) {
   let formComplete = true;
   const onProductFormSubmit = async (e) => {
     e.preventDefault();
+
+    console.log("here");
     if (productData.title === "") {
       formComplete = false;
       toast.error("Please enter product title");
@@ -307,6 +309,7 @@ function AddProductScreen({ formState, categories, skus }) {
   /* category options */
   const categoryMap = {};
 
+
   categories.forEach((category) => {
     const parentId = category.parent;
 
@@ -326,7 +329,6 @@ function AddProductScreen({ formState, categories, skus }) {
     }
   });
 
-  console.log(categoryMap)
 
   function generateOptions(categoryMap, parentId = 'isParent', level = 0) {
     //console.log(categoryMap)
@@ -459,7 +461,7 @@ function AddProductScreen({ formState, categories, skus }) {
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
               <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
-               SKU (last used : {skus[-1]})
+               SKU (last used : {skus.slice(-1)})
               </label>
             </div>
             <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">

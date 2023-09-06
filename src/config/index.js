@@ -6,6 +6,8 @@ const productsCollectionID = "64652e560ee0b611f96f";
 const adminUserCollectionID = "6469e82fa2896f5ccf03";
 const databaseID = "6463bd7a52591d3378f8";
 
+const categoryRelationShipID = "64f8179853f3291b0835";
+
 const client = new Client();
 
 client
@@ -19,4 +21,6 @@ export {
   ordersCollectionID,
   productsCollectionID,
   adminUserCollectionID,
+
+  categoryRelationShipID
 };

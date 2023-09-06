@@ -6,11 +6,64 @@ import {
   ordersCollectionID,
   productsCollectionID,
   adminUserCollectionID,
+  categoryRelationShipID,
 } from '../config';
 
 const account = new Account(client);
 const storage = new Storage(client);
 const database = new Databases(client);
+
+const getCategoryRelations = async () => {
+  try {
+    return await database.listDocuments(databaseID, categoryRelationShipID);
+  } catch (e) {
+    console.error(e.message);
+  }
+};
+
+const getImmediateParent = async (id) => {
+  try {
+    return await database.listDocuments(databaseID, categoryRelationShipID, [
+      Query.equal('child.$id', id),
+    ]);
+  } catch (e) {
+    console.error(e.message);
+  }
+};
+
+const createCategoryRelation = async (relationData) => {
+  try {
+    return await database.createDocument(
+      databaseID,
+      categoryRelationShipID,
+      ID.unique(),
+      relationData
+    );
+  } catch (e) {
+    console.error(e.message);
+  }
+};
+
+const updateCategoryRelation = async (id, relationData) => {
+  try {
+    return await database.updateDocument(
+      databaseID,
+      categoryRelationShipID,
+      id,
+      relationData
+    );
+  } catch (e) {
+    console.error(e.message);
+  }
+};
+
+const deleteCategoryRelation = async (id) => {
+  try{
+    return await database.deleteDocument(databaseID, categoryRelationShipID, id)
+  }catch(e) {
+    console.error(e.message);
+  }
+}
 
 const createCategory = async (categoryData) => {
   try {
@@ -70,7 +123,7 @@ const updateProduct = async (productData, id) => {
   } catch (e) {
     console.log(e.message);
   }
-}
+};
 
 const deleteCategory = async (id) => {
   const catid = id.split('&&')[0];
@@ -79,7 +132,7 @@ const deleteCategory = async (id) => {
     const response = await database.listDocuments(
       databaseID,
       categoryCollectionID,
-      [Query.equal('parent', id)]
+      [Query.equal('parent', catid)]
     );
     const documents = response.documents;
 
@@ -124,6 +177,22 @@ const deleteProduct = async (id) => {
       .catch((error) => {
         console.error('Error deleting document:', error);
       });
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
+const getParentCategoriesNew = async () => {
+  try {
+    var parents = [];
+    database.listDocuments(databaseID, categoryRelationShipID).then((res) => {
+      const relations = res.documents;
+      relations.map((rel) => {
+        if (!parents.includes(rel?.parent?.$id)) parents.push(rel);
+      });
+    });
+
+    return parents;
   } catch (e) {
     console.log(e.message);
   }
@@ -178,14 +247,14 @@ const addCategoryImage = async (image) => {
 };
 
 const deleteFiles = async (ids) => {
-  try{
-    for(const id of ids){
-      await storage.deleteFile('64652f7768e9d723b587',id)
+  try {
+    for (const id of ids) {
+      await storage.deleteFile('64652f7768e9d723b587', id);
     }
-  }catch(e) {
-    console.log(e.message)
+  } catch (e) {
+    console.log(e.message);
   }
-}
+};
 
 const uploadProductFilesToBucket = async (selectedFiles) => {
   try {
@@ -326,5 +395,11 @@ export {
   getAdmins,
   uploadProductFilesToBucket,
   createProduct,
-  deleteFiles
+  deleteFiles,
+  createCategoryRelation,
+  getImmediateParent,
+  getCategoryRelations,
+  getParentCategoriesNew,
+  updateCategoryRelation,
+  deleteCategoryRelation
 };

@@ -2,16 +2,21 @@ import React, { useEffect, useState } from "react";
 import "../styles/toggleSwitch.css";
 import BorderColorSharpIcon from "@mui/icons-material/BorderColorSharp";
 import DeleteOutlineSharpIcon from "@mui/icons-material/DeleteOutlineSharp";
+import { getImmediateParent, updatetonull } from "../actions";
 
 const CategoriesView = ({
   catList,
+  relList,
   setEditId,
   setShow,
   show,
   setDeleteId,
   setDelShow,
   delShow,
+
 }) => {
+
+
   const handleEditClick = (catData) => {
     console.log(catData);
     window.scrollTo({
@@ -22,14 +27,17 @@ const CategoriesView = ({
     setShow(!show);
   };
 
-  const handleDeleteClick = (id) => {
+  const handleDeleteClick = async (id) => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
     setDeleteId(id);
     setDelShow(!delShow);
+
   };
+
+  
 
   return (
     <div>
@@ -48,7 +56,7 @@ const CategoriesView = ({
             </thead>
             <tbody>
               {catList?.map(
-                ({ image, name, parent, published, desc, $id }, index) => (
+                ({ image, name, parent, published, desc, $id, newParent }, index) => (
                   <tr key={$id}>
                     <td className="px-4 py-3">
                       <img
@@ -62,9 +70,10 @@ const CategoriesView = ({
                       <p className="text-ellipsis overflow-hidden ">{desc}</p>
                     </td>
                     <td className="px-4 py-3">
-                      {parent && parent !== "isParent"
+                      {/* {parent && parent !== "isParent"
                         ? parent.split("&&")[1]
-                        : "--"}
+                        : "--"}<br/> */}
+                      {newParent.length> 0 ? newParent[0]?.parent?.name: "---"}
                     </td>
                     <td className="px-4 py-3 ">
                       <input
