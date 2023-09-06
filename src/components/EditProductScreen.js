@@ -696,6 +696,7 @@ function EditProductScreen({ setShow, show, prodData, categories, skus }) {
                       name="originalPrice"
                       placeholder="Original Price"
                       step="0.01"
+                      value={productData.costPrice}
                       onChange={(e) =>
                         setProductData({
                           ...productData,
@@ -733,6 +734,7 @@ function EditProductScreen({ setShow, show, prodData, categories, skus }) {
                       name="price"
                       placeholder="Sale price"
                       step="0.01"
+                      value={productData.salePrice}
                       onChange={(e) =>
                         setProductData({
                           ...productData,
