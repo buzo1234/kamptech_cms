@@ -124,7 +124,7 @@ const updateProduct = async (productData, id) => {
     console.log(e.message);
   }
 };
-};
+
 
 const deleteCategory = async (id) => {
   const catid = id.split("&&")[0];
