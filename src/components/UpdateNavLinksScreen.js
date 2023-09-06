@@ -112,7 +112,7 @@ const UpdateNavLinksScreen = ({ setShow, show, catData }) => {
         </button>
       </div>
 
-      <div className='overflow-y-auto pb-40 bg-gray-800 scrollbar-hide'>
+      <div className='overflow-y-auto pb-40 bg-gray-800 h-full scrollbar-hide'>
         <form>
           {/* Title */}
           <div className='grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3'>
