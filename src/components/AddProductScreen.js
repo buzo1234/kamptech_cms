@@ -12,6 +12,7 @@ function AddProductScreen({ formState, categories, skus }) {
     description: "",
     sku: "",
     quantity: 0,
+    contactForPrice: false,
     salePrice: 0.0,
     costPrice: 0.0,
     specifications: [],
@@ -32,19 +33,18 @@ function AddProductScreen({ formState, categories, skus }) {
 
   const [currentTag, setCurrentTag] = useState("");
 
-  const [rowCount, setRowCount] = useState(0);
-
   const [specification, setSpecification] = useState([]);
 
+  /* invoice: */
+  const [invoice, setInvoice] = useState([]);
+
   const [uploading, setUploading] = useState(false);
-  const [currency, setCurrency] = useState("usd");
+  const [currency, setCurrency] = useState("aed");
 
   /* Files */
   const [selectedfiles, setFiles] = useState([]);
   const [thumbnails, setThumbnails] = useState([]);
   const fileInputRef = useRef(null);
-
-  console.log("skus", skus)
 
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
@@ -118,7 +118,6 @@ function AddProductScreen({ formState, categories, skus }) {
   /* ------------------------------ */
 
   const [serial, setSerial] = useState("");
-  const [invoice, setInvoice] = useState("");
 
   const handleTagRemove = (event, index, type) => {
     switch (type) {
@@ -126,11 +125,6 @@ function AddProductScreen({ formState, categories, skus }) {
         const updatedSerial = [...productData.serial];
         updatedSerial.splice(index, 1);
         setProductData({ ...productData, serial: updatedSerial });
-        break;
-      case "invoice":
-        const updatedInvoice = [...productData.invoice];
-        updatedInvoice.splice(index, 1);
-        setProductData({ ...productData, invoice: updatedInvoice });
         break;
       default:
         const updatedTags = [...productData.tags];
@@ -152,15 +146,6 @@ function AddProductScreen({ formState, categories, skus }) {
           }
           setSerial("");
           break;
-        case "invoice":
-          if (invoice.trim() !== "") {
-            setProductData({
-              ...productData,
-              invoice: [...productData.invoice, invoice.trim()],
-            });
-          }
-          setInvoice("");
-          break;
         default:
           if (currentTag.trim() !== "" && productData.tags.length < 5) {
             setProductData({
@@ -173,22 +158,62 @@ function AddProductScreen({ formState, categories, skus }) {
     }
   };
 
-  const handleRowChange = (index, field, value) => {
-    const updatedRows = [...specification];
-    updatedRows[index][field] = value;
-    setSpecification(updatedRows);
+  const handleRowChange = (index, field, value, type = "spec") => {
+    if (type === "spec") {
+      const updatedRows = [...specification];
+      updatedRows[index][field] = value;
+      setSpecification(updatedRows);
+    } else if (type === "invoice") {
+      const updatedInvoice = [...invoice];
+      updatedInvoice[index][field] = value;
+      setInvoice(updatedInvoice);
+    }
   };
 
-  const handleRemoveRow = (index) => {
-    const updatedRows = [...specification];
-    updatedRows.splice(index, 1);
+  const handleRemoveRow = (index, type = "spec") => {
+    switch (type) {
+      case "invoice":
+        const updatedInvoice = [...invoice];
+        console.log(updatedInvoice);
+        updatedInvoice.splice(index, 1);
+        setInvoice(updatedInvoice);
 
-    setSpecification(updatedRows);
+        setProductData({ ...productData, invoice: updatedInvoice });
+        break;
+      default:
+        const updatedRows = [...specification];
+        updatedRows.splice(index, 1);
+
+        setSpecification(updatedRows);
+        setProductData({ ...productData, specifications: updatedRows });
+    }
+  };
+
+  const handleAddInvoices = (e) => {
+    e.preventDefault();
+    let newInvoices = [];
+    for (let i of invoice) {
+      if (i.invoice.trim() !== "" && i.date.trim() !== "") {
+        newInvoices.push(i);
+      }
+    }
+    console.log(newInvoices);
+    console.log(typeof newInvoices);
+    setInvoice(newInvoices);
+    setProductData({ ...productData, invoice: newInvoices });
   };
 
   const handleAddSpecifications = (e) => {
     e.preventDefault();
-    var newSpecs = JSON.parse(JSON.stringify(specification));
+    let newSpecs = [];
+    for (let i of specification) {
+      if (i.key.trim() !== "" && i.value.trim() !== "") {
+        newSpecs.push(i);
+      }
+    }
+    console.log(newSpecs);
+    console.log(typeof newSpecs);
+    setSpecification(newSpecs);
     setProductData({ ...productData, specifications: newSpecs });
   };
 
@@ -200,10 +225,10 @@ function AddProductScreen({ formState, categories, skus }) {
     if (productData.title === "") {
       formComplete = false;
       toast.error("Please enter product title");
-    } else if (productData.sku === "" ) {
+    } else if (productData.sku === "") {
       formComplete = false;
       toast.error("Please enter product sku");
-    }else if(skus.includes(productData.sku.trim())) {
+    } else if (skus.includes(productData.sku.trim())) {
       formComplete = false;
       toast.error("This SKU number already exists");
     } else if (productData.category === "") {
@@ -215,17 +240,17 @@ function AddProductScreen({ formState, categories, skus }) {
     } else if (productData.quantity < 0) {
       formComplete = false;
       toast.error("Please enter product quantity");
-    } else if (productData.salePrice < 0) {
+    } else if (!productData.contactForPrice && productData.salePrice < 0) {
       formComplete = false;
       toast.error("Please enter sale price");
-    } else if (productData.costPrice < 0) {
+    } else if (!productData.contactForPrice && productData.costPrice < 0) {
       formComplete = false;
       toast.error("Please enter cost price");
     } else {
       try {
         setUploading(true);
         if (formComplete) {
-          var specs = [];
+          let specs = [];
           for (const spec of productData.specifications) {
             specs.push(JSON.stringify(spec));
           }
@@ -243,10 +268,13 @@ function AddProductScreen({ formState, categories, skus }) {
             );
           }
 
+          let invoices = productData.invoice.map((inv) => JSON.stringify(inv));
+
           await createProduct({
             title: productData.title,
             description: productData.description,
             sku: productData.sku.trim(),
+            contactForPrice: productData.contactForPrice,
             salePrice: productData.salePrice,
             costPrice: productData.costPrice,
             quantity: productData.quantity,
@@ -258,10 +286,9 @@ function AddProductScreen({ formState, categories, skus }) {
             published: productData.published,
             currency,
             serial: productData.serial,
-            invoice: productData.invoice,
+            invoice: invoices,
             quantityUpdate: quantityUpdate,
           }).then(() => {
-            console.log("product added");
             setUploading(false);
             formState(false);
           });
@@ -319,7 +346,7 @@ function AddProductScreen({ formState, categories, skus }) {
       if (!categoryMap["isParent"]) {
         categoryMap["isParent"] = [];
       }
-      categoryMap['isParent'].push(category);
+      categoryMap["isParent"].push(category);
     } else {
       // Category has a valid parent ID
       if (!categoryMap[parentId.split("&&")[0]]) {
@@ -404,7 +431,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Title */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Product Title
               </label>
             </div>
@@ -424,25 +451,12 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Description */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Product Description
               </label>
             </div>
 
             <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
-              {/*  <textarea
-                className='block p-3 w-full text-sm px-3 py-1 text-gray-300 rounded-md focus:outline-none form-textarea  border-gray-600 focus:border-gray-500 bg-gray-700 focus:ring-gray-700 focus:ring  border  border-transparent'
-                name='description'
-                placeholder='Product Description'
-                rows='4'
-                spellCheck={true}
-                onChange={(e) =>
-                  setProductData({
-                    ...productData,
-                    description: e.target.value,
-                  })
-                }
-              ></textarea> */}
               <ReactQuill
                 name="description"
                 modules={modules}
@@ -460,8 +474,8 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* SKU */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
-               SKU (last used : {skus.slice(-1)})
+              <label className="text-sm mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+                SKU {skus[-1] && `(last used : {${skus[-1]}})`}
               </label>
             </div>
             <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
@@ -480,7 +494,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Images */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Product Images
               </label>
             </div>
@@ -547,7 +561,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Category */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Select Category
               </label>
             </div>
@@ -571,83 +585,111 @@ function AddProductScreen({ formState, categories, skus }) {
             </div>
           </div>
 
-          {/* Product Price */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
-                Product Price
-              </label>
+              <p className="text-sm mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+                Contact for Price
+              </p>
             </div>
-            <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
-              <div className="flex flex-row">
-                <span className="inline-flex items-center px-3 rounded rounded-r-none border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm focus:border-green-300 dark:bg-gray-700 dark:text-gray-300 dark:border dark:border-gray-600">
-                  <select
-                    className="bg-gray-700 border-none text-md text-gray-300 cursor-pointer appearance-none shadow-sm focus:outline-none"
-                    value={currency}
-                    onChange={(e) => setCurrency(e.target.value)}
-                  >
-                    <option value="usd">USD</option>
-                    <option value="aed">AED</option>
-                  </select>
-                </span>
-                <input
-                  className="block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none rounded-l-none "
-                  type="number"
-                  name="originalPrice"
-                  placeholder="Original Price"
-                  step="0.01"
-                  onChange={(e) =>
-                    setProductData({
-                      ...productData,
-                      costPrice: e.target.value,
-                    })
-                  }
-                />
-              </div>
+            <div
+              className="col-span-1 lg:col-span-3 xl:col-span-3 px-2 relative cursor-pointer"
+              onClick={() =>
+                setProductData({
+                  ...productData,
+                  contactForPrice: !productData.contactForPrice,
+                })
+              }
+            >
+              <input
+                type="checkbox"
+                checked={productData.contactForPrice}
+                class="sr-only peer"
+              />
+              <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[13px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
             </div>
           </div>
 
-          {/* Sale Price */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
-            <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
-                Sale Price
-              </label>
-            </div>
-
-            <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
-              <div className="flex flex-row">
-                <span className="inline-flex items-center px-3 rounded rounded-r-none border border-r-0 border-gray-300 bg-gray-50 text-sm focus:border-green-300 dark:bg-gray-700 text-gray-300 dark:border dark:border-gray-600">
-                  <select
-                    className="bg-gray-700 border-none rounded-md text-gray-300 cursor-pointer appearance-none shadow-sm focus:outline-none"
-                    value={currency}
-                    onChange={(e) => setCurrency(e.target.value)}
-                  >
-                    <option value="usd">USD</option>
-                    <option value="aed">AED</option>
-                  </select>
-                </span>
-                <input
-                  className="block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none rounded-l-none "
-                  type="number"
-                  name="price"
-                  placeholder="Sale price"
-                  step="0.01"
-                  onChange={(e) =>
-                    setProductData({
-                      ...productData,
-                      salePrice: e.target.value,
-                    })
-                  }
-                />
+          {!productData.contactForPrice && (
+            <>
+              {/* Product Price */}
+              <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
+                <div className="col-span-1 px-3">
+                  <label className="text-sm mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+                    Product Price
+                  </label>
+                </div>
+                <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
+                  <div className="flex flex-row">
+                    <span className="inline-flex items-center px-3 rounded rounded-r-none border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm focus:border-green-300 dark:bg-gray-700 dark:text-gray-300 dark:border dark:border-gray-600">
+                      <select
+                        className="bg-gray-700 border-none text-md text-gray-300 cursor-pointer appearance-none shadow-sm focus:outline-none"
+                        value={currency}
+                        onChange={(e) => setCurrency(e.target.value)}
+                      >
+                        <option value="usd">USD</option>
+                        <option value="aed">AED</option>
+                      </select>
+                    </span>
+                    <input
+                      className="block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none rounded-l-none "
+                      type="number"
+                      name="originalPrice"
+                      placeholder="Original Price"
+                      step="0.01"
+                      onChange={(e) =>
+                        setProductData({
+                          ...productData,
+                          costPrice: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+
+              {/* Sale Price */}
+              <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
+                <div className="col-span-1 px-3">
+                  <label className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+                    Sale Price
+                  </label>
+                </div>
+
+                <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
+                  <div className="flex flex-row">
+                    <span className="inline-flex items-center px-3 rounded rounded-r-none border border-r-0 border-gray-300 bg-gray-50 text-sm focus:border-green-300 dark:bg-gray-700 text-gray-300 dark:border dark:border-gray-600">
+                      <select
+                        className="bg-gray-700 border-none rounded-md text-gray-300 cursor-pointer appearance-none shadow-sm focus:outline-none"
+                        value={currency}
+                        onChange={(e) => setCurrency(e.target.value)}
+                      >
+                        <option value="usd">USD</option>
+                        <option value="aed">AED</option>
+                      </select>
+                    </span>
+                    <input
+                      className="block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none rounded-l-none "
+                      type="number"
+                      name="price"
+                      placeholder="Sale price"
+                      step="0.01"
+                      onChange={(e) =>
+                        setProductData({
+                          ...productData,
+                          salePrice: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Product Quantity */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Product Quantity
               </label>
             </div>
@@ -667,7 +709,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Product Tags */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Product Tags
               </label>
             </div>
@@ -706,7 +748,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Serial */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Product Serial Numbers
               </label>
             </div>
@@ -745,38 +787,87 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Invoice */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Product Invoice Numbers
               </label>
             </div>
             <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
-              <div>
-                <input
-                  type="text"
-                  className="block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none"
-                  placeholder="Add Invoice Numbers"
-                  value={invoice}
-                  onChange={(e) => setInvoice(e.target.value)}
-                  onKeyDown={(e) => {
-                    handleTagInput(e, "invoice");
+              <div className="flex w-full items-center mb-4 space-x-2">
+                <div
+                  className="border-0 border-white border-solid px-4 py-2 bg-gray-600 rounded-md cursor-pointer "
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setInvoice([...invoice, { invoice: "", date: "" }]);
+                    console.log(invoice);
                   }}
-                />
+                >
+                  + Add Invoice
+                </div>
+                <button
+                  onClick={handleAddInvoices}
+                  className="bg-green-600 text-white px-4 py-2 rounded-md"
+                >
+                  Done
+                </button>
               </div>
-              <div className="flex mt-2 mb-2">
-                {productData.invoice.map((inv, index) => (
-                  <div
-                    key={index}
-                    className="border-1 bg-green-700 border-white rounded-md border-solid  flex items-center justify-between px-2 py-1 mr-2"
-                  >
-                    <p>{inv}</p>
-                    <CloseIcon
-                      className="cursor-pointer"
-                      onClick={(e) => {
-                        handleTagRemove(e, index, "invoice");
-                      }}
-                    />
+              {invoice.map((inv, index) => (
+                <div className="flex mb-2 items-center space-x-3" key={index}>
+                  <input
+                    type="text"
+                    className="block w-full px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-500 bg-gray-700 border h-12 border-transparent col-span-2"
+                    placeholder="Add Invoice Numbers"
+                    value={inv.invoice}
+                    onChange={(e) =>
+                      handleRowChange(
+                        index,
+                        "invoice",
+                        e.target.value,
+                        "invoice"
+                      )
+                    }
+                  />
+                  <input
+                    type="date"
+                    className="block w-full px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-500 bg-gray-700 border h-12 border-transparent col-span-2"
+                    max={new Date()}
+                    placeholder="dd/mm/yyyy"
+                    value={inv.date}
+                    onChange={(e) =>
+                      handleRowChange(index, "date", e.target.value, "invoice")
+                    }
+                  />
+                  <CloseIcon
+                    onClick={() => handleRemoveRow(index, "invoice")}
+                    className="cursor-pointer"
+                  />
+                </div>
+              ))}
+              <div className="col-span-1 lg:col-span-3 xl:col-span-3">
+                {productData.invoice.length > 0 ? (
+                  <div className="pt-2">
+                    <p className="text-sm text-gray-300">Added Invoices</p>
+                    <table className="w-full whitespace-nowrap bg-gray-900">
+                      {productData.invoice.map((inv, index) => (
+                        <tr className="grid grid-cols-2 w-full text-gray-300 border border-gray-700 ring-1 ring-black ring-opacity-5">
+                          <td className="col-span-1 px-4 py-3 border border-gray-700 ring-1 ring-black ring-opacity-5 ">
+                            <p className="text-ellipsis w-full overflow-hidden">
+                              {inv.invoice}
+                            </p>
+                          </td>
+                          <td className="col-span-1 px-4 py-3 border border-gray-700 ring-1 ring-black ring-opacity-5">
+                            <p className="text-ellipsis w-full overflow-hidden">
+                              {inv.date}
+                            </p>
+                          </td>
+                        </tr>
+                      ))}
+                    </table>
                   </div>
-                ))}
+                ) : (
+                  <p className="text-gray-300 text-sm col-span-4">
+                    No Invoices
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -784,7 +875,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Specifications */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Specifications
               </label>
             </div>
@@ -816,7 +907,7 @@ function AddProductScreen({ formState, categories, skus }) {
                     <input
                       type="text"
                       placeholder="key"
-                      className="block px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-500 bg-gray-700 border h-12 border-transparent col-span-2"
+                      className="block w-full px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md focus:border-gray-200 border-gray-500 bg-gray-700 border h-12 border-transparent col-span-2"
                       onChange={(e) =>
                         handleRowChange(index, "key", e.target.value)
                       }
@@ -825,7 +916,7 @@ function AddProductScreen({ formState, categories, skus }) {
                     <input
                       type="text"
                       placeholder="value"
-                      className="block px-3 py-1 text-sm focus:outline-none focus:border-gray-200 bg-gray-700 dark:text-gray-300 leading-5 rounded-md border h-12 border-transparent col-span-2"
+                      className="block w-full px-3 py-1 text-sm focus:outline-none focus:border-gray-200 bg-gray-700 dark:text-gray-300 leading-5 rounded-md border h-12 border-transparent col-span-2"
                       onChange={(e) =>
                         handleRowChange(index, "value", e.target.value)
                       }
@@ -844,7 +935,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Added Specs */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-4">
             <div className="col-span-1 px-3">
-              <label className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <label className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Added Specifications
               </label>
             </div>
@@ -879,7 +970,7 @@ function AddProductScreen({ formState, categories, skus }) {
           {/* Published */}
           <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
             <div className="col-span-1 px-3">
-              <p className="text-sm text-gray-200 mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+              <p className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
                 Published
               </p>
             </div>
