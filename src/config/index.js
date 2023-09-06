@@ -7,6 +7,7 @@ const adminUserCollectionID = "6469e82fa2896f5ccf03";
 const databaseID = "6463bd7a52591d3378f8";
 
 const categoryRelationShipID = "64f8179853f3291b0835";
+const navlinkCollectionID = "64f88f838325840357b3";
 
 const client = new Client();
 
@@ -22,5 +23,6 @@ export {
   productsCollectionID,
   adminUserCollectionID,
 
-  categoryRelationShipID
+  categoryRelationShipID,
+  navlinkCollectionID
 };

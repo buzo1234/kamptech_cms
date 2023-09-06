@@ -13,6 +13,7 @@ function App() {
         <Route path="/category" element={<Layout screen={"category"} />} />
         <Route path="/orders" element={<Layout screen={"orders"} />} />
         <Route path="/coupons" element={<Layout screen={"coupons"} />} />
+        <Route path="/navlinks" element={<Layout screen={"navlinks"} />} />
       </Routes>
     </BrowserRouter>
   );
