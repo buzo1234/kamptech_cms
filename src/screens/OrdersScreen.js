@@ -217,7 +217,7 @@ const OrdersScreen = ({ currency }) => {
                         orderTime,
                         customer,
                         amount,
-                        Method,
+                        method,
                         Status,
                       }) => (
                         <tr key={$id}>
@@ -237,7 +237,7 @@ const OrdersScreen = ({ currency }) => {
                               ? "$" + amount
                               : "AED " + amount * conversionRate
                           }`}</td>
-                          <td className="px-4 py-3">{Method}</td>
+                          <td className="px-4 py-3">{method}</td>
                           <td className="px-4 py-3">
                             <span
                               className={`${
