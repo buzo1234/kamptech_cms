@@ -5,8 +5,13 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
+import { getCurrency } from "../app/currencySlice";
 
 function AddProductScreen({ formState, categories, skus }) {
+  /*Currency*/
+  const currentCurrency = useSelector(getCurrency);
+
   const [productData, setProductData] = useState({
     title: "",
     description: "",
@@ -25,11 +30,6 @@ function AddProductScreen({ formState, categories, skus }) {
     invoice: [],
     quantityUpdate: [],
   });
-
-  //console.log("HERE",categories)
-
-  /* const [desc, setDesc] = useState('');
-  console.log(desc) */
 
   const [currentTag, setCurrentTag] = useState("");
 
@@ -270,13 +270,21 @@ function AddProductScreen({ formState, categories, skus }) {
 
           let invoices = productData.invoice.map((inv) => JSON.stringify(inv));
 
+          // Storing the cost as AED in db
+          let salePrice = productData.salePrice,
+            costPrice = productData.costPrice;
+          if (currentCurrency === "usd") {
+            salePrice *= 3.67;
+            costPrice *= 3.67;
+          }
+
           await createProduct({
             title: productData.title,
             description: productData.description,
             sku: productData.sku.trim(),
             contactForPrice: productData.contactForPrice,
-            salePrice: productData.salePrice,
-            costPrice: productData.costPrice,
+            salePrice,
+            costPrice,
             quantity: productData.quantity,
             tags: productData.tags,
             images: imagesData.urls,
@@ -336,7 +344,6 @@ function AddProductScreen({ formState, categories, skus }) {
   /* category options */
   const categoryMap = {};
 
-
   categories.forEach((category) => {
     const parentId = category.parent;
 
@@ -356,8 +363,7 @@ function AddProductScreen({ formState, categories, skus }) {
     }
   });
 
-
-  function generateOptions(categoryMap, parentId = 'isParent', level = 0) {
+  function generateOptions(categoryMap, parentId = "isParent", level = 0) {
     //console.log(categoryMap)
     const options = [];
 

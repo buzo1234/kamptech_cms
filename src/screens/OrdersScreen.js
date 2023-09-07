@@ -20,7 +20,7 @@ const OrdersScreen = ({ currency }) => {
     { label: "Customer Name", key: "customer" },
     { label: "Product", key: "product" },
     { label: "Amount", key: "amount" },
-    { label: "Method", key: "Method" },
+    { label: "Method", key: "method" },
     { label: "Status", key: "Status" },
   ];
 
@@ -221,7 +221,9 @@ const OrdersScreen = ({ currency }) => {
                         Status,
                       }) => (
                         <tr key={$id}>
-                          <td className="px-4 py-3">{invoice}</td>
+                          <td className="px-4 py-3 cursor-pointer text-red-400">
+                            <a href={`/invoice/${invoice}`}>{invoice}</a>
+                          </td>
                           <td className="px-4 py-3">
                             {new Intl.DateTimeFormat("en-US", {
                               year: "numeric",
@@ -234,8 +236,8 @@ const OrdersScreen = ({ currency }) => {
                           <td className="px-4 py-3">{customer}</td>
                           <td className="px-4 py-3">{`${
                             currency === "usd"
-                              ? "$" + amount
-                              : "AED " + amount * conversionRate
+                              ? "$" + (amount / conversionRate).toFixed(2)
+                              : "AED " + amount
                           }`}</td>
                           <td className="px-4 py-3">{method}</td>
                           <td className="px-4 py-3">
@@ -276,12 +278,14 @@ const OrdersScreen = ({ currency }) => {
                         customer,
                         product,
                         amount,
-                        Method,
+                        method,
                         Status,
                       }) => {
                         return (
                           <tr key={$id}>
-                            <td className="px-4 py-3">{invoice}</td>
+                            <td className="px-4 py-3">
+                              <a href={`/invoice/${invoice}`}>{invoice}</a>
+                            </td>
                             <td className="px-4 py-3">
                               {new Intl.DateTimeFormat("en-US", {
                                 year: "numeric",
@@ -294,10 +298,10 @@ const OrdersScreen = ({ currency }) => {
                             <td className="px-4 py-3">{customer}</td>
                             <td className="px-4 py-3">{`${
                               currency === "usd"
-                                ? "$" + amount
-                                : "AED " + amount * conversionRate
+                                ? "$" + (amount / conversionRate).toFixed(2)
+                                : "AED " + amount
                             }`}</td>
-                            <td className="px-4 py-3">{Method}</td>
+                            <td className="px-4 py-3">{method}</td>
                             <td className="px-4 py-3">
                               <span
                                 className={`${

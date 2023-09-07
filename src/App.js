@@ -14,6 +14,10 @@ function App() {
         <Route path="/orders" element={<Layout screen={"orders"} />} />
         <Route path="/coupons" element={<Layout screen={"coupons"} />} />
         <Route path="/navlinks" element={<Layout screen={"navlinks"} />} />
+        <Route
+          path="/invoice/:invoiceId"
+          element={<Layout screen={"invoice"} />}
+        />
       </Routes>
     </BrowserRouter>
   );

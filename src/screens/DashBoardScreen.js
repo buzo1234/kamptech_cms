@@ -89,10 +89,10 @@ const DashBoardScreen = ({ currency }) => {
                   {currency === "usd" ? "$" : "AED "}
                   {todaysOrders
                     ? todaysOrders.reduce((total, current) => {
-                        if (currency === "usd") {
+                        if (currency === "aed") {
                           return (total += current.amount);
                         } else {
-                          return (total += current.amount * conversionRate);
+                          return (total += current.amount / conversionRate);
                         }
                       }, 0)
                     : 0}
@@ -100,13 +100,13 @@ const DashBoardScreen = ({ currency }) => {
               </div>
               <div className="flex items-center justify-center text-center text-xs font-normal text-gray-50 dark:text-gray-100">
                 <div className="px-1 mt-3">
-                  Cash: {currency === "usd" ? "$" : "AED "}
+                  COD: {currency === "usd" ? "$" : "AED "}
                   {todaysOrders.reduce(
                     (total, current) =>
-                      current.Method === "Cash"
-                        ? currency === "usd"
+                      current.method === "COD"
+                        ? currency === "aed"
                           ? (total += current.amount)
-                          : (total += current.amount * conversionRate)
+                          : (total += current.amount / conversionRate)
                         : 0,
                     0
                   )}
@@ -115,10 +115,10 @@ const DashBoardScreen = ({ currency }) => {
                   Card: {currency === "usd" ? "$" : "AED "}
                   {todaysOrders.reduce(
                     (total, current) =>
-                      current.Method !== "Cash"
-                        ? currency === "usd"
+                      current.method !== "COD"
+                        ? currency === "aed"
                           ? (total += current.amount)
-                          : (total += current.amount * conversionRate)
+                          : (total += current.amount / conversionRate)
                         : 0,
                     0
                   )}
@@ -152,10 +152,10 @@ const DashBoardScreen = ({ currency }) => {
                   {currency === "usd" ? "$" : "AED "}
                   {yesterdaysOrders
                     ? yesterdaysOrders.reduce((total, current) => {
-                        if (currency === "usd") {
+                        if (currency === "aed") {
                           return (total += current.amount);
                         } else {
-                          return (total += current.amount * conversionRate);
+                          return (total += current.amount / conversionRate);
                         }
                       }, 0)
                     : 0}
@@ -163,13 +163,13 @@ const DashBoardScreen = ({ currency }) => {
               </div>
               <div className="flex text-center items-center justify-center text-xs font-normal text-gray-50 dark:text-gray-100">
                 <div className="px-1 mt-3">
-                  Cash: {currency === "usd" ? "$" : "AED "}
+                  COD: {currency === "usd" ? "$" : "AED "}
                   {yesterdaysOrders.reduce(
                     (total, current) =>
-                      current.Method === "Cash"
-                        ? currency === "usd"
+                      current.Method === "COD"
+                        ? currency === "aed"
                           ? (total += current.amount)
-                          : (total += current.amount * conversionRate)
+                          : (total += current.amount / conversionRate)
                         : 0,
                     0
                   )}
@@ -178,10 +178,10 @@ const DashBoardScreen = ({ currency }) => {
                   Card: {currency === "usd" ? "$" : "AED "}
                   {yesterdaysOrders.reduce(
                     (total, current) =>
-                      current.Method === "Card"
-                        ? currency === "usd"
+                      current.Method !== "COD"
+                        ? currency === "aed"
                           ? (total += current.amount)
-                          : (total += current.amount * conversionRate)
+                          : (total += current.amount / conversionRate)
                         : 0,
                     0
                   )}
@@ -219,9 +219,9 @@ const DashBoardScreen = ({ currency }) => {
                   (total, current) =>
                     new Date(current.orderTime).getMonth() ===
                     new Date().getMonth()
-                      ? currency === "usd"
+                      ? currency === "aed"
                         ? (total += current.amount)
-                        : (total += current.amount * conversionRate)
+                        : (total += current.amount / conversionRate)
                       : 0,
                   0
                 )}
@@ -252,10 +252,10 @@ const DashBoardScreen = ({ currency }) => {
               <p className="text-2xl font-bold leading-none text-gray-50 dark:text-gray-50">
                 {currency === "usd" ? "$" : "AED "}
                 {allOrders?.reduce((total, current) => {
-                  if (currency === "usd") {
+                  if (currency === "aed") {
                     return (total += current.amount);
                   } else {
-                    return (total += current.amount * conversionRate);
+                    return (total += current.amount / conversionRate);
                   }
                 }, 0)}
               </p>
@@ -441,8 +441,8 @@ const DashBoardScreen = ({ currency }) => {
                       <td className="px-4 py-3">{customer}</td>
                       <td className="px-4 py-3">{`${
                         currency === "usd"
-                          ? "$" + amount
-                          : "AED " + amount * conversionRate
+                          ? "$" + (amount / conversionRate).toFixed(2)
+                          : "AED " + amount
                       }`}</td>
                       <td className="px-4 py-3">{Method}</td>
                       <td className="px-4 py-3">
