@@ -21,6 +21,7 @@ function AddProductScreen({ formState, categories, skus }) {
     salePrice: 0.0,
     costPrice: 0.0,
     specifications: [],
+    deliveryTime: "",
     tags: [],
     category: "",
     images: [],
@@ -296,6 +297,7 @@ function AddProductScreen({ formState, categories, skus }) {
             serial: productData.serial,
             invoice: invoices,
             quantityUpdate: quantityUpdate,
+            deliveryTime: productData.deliveryTime,
           }).then(() => {
             setUploading(false);
             formState(false);
@@ -708,6 +710,28 @@ function AddProductScreen({ formState, categories, skus }) {
                   setProductData({ ...productData, quantity: e.target.value })
                 }
                 placeholder="Product Quantity"
+              />
+            </div>
+          </div>
+          {/* Delivery Time */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 my-3">
+            <div className="col-span-1 px-3">
+              <label className="text-sm  mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-300">
+                Estimated Delivery Time
+              </label>
+            </div>
+            <div className="col-span-1 lg:col-span-3 xl:col-span-3 px-2">
+              <input
+                className="block w-full px-3 py-1  text-gray-300 leading-5 rounded-md  border-gray-600 focus:ring  focus:border-gray-500 focus:ring-gray-700 bg-gray-700 border-2 h-12 text-sm focus:outline-none"
+                type="text"
+                name="deliveryTime"
+                onChange={(e) =>
+                  setProductData({
+                    ...productData,
+                    deliveryTime: e.target.value,
+                  })
+                }
+                placeholder="Estimated Delivery Time"
               />
             </div>
           </div>
