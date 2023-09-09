@@ -16,8 +16,6 @@ const DashBoardScreen = ({ currency }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(yesterdaysOrders, todaysOrders);
-
   const getLatestOrders = async () => {
     await getOrders()
       .then((response) => {
