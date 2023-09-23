@@ -92,9 +92,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   totalAmount: {
-    marginTop: 20,
+    marginTop: 5,
     fontSize: 16,
     fontWeight: 'bold',
+    textAlign: 'right',
+  },
+  vatAmount: {
+    marginTop: 20,
+    fontSize: 12,
+    fontWeight: 'semibold',
     textAlign: 'right',
   },
   table: {
@@ -151,6 +157,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '50%',
     textAlign: 'left',
+  },
+
+  addressText: {
+    width: '70%',
   },
 
   gridCell: {
@@ -230,7 +240,7 @@ const InvoicePdf = ({
           />
         </View>
         <View>
-          <Text style={styles.invoiceTitle}>INVOICE</Text>
+          <Text style={styles.invoiceTitle}>TAX INVOICE</Text>
         </View>
         <View>
           <View style={styles.invoiceNoandDate}>
@@ -261,7 +271,7 @@ const InvoicePdf = ({
             <View style={styles.tableCol2}>
               <Text style={styles.tableCell2}>
                 <View>
-                  <Text>TechSouqDubai</Text>
+                  <Text>Kamptech Solutions FZ LLC</Text>
                 </View>
               </Text>
             </View>
@@ -278,9 +288,12 @@ const InvoicePdf = ({
             <View style={styles.tableCol2}>
               <Text style={styles.tableCell2}>
                 <View style={styles.addressStyle}>
-                  <Text style={styles.addressStyle}>
-                    Office No: 301-23, Al Masaood Tower, Al Maktoum Road, Deira
-                    PO Box 390040 - Dubai
+                  <Text style={styles.addressText}>
+                    Office No: 301-23, Al Masaood Tower,
+                    <br />
+                    Al Maktoum Road, Deira PO Box
+                    <br />
+                    390040 - Dubai
                   </Text>
                 </View>
               </Text>
@@ -321,7 +334,7 @@ const InvoicePdf = ({
             </View>
             <View style={styles.tableCol2}>
               <Text style={styles.tableCell2}>
-                <View></View>
+                <View>{order?.telephone}</View>
               </Text>
             </View>
           </View>
@@ -403,7 +416,14 @@ const InvoicePdf = ({
             </View>
           </View>
         </View>
-
+        <Text style={styles.vatAmount}>
+          VAT 5% (included):{' '}
+          {`${
+            currency === 'usd'
+              ? '$' + (0.05 * (order.amount / conversionRate)).toFixed(2)
+              : 'AED ' + (0.05 * order.amount).toFixed(2)
+          }`}
+        </Text>
         <Text style={styles.totalAmount}>
           Total Order Amount:{' '}
           {`${
@@ -439,7 +459,6 @@ const InvoiceScreen = () => {
           orderedItems.push(JSON.parse(o));
         }
         setOrderedProducts(orderedItems);
-        console.log(invoiceOrder);
 
         const dateTime = new Date(invoiceOrder.orderTime);
         const day = dateTime.getDate().toString().padStart(2, '0');

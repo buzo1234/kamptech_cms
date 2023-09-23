@@ -1,19 +1,20 @@
-import { Client } from "appwrite";
+import { Client } from 'appwrite';
 
-const categoryCollectionID = "6463c06dcd8461180987";
-const ordersCollectionID = "6464f3d749d7a7ac75ba";
-const productsCollectionID = "64652e560ee0b611f96f";
-const adminUserCollectionID = "6469e82fa2896f5ccf03";
-const databaseID = "6463bd7a52591d3378f8";
+const categoryCollectionID = process.env.REACT_APP_CATEGORY_COLLECTION;
+const ordersCollectionID = process.env.REACT_APP_ORDER_COLLECTION;
+const productsCollectionID = process.env.REACT_APP_PRODUCT_COLLECTION;
+const adminUserCollectionID = process.env.REACT_APP_ADMIN_COLLECTION;
+const databaseID = process.env.REACT_APP_DATABASE_ID;
 
-const categoryRelationShipID = "64f8179853f3291b0835";
-const navlinkCollectionID = "64f88f838325840357b3";
+const categoryRelationShipID =
+  process.env.REACT_APP_CATEGORY_RELATION_COLLECTION;
+const navlinkCollectionID = process.env.REACT_APP_NAVLINK_COLLECTION;
 
 const client = new Client();
 
 client
-  .setEndpoint("https://appwrite.techsouqdubai.com/v1")
-  .setProject("646339a61beac87efd09");
+  .setEndpoint('https://appwrite.techsouqdubai.com/v1')
+  .setProject(process.env.REACT_APP_PROJECT_ID);
 
 export {
   client,
@@ -22,7 +23,6 @@ export {
   ordersCollectionID,
   productsCollectionID,
   adminUserCollectionID,
-
   categoryRelationShipID,
-  navlinkCollectionID
+  navlinkCollectionID,
 };
